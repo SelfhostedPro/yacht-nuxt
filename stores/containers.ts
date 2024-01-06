@@ -14,7 +14,7 @@ export const useContainersStore = defineStore({
     async fetchContainers() {
       const { error, data, pending } = await useFetch('/api/containers', { lazy: true })
       this.loading = pending.value
-      data.value ? this.servers = data.value : this.servers = {}
+      if (error.value) console.error(error.value.statusMessage); else data.value && typeof data.value !== 'string' ? this.servers = data.value : this.servers = {}
     }
   }
 })
