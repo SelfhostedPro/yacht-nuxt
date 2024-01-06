@@ -1,0 +1,224 @@
+import type { Container, ContainerMount, ContainerPort } from "~/types/containers/yachtContainers";
+import { fixedContainerInfoSchema, fixedContainerInspectInfoSchema } from "~/types/containers/fixedDockerode";
+import type { FixedContainerInfo, FixedContainerInspectInfo } from "~/types/containers/fixedDockerode";
+import type { Port, ContainerInspectInfo, ContainerInfo } from "~/types/containers/dockerode"
+import { format, parseISO } from 'date-fns';
+
+/**
+ * Checks to see if the icon url is valid and loads.
+ * (Used in order to grab the default LSIO icon if the app's icon returns a 404)
+ */
+const checkUrl = async (url: string): Promise<string> => {
+    const DEFAULT_IMAGE_URL = 'https://raw.githubusercontent.com/linuxserver/docker-templates/master/linuxserver.io/img/linuxserver-ls-logo.png';
+    try {
+        new URL(url);
+        const response = await fetch(url);
+        return response.ok && response.status !== 404 ? url : DEFAULT_IMAGE_URL;
+    } catch {
+        return DEFAULT_IMAGE_URL;
+    }
+}
+
+/**
+ * Checks for an icon url in the container's labels.
+ * Includes some special cases for certain vendors.
+ */
+const getIconUrl = async (labels: Container['labels']) => {
+    if (labels && labels['sh.yacht.icon']) {
+        return checkUrl(labels['sh.yacht.icon']);
+    }
+    if (
+        labels && labels['org.opencontainers.image.vendor'] &&
+        labels['org.opencontainers.image.title']
+    ) {
+        const vendor = labels['org.opencontainers.image.vendor']?.toLowerCase();
+        const title = labels['org.opencontainers.image.title']?.toLowerCase();
+        switch (vendor) {
+            case 'linuxserver.io': {
+                const url = `https://raw.githubusercontent.com/linuxserver/docker-templates/master/linuxserver.io/img/${title}-logo.png`;
+                checkUrl(url);
+            }
+            case 'portainer.io': {
+                return labels['com.docker.desktop.extension.icon']
+            }
+            default: {
+                return labels['sh.yacht.icon']
+            }
+        }
+    };
+}
+
+/**
+ * Transform mounts data to ContainerMount type.
+ */
+const formatMounts = (data: FixedContainerInfo['Mounts'] | FixedContainerInspectInfo['Mounts']): ContainerMount[] => {
+    return data.map(
+        ({ Type, Name, Source, Destination, Driver, Mode, RW, Propagation }) => ({
+            type: Type,
+            name: Name,
+            source: Source ?? null,
+            destination: Destination ?? null,
+            driver: Driver,
+            mode: Mode,
+            rw: RW,
+            propagation: Propagation,
+        }),
+    );
+}
+
+/**
+* Transform ports data from inspect to ContainerPort type.
+*/
+const formatInfoPorts = (data: Port[]): ContainerPort[] => {
+    return data.reduce(
+        (
+            acc: ContainerPort[],
+            { PrivatePort, PublicPort, IP, Type },
+        ) => {
+            if (IP !== '::1') {
+                acc.push({
+                    containerPort: PrivatePort,
+                    hostPort: PublicPort,
+                    hostIP: IP,
+                    type: Type,
+                });
+            }
+            return acc;
+        },
+        [],
+    );
+}
+/**
+ * Changes a port string to a ContainerPort type.
+ */
+const splitPort = (port: string) => {
+    const [portNumber, type] = port.split('/');
+    return { containerPort: parseInt(portNumber), type };
+}
+/**
+ * Transform ports data from info to ContainerPort type.
+ */
+const formatInspectPorts = (data: ContainerInspectInfo): ContainerPort[] => {
+    const portList: Set<ContainerPort> = new Set();
+    const { NetworkSettings, Config } = data;
+    // Check network settings for mapped ports
+    Object.entries(NetworkSettings.Ports).forEach(([port, forwarded]) => {
+        const formattedPort: ContainerPort = { ...splitPort(port) };
+        if (forwarded) {
+            formattedPort.hostPort = parseInt(forwarded[0].HostPort);
+            formattedPort.hostIP = forwarded[0].HostIp;
+        }
+        portList.add(formattedPort);
+    });
+    // Check config for additional ports that might not be mapped
+    Object.entries(Config.ExposedPorts).forEach(([port, _]) => {
+        const { containerPort, type } = splitPort(port);
+        // Check to make sure the port doesn't already exist
+        if (containerPort! in portList.values()) {
+            portList.add({
+                containerPort,
+                type: type
+            });
+        }
+    });
+    return Array.from(portList);
+}
+
+const normalizeContainers = async (
+    data: ContainerInfo[],
+): Promise<Container[]> => {
+    const promises = data.map(normalizeContainerInfo, this);
+    return Promise.all(promises);
+}
+
+const normalizeContainerInfo = async (data: FixedContainerInfo): Promise<Container> => {
+    return {
+        name: data.Names[0].slice(1),
+        id: data.Id,
+        shortId: data['Id'].substring(0, 10),
+        image: data['Image'],
+        created: format(new Date(data.Created * 1000), 'MM/dd/yyyy'),
+        status: data.State,
+        state: data.Status,
+        info: {
+            title:
+                data.Labels['sh.yacht.title'] ||
+                data.Labels['org.opencontainers.image.title'],
+            notes: data.Labels['sh.yacht.notes'],
+            description: data.Labels['org.opencontainers.image.description'],
+            docs: data.Labels['org.opencontainers.image.documentation'],
+            url: data.Labels['org.opencontainers.image.url'],
+            source: data.Labels['org.opencontainers.image.source'],
+            vendor: data.Labels['org.opencontainers.image.vendor'],
+            icon: await getIconUrl(data.Labels),
+        },
+        config: {
+            network: {
+                mode: data.HostConfig.NetworkMode,
+                networks: data.NetworkSettings.Networks,
+            },
+        },
+        mounts: data.Mounts ? formatMounts(data.Mounts) : null,
+        ports: data.Ports ? formatInfoPorts(data.Ports) : null,
+        labels: data.Labels,
+    } as Container;
+}
+
+/**
+ * Normalize container data from FixedContainerInspectInfo type.
+ */
+const normalizeContainerInspectInfo = async (data: FixedContainerInspectInfo): Promise<Container> => {
+    return {
+        name: data.Name.slice(1),
+        id: data.Id,
+        shortId: data['Id'].substring(0, 10),
+        image: data.Config.Image,
+        created: format(parseISO(data['Created'].toString()), 'MM/dd/yyyy'),
+        status: data.State.Status,
+        restart: {
+            policy: data.HostConfig.RestartPolicy?.Name,
+            count: data.RestartCount,
+        },
+        info: {
+            title:
+                data.Config.Labels['sh.yacht.title'] ||
+                data.Config.Labels['org.opencontainers.image.title'],
+            notes: data.Config.Labels['sh.yacht.notes'],
+            description: data.Config.Labels['org.opencontainers.image.description'],
+            docs: data.Config.Labels['org.opencontainers.image.documentation'],
+            url: data.Config.Labels['org.opencontainers.image.url'],
+            source: data.Config.Labels['org.opencontainers.image.source'],
+            vendor: data.Config.Labels['org.opencontainers.image.vendor'],
+            icon: await getIconUrl(data.Config.Labels),
+        },
+        config: {
+            network: {
+                mode: data.HostConfig.NetworkMode,
+                networks: data.NetworkSettings.Networks,
+            },
+            general: {
+                hostname: data.Config.Hostname,
+                tty: data.Config.Tty,
+                user: data.Config.User,
+                appArmorProfile: data.AppArmorProfile,
+                driver: data.Driver,
+                platform: data.Platform,
+                path: data.Path,
+                autoRemove: data.HostConfig.AutoRemove,
+                logConfig: {
+                    type: data.HostConfig.LogConfig?.Type,
+                    config: data.HostConfig.LogConfig?.Config,
+                },
+                args: data.Args,
+            },
+        },
+        mounts: data.Mounts ? formatMounts(data.Mounts) : null,
+        ports: Object.keys(data.NetworkSettings.Ports).length
+            ? formatInspectPorts(data)
+            : null,
+        labels: data.Config.Labels,
+        env: data.Config.Env,
+    } as Container;
+}
+
+export { normalizeContainers, normalizeContainerInfo, normalizeContainerInspectInfo }
