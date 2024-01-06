@@ -11,6 +11,7 @@ class Servers {
   }
   getServers = async () => {
     Config.getConfig().then(async (config) => {
+      console.log('config', config)
       const servers = config.base.servers
       const serverPromises = servers.map(async (server) => {
         if (server.options?.protocol === 'ssh' && server.key) {

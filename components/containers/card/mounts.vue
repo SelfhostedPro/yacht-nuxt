@@ -1,13 +1,17 @@
 <template>
-    <v-card-item>
+    <v-card-item class="d-flex flex-column items-center">
         <v-card-subtitle class="mx-auto text-center">MOUNTS</v-card-subtitle>
-        <v-slide-group show-arrows>
-            <v-slide-group-item v-for="mount in mounts" :key="mount.destination">
-                <v-btn elevation="4" size="small" variant="tonal" class="ma-1" color='warning'> {{
-                    mount.destination
-                }}</v-btn>
-            </v-slide-group-item>
-        </v-slide-group>
+        <v-item-group show-arrows class="mx-auto">
+            <v-row no-gutters>
+                <v-item v-for="mount in mounts" :key="mount.destination">
+                    <v-col>
+                        <v-chip label size="small" class="ma-1" color="warning"> {{
+                            mount.destination
+                        }}</v-chip>
+                    </v-col>
+                </v-item>
+            </v-row>
+        </v-item-group>
     </v-card-item>
 </template>
 

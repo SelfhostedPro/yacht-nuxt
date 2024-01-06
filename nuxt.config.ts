@@ -12,7 +12,7 @@ export default defineNuxtConfig({
         config.plugins.push(vuetify({ autoImport: true }))
       })
     },
-    '@pinia/nuxt', "@vueuse/nuxt", '@vueuse/motion/nuxt'],
+    '@pinia/nuxt', "@vueuse/nuxt", '@vueuse/motion/nuxt', "@formkit/auto-animate"],
   vite: {
     vue: {
       template: {

@@ -11,7 +11,7 @@
     </v-toolbar>
     <v-window v-model="tab" class="mt-5">
       <v-window-item v-for="server, i in Object.keys(containers.servers)" :value="i" :key="i">
-        <v-data-iterator :items="containers.servers[server]" :search="search" :items-per-page="10">
+        <v-data-iterator :items="containers.servers[server]" :search="search" :items-per-page="12">
           <template v-slot:default="{ items }">
             <v-row>
               <v-col v-for="container in items" :key="container.raw.id" cols="12" sm="6" md="4" lg="4" xl="3">
@@ -38,7 +38,7 @@
 
 <script lang="ts" setup>
 const search = useState('search', () => "")
-const tab = useState('tab')
+const tab: Ref<number> = useState('tab', () => 0)
 const containers = useContainersStore()
 
 await callOnce(containers.fetchContainers)

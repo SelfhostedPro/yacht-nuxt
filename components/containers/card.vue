@@ -1,64 +1,61 @@
 <template>
-    <v-card class="pa-2 justify-start" density="compact" style="transition: height 0.3s ease-in-out;">
-        <v-row dense no-gutters class="align-start">
-            <v-col>
-                <containers-card-base :container="container" />
-                <v-row>
-                    <v-col>
-                        <v-btn v-if="container.mounts && container.mounts[0]"
-                            :icon="reveal.includes(LazyContainersCardMounts) ? 'mdi-information-off' : 'mdi-information'"
-                            variant="text" color="primary"
-                            v-on:click.prevent="handleRevealButton(LazyContainersCardMounts)" />
-                        <v-btn v-if="container.ports && container.ports[0]"
-                            :icon="reveal.includes(LazyContainersCardPorts) ? 'mdi-information-off' : 'mdi-information'"
-                            variant="text" color="primary"
-                            v-on:click.prevent="handleRevealButton(LazyContainersCardPorts)" />
-                    </v-col>
-                </v-row>
-                <transition-group name="list" tag="div">
-                    <component @onEnter="useOnChildEnter($this)" v-motion-slide-bottom v-for="revealItem, i in reveal"
-                        :key="i" :is="revealItem"
-                        v-bind:mounts="container.mounts && container.mounts[0] ? container.mounts : []"
-                        v-bind:ports="container.ports && container.ports[0] ? container.ports : []" />
-                </transition-group>
-            </v-col>
+  <v-card class="pa-2 justify-start" density="compact" style="transition: height 0.3s ease-in-out;">
+    <v-row dense no-gutters class="align-start">
+      <v-col>
+        <containers-card-base :container="container" />
+        <v-row>
+          <v-col>
+            <v-btn :icon="reveal.includes(raw) ? 'mdi-code-braces-box' : 'mdi-code-braces'" variant="text" color="primary"
+              v-on:click.prevent="handleRevealButton(raw)" />
+            <v-btn v-if="container.mounts && container.mounts[0]"
+              :icon="reveal.includes(mounts) ? 'mdi-information' : 'mdi-information-outline'" variant="text"
+              color="primary" v-on:click.prevent="handleRevealButton(mounts)" />
+            <v-btn v-if="container.ports && container.ports[0]"
+              :icon="reveal.includes(ports) ? 'mdi-information-off' : 'mdi-information'" variant="text" color="primary"
+              v-on:click.prevent="handleRevealButton(ports)" />
+          </v-col>
         </v-row>
-    </v-card>
+        <ul ref="parent">
+          <component @onEnter="useOnChildEnter($this)" v-for="revealItem, i in reveal" :key="i" :is="revealItem"
+            v-bind:mounts="container.mounts && container.mounts[0] ? container.mounts : []"
+            v-bind:ports="container.ports && container.ports[0] ? container.ports : []"
+            v-bind:container="reveal.includes(raw) ? container : null" />
+        </ul>
+      </v-col>
+    </v-row>
+  </v-card>
 </template>
 
 <script lang="ts" setup>
-import { LazyContainersCardMounts, LazyContainersCardPorts } from '#components'
+import { LazyContainersCardMounts, LazyContainersCardPorts, LazyContainersCardRaw } from '#components'
 import type { Container } from '~/types/containers/yachtContainers';
-type DynamicComponent = typeof LazyContainersCardMounts | typeof LazyContainersCardPorts
+
+// Define Components
+const mounts = markRaw(LazyContainersCardMounts)
+const ports = markRaw(LazyContainersCardPorts)
+const raw = markRaw(LazyContainersCardRaw)
+
+const [parent] = useAutoAnimate({ easing: 'ease-in-out' })
+
+type DynamicComponent = typeof LazyContainersCardMounts | typeof LazyContainersCardPorts | typeof LazyContainersCardRaw
 
 const props = defineProps<{ container: Container }>()
 const reveal = useState(`reveal-${props.container.shortId}`, () => [] as DynamicComponent[])
 
 
 const handleRevealButton = (component: DynamicComponent) => {
-    const idx = reveal.value.indexOf(component)
-    idx > -1 ? reveal.value.splice(idx, 1) : reveal.value.push(component)
+  const idx = reveal.value.indexOf(component)
+  idx > -1 ? reveal.value.splice(idx, 1) : reveal.value.push(component)
 }
 
 </script>
 
 <style>
 .v-card--reveal {
-    bottom: 0;
-    opacity: 1 !important;
-    position: absolute;
-    width: 100%;
-}
-
-.list-enter-active,
-.list-leave-active {
-    transition: all 0.3s ease;
-}
-
-.list-enter,
-.list-leave-to {
-    opacity: 0;
-    height: 0;
+  bottom: 0;
+  opacity: 1 !important;
+  position: absolute;
+  width: 100%;
 }
 </style>
 

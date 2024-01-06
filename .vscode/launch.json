@@ -16,7 +16,9 @@
         "name": "server: nuxt",
         "program": "${workspaceFolder}/node_modules/nuxi/bin/nuxi.mjs",
         "args": [
-          "dev"
+          "--bun",
+          "dev",
+          "--port 3001"
         ],
       }
     ],
