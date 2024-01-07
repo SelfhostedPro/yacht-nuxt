@@ -1,4 +1,5 @@
 import vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: true },
@@ -12,7 +13,7 @@ export default defineNuxtConfig({
         config.plugins.push(vuetify({ autoImport: true }))
       })
     },
-    '@pinia/nuxt', "@vueuse/nuxt", '@vueuse/motion/nuxt', "@formkit/auto-animate"],
+    '@pinia/nuxt', "@vueuse/nuxt", "@formkit/auto-animate"],
   vite: {
     vue: {
       template: {
@@ -21,6 +22,9 @@ export default defineNuxtConfig({
     },
   },
   nitro: {
+    experimental: {
+      openAPI: true
+    },
     storage: {
       config: {
         driver: 'fsLite',

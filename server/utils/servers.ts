@@ -1,8 +1,10 @@
 import { Config } from "../plugins/01.startup"
 import type { ServerConfig } from "~/types/config"
 import type { ServerDict } from "~/types/servers"
-import type { EventHandlerRequest, H3Event } from 'h3'
+import { H3Error } from 'h3'
 import Docker from 'dockerode';
+import { YachtLog } from "./logger";
+import YachtError from "./errors"
 
 const getServers = async () => {
   return Config.getConfig().then(async (config) => {
@@ -10,23 +12,27 @@ const getServers = async () => {
     const servers = config.base.servers
     const returnServers = {} as ServerDict
     const serverPromises = servers.map(async (server) => {
-      if (server.options?.protocol === 'ssh' && server.key) {
-        console.log('SSH Not implemented yet')
-        // const privateKey = await this.keyManager.getPrivateKey(server.key);
-        // const newServer = await this.createDockerInstance(server, privateKey);
-        // if (newServer) {
-        //   this.servers[server.name] = newServer;
-        // }
-      } else if (server.options?.protocol === 'ssh' && !server.key) {
-        console.log('SSH Not implemented yet')
-        console.log(`SSH key not found for ${server.name} please try removing and re-adding the server`);
-      } else {
-        const newLocal = await createDockerInstance(server);
-        if (newLocal) {
+      try {
+
+        if (server.options?.protocol === 'ssh' && server.key) {
+          console.log('SSH Not implemented yet')
+          // const privateKey = await this.keyManager.getPrivateKey(server.key);
+          // const newServer = await this.createDockerInstance(server, privateKey);
+          // if (newServer) {
+          //   this.servers[server.name] = newServer;
+          // }
+        } else if (server.options?.protocol === 'ssh' && !server.key) {
+          console.log('SSH Not implemented yet')
+          console.log(`SSH key not found for ${server.name} please try removing and re-adding the server`);
+        } else {
+          const newLocal = await createDockerInstance(server);
           returnServers[server.name] = newLocal;
         }
+      } catch (e) {
+        YachtError(e)
       }
-    })
+    }
+    )
     await Promise.all(serverPromises);
     return returnServers
   })
@@ -40,7 +46,7 @@ const createDockerInstance = async (server: ServerConfig, privateKey?: string) =
     await newServer.info();
     return newServer;
   } catch (e) {
-    throw createError({ statusCode: 500, statusMessage: `Error connecting to ${server.name} (${server.options?.host && server.options.port ? server.options.host + ':' + server.options.port : server.options?.socketPath}) => ${e}` })
+    throw createError({ data: { title: 'DockerError', level: 'error', from: '/plugins/servers.ts - createDockerInstance', message: `Error connecting to ${server.name} (${server.options?.host && server.options.port ? server.options.host + ':' + server.options.port : server.options?.socketPath}) => ${e}` } })
   }
 }
 

@@ -1,7 +1,7 @@
 // import { useAuthStore } from "~/stores/auth";
 // import { useNotifyStore } from "~/stores/notifications";
 // import { createFetch, useFetch } from "@vueuse/core";
-// import { fetchEventSource } from '@microsoft/fetch-event-source'
+import { fetchEventSource, type FetchEventSourceInit } from '@microsoft/fetch-event-source'
 
 
 // export const AuthFetch = createFetch({
@@ -44,20 +44,21 @@
 //     }
 // })
 
-// export async function useEventSource(url, options) {
+// export async function useFetchEventSource(url: string, options: FetchEventSourceInit) {
 //     return fetchEventSource(url, {
 //         async onopen(response) {
 //             if (response.ok) {
 //                 return
 //             } else if (response.status === 401) {
-//                 const authStore = useAuthStore()
-//                 try {
-//                     authStore.refresh()
-//                 } catch (e) {
-//                     throw new Error(e)
-//                 }
+//                 // const authStore = useAuthStore()
+//                 // try {
+//                 //     authStore.refresh()
+//                 // } catch (e) {
+//                 //     throw new Error(e)
+//                 // }
+//                 console.log(`${response.status}: ${response.statusText}`)
 //             } else {
-//                 throw new Error(`${response.status}: ${response.statusText}`)
+//                 console.log(`${response.status}: ${response.statusText}`)
 //             }
 //         },
 //         ...options

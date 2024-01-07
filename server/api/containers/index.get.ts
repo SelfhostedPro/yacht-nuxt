@@ -3,25 +3,21 @@ import getServers from '~/server/utils/servers'
 import type { Container } from '~/types/containers/yachtContainers'
 import { normalizeContainers } from '~/server/utils/formatter'
 import type { ServerContainers } from '~/types/servers'
+import YachtError from '~/server/utils/errors'
 
 export default defineEventHandler(async () => {
-    const servers = await getServers()
-    const serverKeys = Object.keys(servers)
+    const serversReturn = {} as ServerContainers
+    const servers = Object.entries(await getServers())
 
     // Get containers from all servers in config
-    const serverPromises: Promise<Container[]>[] = serverKeys.map(
-        async (name) => {
-            const containers = await servers[name]
-                .listContainers({ all: true })
-            return normalizeContainers(containers);
+    const serverPromises = servers.map(
+        async ([server, docker]) => {
+            const containers = await docker?.listContainers({ all: true })
+            if (containers !== undefined) serversReturn[server] = await normalizeContainers(containers)
+            else serversReturn[server] = [] as Container[]
         },
     )
     // Wait for containers to resolve
-    const containerArrays = await Promise.all(serverPromises)
-
-    // Assign each container array to its server
-    return serverKeys.reduce((acc, serverName, index) => {
-        acc[serverName] = containerArrays[index];
-        return acc;
-    }, {} as ServerContainers);
+    await Promise.all(serverPromises)
+    return serversReturn
 })
