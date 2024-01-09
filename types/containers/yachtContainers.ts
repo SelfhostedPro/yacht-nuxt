@@ -23,7 +23,7 @@ const containerGeneralConfigSchema = z.object({
 export type ContainerGeneralConfig = z.infer<typeof containerGeneralConfigSchema>
 
 const containerMountSchema = z.object({
-    type: z.string(),
+    type: z.string().optional(),
     name: z.string().optional(),
     source: z.string(),
     destination: z.string(),

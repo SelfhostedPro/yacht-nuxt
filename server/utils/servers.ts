@@ -1,12 +1,14 @@
 import { Config } from "../plugins/01.startup"
 import type { ServerConfig } from "~/types/config"
 import type { ServerDict } from "~/types/servers"
-import { H3Error } from 'h3'
 import Docker from 'dockerode';
-import { YachtLog } from "./logger";
-import YachtError from "./errors"
 
-const getServers = async () => {
+export const getServer = async (name: string) => {
+  const servers = await getServers()
+  return servers[name]
+}
+
+export const getServers = async () => {
   return Config.getConfig().then(async (config) => {
     // console.log('config', config)
     const servers = config.base.servers
@@ -51,4 +53,3 @@ const createDockerInstance = async (server: ServerConfig, privateKey?: string) =
 }
 
 // const ServerController = new Servers()
-export default getServers

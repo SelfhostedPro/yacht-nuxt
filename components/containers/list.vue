@@ -13,7 +13,7 @@
         </v-col>
         <v-spacer />
         <v-col cols="1" offset="1">
-          <v-btn class="float-right" icon @click="containersStore.fetchContainers()" :loading="loading">
+          <v-btn class="float-right" icon @click="containersStore.fetchContainers()" :loading="loading.includes('containers')">
             <v-icon>mdi-refresh</v-icon>
           </v-btn>
         </v-col>
@@ -25,7 +25,7 @@
           <template v-slot:default="{ items }">
             <v-row>
               <v-col v-for="container in items" :key="container.raw.id" cols="12" sm="6" md="4" lg="4" xl="3">
-                <containers-card :container="container.raw"></containers-card>
+                <containers-card :container="container.raw" :server="server"></containers-card>
               </v-col>
             </v-row>
           </template>

@@ -35,7 +35,7 @@ const fixedContainerInspectInfoSchema = containerInspectInfoSchema.extend({
         z.object({
             Name: z.union([z.string(), z.undefined()]).optional(),
             Type: z
-                .union([z.literal("volume"), z.literal("bind"), z.literal("tmpfs")]),
+                .union([z.literal("volume"), z.literal("bind"), z.literal("tmpfs")]).optional(),
             Source: z.string(),
             Destination: z.string(),
             Driver: z.union([z.string(), z.undefined()]).optional(),

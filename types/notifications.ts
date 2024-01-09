@@ -5,6 +5,7 @@ export interface Notification {
     from?: string,
     timeout?: number
     dedupe?: boolean
+    vertical?: boolean
 }
 
 export interface NotificationEvent extends MessageEvent {

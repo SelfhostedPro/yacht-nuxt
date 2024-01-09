@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "build": "nuxt build",
-    "dev": "nuxt dev",
+    "dev": "nuxt dev --https",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare"
@@ -21,16 +21,12 @@
     "bun-types": "^1.0.21",
     "nuxt": "^3.9.0",
     "typescript": "^5.3.3",
-    "vite-plugin-mkcert": "^1.17.1",
-    "vite-plugin-vuetify": "^2.0.1",
     "vue": "^3.4.3",
     "vue-router": "^4.2.5",
     "vue-tsc": "^1.8.27",
-    "vuetify": "^3.4.9"
+    "vuetify-nuxt-module": "latest"
   },
   "dependencies": {
-    "@mdi/font": "^7.4.47",
-    "@prisma/client": "^5.7.1",
     "date-fns": "^3.0.6",
     "dockerode": "^4.0.2",
     "drizzle-orm": "^0.29.3",
@@ -38,7 +34,6 @@
     "install": "^0.13.0",
     "js-yaml": "^4.1.0",
     "npm": "^10.2.5",
-    "prisma": "^5.7.1",
     "vuetify-sonner": "^0.3.12",
     "zod": "^3.22.4"
   }

@@ -304,7 +304,7 @@ export const containerInspectInfoSchema = z.object({
             .union([z.string(), z.array(z.string()), z.undefined()])
             .optional(),
         OnBuild: z.any().optional(),
-        Labels: z.record(z.string())
+        Labels: z.record(z.string(), z.string())
     }),
     NetworkSettings: z.object({
         Bridge: z.string(),

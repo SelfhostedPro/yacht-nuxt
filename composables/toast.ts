@@ -4,7 +4,7 @@ import { type Notification } from '~/types/notifications'
 const notifications = ref([] as Notification[])
 const currentNotifications = ref([] as Notification[])
 
-export const useToast = ({ title, message, level, from, timeout, dedupe }: Notification) => {
+export const useToast = ({ title, message, level, from, timeout, dedupe, vertical }: Notification) => {
   const previous = notifications.value.find(n => n.message === message)
   const existing = currentNotifications.value.findIndex(n => n.message === message)
 
@@ -19,14 +19,23 @@ export const useToast = ({ title, message, level, from, timeout, dedupe }: Notif
   const toastOptions = {
     description: title ? message : undefined,
     duration: timeout || Number.POSITIVE_INFINITY,
+    // vertical: vertical || false,
     cardProps: {
       color: level === 'debug' ? 'info' : level,
-      maxWidth: '70vw'
+      maxWidth: '70vw',
     },
     action: {
       label: 'close',
       onClick: () => {
         toast.dismiss()
+        currentNotifications.value.splice(existing, 1)
+        notifications.value.push({ title, message, level, from, timeout })
+      },
+      onDismiss: () => {
+        currentNotifications.value.splice(existing, 1)
+        notifications.value.push({ title, message, level, from, timeout })
+      },
+      onAutoClose: () => {
         currentNotifications.value.splice(existing, 1)
         notifications.value.push({ title, message, level, from, timeout })
       }

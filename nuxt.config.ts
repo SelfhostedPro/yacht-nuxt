@@ -1,5 +1,4 @@
-import vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
-import mkcert from 'vite-plugin-mkcert'
+import basicSsl from '@vitejs/plugin-basic-ssl'
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: true },
@@ -10,25 +9,17 @@ export default defineNuxtConfig({
     transpile: ['vuetify', 'vue-sonner'],
   },
   modules: [
-    (_options, nuxt) => {
-      nuxt.hooks.hook('vite:extendConfig', (config) => {
-        // @ts-expect-error
-        config.plugins.push(vuetify({ autoImport: true }))
-      })
-    },
-    '@pinia/nuxt', "@vueuse/nuxt", "@formkit/auto-animate"],
+    '@pinia/nuxt', "@vueuse/nuxt", "@formkit/auto-animate", "vuetify-nuxt-module"],
+  vuetify: {
+    vuetifyOptions: "./vuetify.config.ts",
+  },
   vite: {
-    https: true,
-    plugins: [mkcert({ autoUpgrade: true })],
-    vue: {
-      template: {
-        transformAssetUrls,
-      },
-    },
+    plugins: [basicSsl()]
   },
   nitro: {
     experimental: {
-      openAPI: true
+      openAPI: true,
+      asyncContext: true
     },
     storage: {
       config: {
