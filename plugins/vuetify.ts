@@ -22,6 +22,11 @@ export default defineNuxtPlugin((nuxtApp) => {
             defaultTheme: 'yachtDarkTheme',
             themes: {
                 yachtDarkTheme,
+            },
+            variations: {
+                colors: ['primary', 'secondary', 'tabs', 'foreground', 'surface'],
+                lighten: 5,
+                darken: 5,
             }
         },
     })

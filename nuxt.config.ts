@@ -1,10 +1,13 @@
 import vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
-
+import mkcert from 'vite-plugin-mkcert'
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: true },
+  experimental: {
+    renderJsonPayloads: false
+  },
   build: {
-    transpile: ['vuetify'],
+    transpile: ['vuetify', 'vue-sonner'],
   },
   modules: [
     (_options, nuxt) => {
@@ -15,6 +18,8 @@ export default defineNuxtConfig({
     },
     '@pinia/nuxt', "@vueuse/nuxt", "@formkit/auto-animate"],
   vite: {
+    https: true,
+    plugins: [mkcert({ autoUpgrade: true })],
     vue: {
       template: {
         transformAssetUrls,

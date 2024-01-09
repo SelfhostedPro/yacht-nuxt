@@ -12,24 +12,24 @@ const getServers = async () => {
     const servers = config.base.servers
     const returnServers = {} as ServerDict
     const serverPromises = servers.map(async (server) => {
-      try {
-
-        if (server.options?.protocol === 'ssh' && server.key) {
-          console.log('SSH Not implemented yet')
-          // const privateKey = await this.keyManager.getPrivateKey(server.key);
-          // const newServer = await this.createDockerInstance(server, privateKey);
-          // if (newServer) {
-          //   this.servers[server.name] = newServer;
-          // }
-        } else if (server.options?.protocol === 'ssh' && !server.key) {
-          console.log('SSH Not implemented yet')
-          console.log(`SSH key not found for ${server.name} please try removing and re-adding the server`);
-        } else {
+      if (server.options?.protocol === 'ssh' && server.key) {
+        console.log('SSH Not implemented yet')
+        // const privateKey = await this.keyManager.getPrivateKey(server.key);
+        // const newServer = await this.createDockerInstance(server, privateKey);
+        // if (newServer) {
+        //   this.servers[server.name] = newServer;
+        // }
+      } else if (server.options?.protocol === 'ssh' && !server.key) {
+        console.log('SSH Not implemented yet')
+        console.log(`SSH key not found for ${server.name} please try removing and re-adding the server`);
+      } else {
+        try {
           const newLocal = await createDockerInstance(server);
           returnServers[server.name] = newLocal;
+        } catch (e) {
+          YachtError(e)
+          returnServers[server.name] = null;
         }
-      } catch (e) {
-        YachtError(e)
       }
     }
     )

@@ -5,7 +5,7 @@
         @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
     </template>
     <v-app-bar-title>
-      <v-img max-height="30" class="d-flex align-center mx-auto text-logo" :src="logo" style="filter: brightness(5)" />
+      <v-img max-height="30" class="d-flex align-center mx-auto text-logo" src="~/assets/yacht-text.svg" style="filter: brightness(5)" />
     </v-app-bar-title>
   </v-app-bar>
   <v-navigation-drawer v-if="mdAndDown" app v-model="drawer" location="right" temporary>
@@ -13,7 +13,6 @@
       <div v-for="(link, i) in links" :key="i">
         <v-list-item v-if="!link.subLinks" :to="link.to" :title="link.text" :prepend-icon="link.icon" exact
           class="mt-1" />
-
         <v-list-group v-else :key="link.text" :prepend-icon="link.icon" :value="false">
           <template v-slot:activator="{ props }">
             <v-list-item v-bind="props" :title="link.text" :prepend-icon="link.icon" />
@@ -28,13 +27,11 @@
 </template>
 
 <script lang="ts" setup>
-import { textLogo } from "~/composables/logo"
 import { useDisplay } from 'vuetify'
 
 defineProps(['links'])
 const drawer = ref(false)
 const { mdAndDown, name } = useDisplay()
-const logo = textLogo()
 </script>
 
 <style>

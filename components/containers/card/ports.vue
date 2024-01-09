@@ -1,11 +1,11 @@
 <template>
     <v-card-item class="d-flex flex-column items-center">
         <v-card-subtitle class="mx-auto text-center">PORTS</v-card-subtitle>
-        <v-item-group show-arrows>
+        <v-item-group justify="start" show-arrows>
             <v-row no-gutters>
                 <v-item v-for="port in disableIpv6(ports)" :key="port.containerPort">
-                    <v-col>
-                        <v-tooltip :text="port.hostPort ? `Host Port: ${port.hostPort}` : 'Port not forwarded'">
+                    <v-col cols="2">
+                        <v-tooltip location="bottom" :text="port.hostPort ? `host port: ${port.hostPort}` : 'port not forwarded'">
                             <template v-slot:activator="{ props }">
                                 <v-chip v-bind="props" label size="small" class="ma-1"
                                     :color="port.hostPort ? 'primary' : 'error'">
@@ -21,8 +21,8 @@
 </template>
 
 <script lang="ts" setup>
-import type { ContainerPort } from '~/types/containers/yachtContainers';
-const props = defineProps<{ ports: ContainerPort[] }>()
+import type { ContainerPort, Container } from '~/types/containers/yachtContainers';
+const props = defineProps<{ ports: ContainerPort[], labels: Container['labels'] }>()
 const disableIpv6 = (ports: ContainerPort[]) => {
     return ports.filter((port) => port.hostIP !== '::')
 }

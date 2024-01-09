@@ -3,22 +3,23 @@
     <v-row dense no-gutters class="align-start">
       <v-col>
         <containers-card-base :container="container" />
-        <v-row>
+        <v-row class="align-center justify-start">
           <v-col>
-            <v-btn :icon="reveal.includes(raw) ? 'mdi-code-braces-box' : 'mdi-code-braces'" variant="text" color="primary"
-              v-on:click.prevent="handleRevealButton(raw)" />
-            <v-btn v-if="container.mounts && container.mounts[0]"
-              :icon="reveal.includes(mounts) ? 'mdi-information' : 'mdi-information-outline'" variant="text"
-              color="primary" v-on:click.prevent="handleRevealButton(mounts)" />
-            <v-btn v-if="container.ports && container.ports[0]"
-              :icon="reveal.includes(ports) ? 'mdi-information-off' : 'mdi-information'" variant="text" color="primary"
+            <v-btn rounded="0" :active="reveal.includes(mounts)" v-if="container.mounts && container.mounts[0]"
+              :icon="reveal.includes(mounts) ? 'mdi-file-tree' : 'mdi-file-tree-outline'" variant="text" color="primary"
+              v-on:click.prevent="handleRevealButton(mounts)" />
+            <v-btn rounded="0" :active="reveal.includes(ports)" v-if="container.ports && container.ports[0]"
+              :icon="reveal.includes(ports) ? 'mdi-lan-pending' : 'mdi-lan-connect'" variant="text" color="primary"
               v-on:click.prevent="handleRevealButton(ports)" />
+            <v-btn rounded="0" :active="reveal.includes(raw)"
+              :icon="reveal.includes(raw) ? 'mdi-code-braces-box' : 'mdi-code-braces'" variant="text" color="primary"
+              v-on:click.prevent="handleRevealButton(raw)" />
           </v-col>
         </v-row>
         <ul ref="parent">
-          <component @onEnter="useOnChildEnter($this)" v-for="revealItem, i in reveal" :key="i" :is="revealItem"
+          <component v-for="revealItem, i in reveal" :key="i" :is="revealItem"
             v-bind:mounts="container.mounts && container.mounts[0] ? container.mounts : []"
-            v-bind:ports="container.ports && container.ports[0] ? container.ports : []"
+            v-bind:ports="container.ports && container.ports[0] ? container.ports : []" v-bind:labels="container.labels"
             v-bind:container="reveal.includes(raw) ? container : null" />
         </ul>
       </v-col>

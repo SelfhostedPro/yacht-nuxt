@@ -1,5 +1,4 @@
 import { useLogger } from '@nuxt/kit'
-import { H3Error } from 'h3'
 
 const logger = useLogger()
 

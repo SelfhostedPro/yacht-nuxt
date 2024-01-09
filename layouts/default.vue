@@ -2,16 +2,18 @@
   <v-app>
     <nav-sidebar :links="links" />
     <nav-app-bar :links="links" />
-    <notifications />
     <v-main>
       <v-container fluid>
         <slot />
       </v-container>
     </v-main>
+    <lazy-notifications />
   </v-app>
 </template>
   
 <script lang="ts" setup>
+// const notificationsStore = useNotificationsStore()
+// const { connected } = storeToRefs(notificationsStore)
 const links = [
   {
     to: "/",

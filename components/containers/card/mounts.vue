@@ -5,9 +5,13 @@
             <v-row no-gutters>
                 <v-item v-for="mount in mounts" :key="mount.destination">
                     <v-col>
-                        <v-chip label size="small" class="ma-1" color="warning"> {{
+                        <v-tooltip location="bottom" :text="mount.source ? `host: ${mount.source}` : 'not mounted'">
+                            <template v-slot:activator="{ props }">
+                        <v-chip v-bind="props" label size="small" class="ma-1" :color="mount.source ? 'primary' : 'error'"> {{
                             mount.destination
                         }}</v-chip>
+                        </template>
+                        </v-tooltip>
                     </v-col>
                 </v-item>
             </v-row>
