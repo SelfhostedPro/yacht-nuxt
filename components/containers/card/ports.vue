@@ -1,5 +1,5 @@
 <template>
-    <v-card-item class="d-flex flex-column items-center">
+    <!-- <v-card-item class="d-flex flex-column items-center">
         <v-card-subtitle class="mx-auto text-center">PORTS</v-card-subtitle>
         <v-item-group justify="start" show-arrows>
             <v-row no-gutters>
@@ -28,7 +28,7 @@
                 </v-item>
             </v-row>
         </v-item-group>
-    </v-card-item>
+    </v-card-item> -->
 </template>
 
 <script lang="ts" setup>

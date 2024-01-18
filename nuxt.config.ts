@@ -5,13 +5,30 @@ export default defineNuxtConfig({
   experimental: {
     renderJsonPayloads: false
   },
-  build: {
-    transpile: ['vuetify', 'vue-sonner'],
-  },
   modules: [
-    '@pinia/nuxt', "@vueuse/nuxt", "@formkit/auto-animate", "vuetify-nuxt-module"],
-  vuetify: {
-    vuetifyOptions: "./vuetify.config.ts",
+    '@pinia/nuxt',
+    "@vueuse/nuxt",
+    "@formkit/auto-animate",
+    '@nuxtjs/tailwindcss',
+    'shadcn-nuxt',
+    'nuxt-svgo',
+    '@nuxtjs/color-mode',
+    "nuxt-icon",
+    "@nuxtjs/device"
+  ],
+  colorMode: {
+    classSuffix: ''
+  },
+  shadcn: {
+    /**
+     * Prefix for all the imported component
+     */
+    prefix: '',
+    /**
+     * Directory that the component lives in.
+     * @default "./components/ui"
+     */
+    componentDir: './components/ui'
   },
   vite: {
     plugins: [basicSsl()]

@@ -1,5 +1,5 @@
 <template>
-    <v-card-title v-if="setup" class="text-center"> first time setup </v-card-title>
+    <!-- <v-card-title v-if="setup" class="text-center"> first time setup </v-card-title>
     <v-card-text>
         <v-form fast-fail>
             <v-text-field @keyup.enter="submit" v-model="username" label="username" append-inner-icon="mdi-account-circle" />
@@ -13,7 +13,7 @@
         <v-btn v-else v-on:click="submit" block color="primary" elevation="4">
             submit
         </v-btn>
-    </v-card-text>
+    </v-card-text> -->
 </template>
 
 <script setup lang="ts">

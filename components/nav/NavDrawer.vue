@@ -1,14 +1,14 @@
 <template>
-    <v-navigation-drawer app v-model="drawer" location="bottom" temporary>
+    <!-- <v-navigation-drawer app v-model="drawer" location="bottom" temporary>
         <v-list :items="links"></v-list>
-    </v-navigation-drawer>
+    </v-navigation-drawer> -->
 </template>
 
 <script lang="ts" setup>
-defineProps(['links'])
-const drawer = ref(false)
+// defineProps(['links'])
+// const drawer = ref(false)
 
-defineExpose({
-    drawer
-})
+// defineExpose({
+//     drawer
+// })
 </script>

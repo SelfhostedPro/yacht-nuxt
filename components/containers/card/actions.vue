@@ -1,5 +1,5 @@
 <template>
-  <v-card-item>
+  <!-- <v-card-item>
     <v-row>
       <v-col cols="12">
         <v-btn-group v-auto-animate divided class="d-flex justify-center">
@@ -38,13 +38,13 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-  </v-card-item>
+  </v-card-item> -->
 </template>
 
 <script lang="ts" setup>
 import type { Container } from '~/types/containers/yachtContainers';
 const containers = useContainersStore()
-const { mdAndDown } = useDisplay()
+// const { mdAndDown } = useDisplay()
 const props = defineProps<{ container: Container, server: string }>()
 const emit = defineEmits(["startLoading", "stopLoading"])
 const removeDialog: Ref<boolean> = ref(false)

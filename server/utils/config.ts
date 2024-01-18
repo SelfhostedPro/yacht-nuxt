@@ -1,7 +1,6 @@
 import { YachtConfigSchema, type YachtConfig } from '~/types/config';
 import yaml from 'js-yaml'
-import { useLogger } from '@nuxt/kit'
-
+import consola from 'consola'
 const defaultConfig: YachtConfig = {
   base: {
     name: 'Yacht',
@@ -25,7 +24,7 @@ const defaultConfig: YachtConfig = {
 let _config: YachtConfig
 
 // setup logger
-const logger = useLogger('config')
+const logger = consola
 
 // setup storage
 const configDir = useStorage('config')

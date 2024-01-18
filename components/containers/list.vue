@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid>
+  <!-- <v-container fluid>
     <v-tabs bg-color="surface" color="primry" align-tabs="center" v-model="tab">
       <v-tab v-for="server, i in Object.keys(servers)" :value="i" :key="i">
         {{ server }}
@@ -53,7 +53,7 @@
         </div>
       </v-window-item>
     </v-window>
-  </v-container>
+  </v-container> -->
 </template>
 
 <script lang="ts" setup>

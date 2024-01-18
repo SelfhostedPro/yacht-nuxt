@@ -1,12 +1,12 @@
 <template>
-  <v-card class="pa-2 justify-start" density="compact" style="transition: height 0.3s ease-in-out;"
+  <!-- <v-card class="pa-2 justify-start" density="compact" style="transition: height 0.3s ease-in-out;"
     :loading="loading ? 'primary' : false">
     <v-row dense no-gutters class="align-start">
       <v-col>
         <containers-card-base :container="container" />
         <v-row class="align-center justify-start">
           <v-col>
-            <!-- Expansion Buttons -->
+            Expansion Buttons
             <v-btn rounded="0" :active="reveal.includes(actions)"
               :icon="reveal.includes(actions) ? 'mdi-chevron-up' : 'mdi-chevron-down'" variant="text" color="primary"
               v-on:click.prevent="handleRevealButton(actions)" />
@@ -21,9 +21,9 @@
               v-on:click.prevent="handleRevealButton(raw)" />
           </v-col>
         </v-row>
-        <!-- Expansion Ref -->
+        Expansion Ref
         <ul v-auto-animate>
-          <!-- Dynamic Components -->
+          Dynamic Components
           <component v-for="revealItem, i in reveal" :key="i" :is="revealItem" @start-loading="loading = true"
             @stop-loading="loading = false"
             v-bind:mounts="container.mounts && container.mounts[0] ? container.mounts : []"
@@ -33,7 +33,7 @@
         </ul>
       </v-col>
     </v-row>
-  </v-card>
+  </v-card> -->
 </template>
 
 <script lang="ts" setup>
@@ -69,71 +69,3 @@ const handleRevealButton = (component: DynamicComponent) => {
   width: 100%;
 }
 </style>
-
-<!-- <template>
-    <v-card class="pa-2 justify-start" density="compact">
-      <v-row dense no-gutters class="align-start">
-        <v-col>
-          <containers-card-base :container="container" />
-          <v-row>
-            
-          </v-row>
-          <transition
-            name="expand"
-            @before-enter="beforeEnter"
-            @enter="enter"
-            @before-leave="beforeLeave"
-            @leave="leave"
-          >
-            <div v-if="reveal.length > 0">
-              <component v-for="(revealItem, i) in reveal" :key="i"
-                         :is="revealItem"
-                         v-bind:mounts="container.mounts && container.mounts[0] ? container.mounts : []"
-                         v-bind:ports="container.ports && container.ports[0] ? container.ports : []" />
-            </div>
-          </transition>
-        </v-col>
-      </v-row>
-    </v-card>
-  </template> 
-  
-  <script lang="ts" setup>
-  import { ref, onMounted } from 'vue';
-  import { ContainersCardMounts, ContainersCardPorts } from '#components';
-  import type { Container } from '~/types/containers/yachtContainers';
-  
-  const props = defineProps<{ container: Container }>();
-  const reveal = ref([] as Array<typeof ContainersCardMounts | typeof ContainersCardPorts>);
-  
-  function beforeEnter(el) {
-    el.style.height = '0';
-  }
-  
-  function enter(el, done) {
-    el.style.height = `${el.scrollHeight}px`;
-    el.style.overflow = 'hidden';
-    done();
-  }
-  
-  function beforeLeave(el) {
-    el.style.height = `${el.scrollHeight}px`;
-    el.style.overflow = 'hidden';
-  }
-  
-  function leave(el, done) {
-    el.style.height = '0';
-    done();
-  }
-  
-  // Other methods...
-  </script>
-  
-  <style>
-  .expand-enter-active, .expand-leave-active {
-    transition: height 0.3s ease;
-  }
-  .expand-enter-from, .expand-leave-to {
-    height: 0;
-  }
-  </style>
-  -->

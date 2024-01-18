@@ -1,5 +1,5 @@
 <template>
-  <v-card-item class="d-flex flex-column items-center overflow-x-auto text-no-wrap px-5">
+  <!-- <v-card-item class="d-flex flex-column items-center overflow-x-auto text-no-wrap px-5">
     <v-list v-model="open">
       <v-list-item
         v-for="[property, value], i in Object.entries(container).filter(([k, v]) => (Array.isArray(v) && v.length > 0) || (typeof v === 'string') || (!Array.isArray(v) && Object.entries(v).length > 0))">
@@ -32,10 +32,10 @@
         <v-list-item-subtitle v-if="(typeof value === 'string')">{{ value }}</v-list-item-subtitle>
       </v-list-item>
     </v-list>
-    <!-- <pre>
+    <pre>
       {{ formatContainer(container) }}
-    </pre> -->
-  </v-card-item>
+    </pre>
+  </v-card-item> -->
 </template>
 
 <script lang="ts" setup>

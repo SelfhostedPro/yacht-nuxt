@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid class="fill-height">
+  <!-- <v-container fluid class="fill-height">
     <v-row>
       <v-col>
         <v-card class="mx-auto" max-width="400px" color="foreground">
@@ -9,7 +9,7 @@
         </v-card>
       </v-col>
     </v-row>
-  </v-container>
+  </v-container> -->
 </template>
 
 <script setup lang="ts">

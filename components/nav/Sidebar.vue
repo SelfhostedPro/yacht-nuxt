@@ -1,5 +1,15 @@
 <template>
-    <v-navigation-drawer v-if="!mdAndDown" height="100vh" :permanent="locked" elevation="10" floating
+    <div :class="`${locked ? 'w-72' : 'w-32 hover:w-72'} min-h-full transition-all`">
+        <div>
+            <!-- <NuxtImg src="~/assets/icons/yacht/mini.svg" class="max-h-72" /> -->
+        </div>
+        <Button variant="outline" size="icon" @click="locked = !locked">
+            <Icon :name="locked ? 'material-symbols:lock' : 'material-symbols:lock-open'" />
+        </Button>
+        Sidebar
+        {{ links }}
+    </div>
+    <!-- <v-navigation-drawer v-if="!mdAndDown" height="100vh" :permanent="locked" elevation="10" floating
         :expand-on-hover="true" :rail="!locked">
         <v-img max-height="100" class="mx-2 mt-2" src="~/assets/yacht-mini.svg" style="filter: brightness(5)" />
         <v-btn class="my-2 mx-2" :icon="locked ? 'mdi-lock' : 'mdi-lock-open'" density="comfortable"
@@ -29,12 +39,17 @@
                     href="https://github.com/SelfhostedPro/Yacht" />
             </div>
         </template>
-    </v-navigation-drawer>
+    </v-navigation-drawer> -->
 </template>
 
 <script setup lang="ts">
-import { useDisplay } from 'vuetify'
-const { mdAndDown } = useDisplay()
-defineProps(['links'])
+import type { Link } from '~/layouts/default.vue';
+
+// import { useDisplay } from 'vuetify'
+// const { mdAndDown } = useDisplay()
+interface Props {
+    links: Link[],
+}
+defineProps<Props>()
 const locked = ref(false)
 </script>
