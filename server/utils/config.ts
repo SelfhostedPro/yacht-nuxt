@@ -1,7 +1,6 @@
 import { YachtConfigSchema, type YachtConfig } from '~/types/config';
 import yaml from 'js-yaml'
 import { useLogger } from '@nuxt/kit'
-import type { Driver } from 'unstorage';
 
 const defaultConfig: YachtConfig = {
   base: {
@@ -23,43 +22,51 @@ const defaultConfig: YachtConfig = {
   },
 };
 
-class ConfigController {
-  logger
-  driver: Driver
-  base: string
-  default = defaultConfig
+let _config: YachtConfig
 
-  constructor() {
-    this.logger = useLogger('config')
-    this.base = useStorage().getMount('config').driver.options['base']
-    this.driver = useStorage().getMount('config').driver
-  }
-  createConfig = () => {
-    this.driver.setItem && this.driver.setItem('config.yml', yaml.dump(defaultConfig), {})
-    this.logger.success(`New config created at: ${this.base}/config.yml`)
-    return this.driver.getItem('config.yml') as YachtConfig
-  }
-  backupConfig = async (oldConfig: YachtConfig) => {
-    this.driver.setItem && await this.driver.setItem('config.yml.bak', yaml.dump(oldConfig), {})
-  }
-  validateConfig = async (config: YachtConfig) => {
-    return (await YachtConfigSchema.safeParseAsync(config)).success
-  }
-  getConfig = async (): Promise<YachtConfig> => {
-    const configFile = await this.driver.getItem('config.yml')
-    const config = yaml.load(configFile?.toString() || "") as YachtConfig
-    const isValid = await this.validateConfig(config)
-    if (isValid && config) {
-      return config
-    } else if (config) {
-      this.logger.warn(`Config at ${this.base}/config.yml is invalid! Backing up and replacing with default...`)
-      await this.backupConfig(config)
-      return this.createConfig()
-    } else {
-      this.logger.warn(`Config not detected at ${this.base}/config.yml! Generating default config`)
-      return this.createConfig()
-    }
+// setup logger
+const logger = useLogger('config')
+
+// setup storage
+const configDir = useStorage('config')
+
+export const useConfig = async () => {
+  if (!_config) {
+    _config = await getConfig()
+  } else {
+    return _config
   }
 }
 
-export default ConfigController
+export const getConfig = async (): Promise<YachtConfig> => {
+  const configFile = await configDir.getItem('config.yml')
+  if (configFile) {
+    const config = yaml.load(configFile?.toString() || "") as YachtConfig
+    const isValid = await validateConfig(config)
+    if (isValid) {
+      return config
+    } else {
+      logger.warn(`Config at ${useStorage().getMount('config').base}/config.yml is invalid! Backing up and replacing with default...`)
+      await backupConfig(config)
+      return await createConfig()
+    }
+  } else {
+    logger.warn(`Config at ${useStorage().getMount('config').base}/config.yml not found! Creating new config...`)
+    return await createConfig()
+  }
+}
+
+const backupConfig = async (oldConfig: YachtConfig) => {
+  await configDir.setItem('config.yml.bak', yaml.dump(oldConfig), {})
+}
+
+const validateConfig = async (config: YachtConfig) => {
+  return (await YachtConfigSchema.safeParseAsync(config)).success
+}
+
+const createConfig = async () => {
+  await configDir.setItem('config.yml', yaml.dump(defaultConfig), {})
+  _config = defaultConfig
+  logger.success(`New config created at: ${useStorage().getMount('config').base}/config.yml`)
+  return defaultConfig
+}

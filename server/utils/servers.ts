@@ -1,7 +1,15 @@
-import { Config } from "../plugins/01.startup"
 import type { ServerConfig } from "~/types/config"
 import type { ServerDict } from "~/types/servers"
 import Docker from 'dockerode';
+
+let _servers: ServerDict
+
+export const useServers = async () => {
+  if (!_servers) {
+    _servers = await getServers()
+  }
+  return _servers
+}
 
 export const getServer = async (name: string) => {
   const servers = await getServers()
@@ -9,8 +17,7 @@ export const getServer = async (name: string) => {
 }
 
 export const getServers = async () => {
-  return Config.getConfig().then(async (config) => {
-    // console.log('config', config)
+  return getConfig().then(async (config) => {
     const servers = config.base.servers
     const returnServers = {} as ServerDict
     const serverPromises = servers.map(async (server) => {

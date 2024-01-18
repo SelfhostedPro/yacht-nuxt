@@ -1,9 +1,10 @@
 import { type Container } from "~/types/containers/yachtContainers"
 import { type ServerContainers } from "~/types/servers"
 
+
 export const getContainers = async () => {
     const serversReturn = {} as ServerContainers
-    const servers = Object.entries(await getServers())
+    const servers = Object.entries(await useServers())
 
     // Get containers from all servers in config
     const serverPromises = servers.map(
@@ -26,7 +27,7 @@ export const getContainerInfo = async (server: string, id: string) => {
         } catch (e) {
             YachtError(e)
         }
-    } else createError(`Server ${server} not found!`)
+    } else throw createError(`Server ${server} not found!`)
 }
 
 export const getContainerAction = async (server: string, id: string, action: string) => {
@@ -48,8 +49,7 @@ export const getContainerAction = async (server: string, id: string, action: str
             try {
                 await new Promise((res, rej) => actions[action](res, rej))
                 const _container = await normalizeContainerInspectInfo(await container.inspect())
-                YachtLog({ title: 'ContainerAction', level: 'info', from: '/utils/containers.ts - getContainerAction', message: `${action} performed on ${_container.info.title || _container.name}: ${_container.shortId}`, timeout: 2000 })
-                console.log(`${action} performed on ${_container.shortId}`)
+                YachtLog({ title: 'ContainerAction', level: 'info', message: `${action} performed on ${_container.info.title || _container.name}: ${_container.shortId}`, timeout: 2000 })
                 return await getContainers()
             } catch (e) {
                 YachtError(e)
@@ -58,7 +58,7 @@ export const getContainerAction = async (server: string, id: string, action: str
 
         } else {
             YachtLog({ title: 'ContainerActionError', level: 'error', from: '/utils/containers.ts - getContainerAction', message: `Action ${action} not valid!` })
-            return `Action ${action} not valid!`
+            throw createError(`Action ${action} not valid!`)
         }
     }
 }

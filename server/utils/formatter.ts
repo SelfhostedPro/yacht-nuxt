@@ -1,5 +1,4 @@
 import type { Container, ContainerMount, ContainerPort } from "~/types/containers/yachtContainers";
-import { fixedContainerInfoSchema, fixedContainerInspectInfoSchema } from "~/types/containers/fixedDockerode";
 import type { FixedContainerInfo, FixedContainerInspectInfo } from "~/types/containers/fixedDockerode";
 import type { Port, ContainerInspectInfo, ContainerInfo } from "~/types/containers/dockerode"
 import { format, parseISO } from 'date-fns';
@@ -124,14 +123,14 @@ const formatInspectPorts = (data: ContainerInspectInfo): ContainerPort[] => {
     return Array.from(portList);
 }
 
-const normalizeContainers = async (
+export const normalizeContainers = async (
     data: ContainerInfo[],
 ): Promise<Container[]> => {
     const promises = data.map(normalizeContainerInfo, this);
     return Promise.all(promises);
 }
 
-const normalizeContainerInfo = async (data: FixedContainerInfo): Promise<Container> => {
+export const normalizeContainerInfo = async (data: FixedContainerInfo): Promise<Container> => {
     return {
         name: data.Names[0].slice(1),
         id: data.Id,
@@ -167,7 +166,7 @@ const normalizeContainerInfo = async (data: FixedContainerInfo): Promise<Contain
 /**
  * Normalize container data from FixedContainerInspectInfo type.
  */
-const normalizeContainerInspectInfo = async (data: FixedContainerInspectInfo): Promise<Container> => {
+export const normalizeContainerInspectInfo = async (data: FixedContainerInspectInfo): Promise<Container> => {
     return {
         name: data.Name.slice(1),
         id: data.Id,
@@ -220,5 +219,3 @@ const normalizeContainerInspectInfo = async (data: FixedContainerInspectInfo): P
         env: data.Config.Env,
     } as Container;
 }
-
-export { normalizeContainers, normalizeContainerInfo, normalizeContainerInspectInfo }

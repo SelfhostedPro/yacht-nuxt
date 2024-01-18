@@ -16,6 +16,7 @@
     "@types/dockerode": "^3.3.23",
     "@types/eventsource": "^1.1.15",
     "@types/js-yaml": "^4.0.9",
+    "@vitejs/plugin-basic-ssl": "^1.1.0",
     "@vueuse/nuxt": "^10.7.1",
     "add": "^2.0.6",
     "bun-types": "^1.0.21",
@@ -27,6 +28,7 @@
     "vuetify-nuxt-module": "latest"
   },
   "dependencies": {
+    "@microsoft/fetch-event-source": "^2.0.1",
     "date-fns": "^3.0.6",
     "dockerode": "^4.0.2",
     "drizzle-orm": "^0.29.3",
