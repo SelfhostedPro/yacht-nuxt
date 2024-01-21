@@ -1,8 +1,10 @@
 <template>
   <card>
-    <card-title>
-      HI
-    </card-title>
+    <card-header>
+      <card-title>
+        HI
+      </card-title>
+    </card-header>
   </card>
 </template>
 

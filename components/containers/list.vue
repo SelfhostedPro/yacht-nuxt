@@ -1,4 +1,33 @@
 <template>
+  <div>
+    <Tabs :value="tab" :default-value="Object.keys(servers)[0]" v-if="Object.keys(servers).length > 0">
+      <TabsList :class="`grid w-full grid-cols-${Object.keys(servers).length}`">
+        <TabsTrigger v-for="server, i in Object.keys(servers)" :value="server" :key="i">
+          {{ server }}
+        </TabsTrigger>
+      </TabsList>
+      <TabsContent v-for="server, i in Object.keys(servers)" :value="server" :key="i">
+        <div v-for="container, i in servers[server]" :key="container.shortId">
+          <containers-card :container="container" :server="server"></containers-card>
+        </div>
+      </TabsContent>
+    </Tabs>
+    <Tabs v-else>
+      <TabsList>
+        <TabsTrigger value="none">
+          Error!
+        </TabsTrigger>
+      </TabsList>
+      <TabsContent value="none">
+        <Card>
+          <CardHeader>
+            <CardTitle> No Servers found!</CardTitle>
+            <CardDescription>Please check your config and your server settings.</CardDescription>
+          </CardHeader>
+        </Card>
+      </TabsContent>
+    </Tabs>
+  </div>
   <!-- <v-container fluid>
     <v-tabs bg-color="surface" color="primry" align-tabs="center" v-model="tab">
       <v-tab v-for="server, i in Object.keys(servers)" :value="i" :key="i">

@@ -1,4 +1,16 @@
 <template>
+  <Card>
+    <div>
+      <CardHeader>
+        <CardTitle>
+          {{ props.container.name }}
+        </CardTitle>
+        <CardDescription>
+          {{ props.container.shortId }}
+        </CardDescription>
+      </CardHeader>
+    </div>
+  </Card>
   <!-- <v-card class="pa-2 justify-start" density="compact" style="transition: height 0.3s ease-in-out;"
     :loading="loading ? 'primary' : false">
     <v-row dense no-gutters class="align-start">

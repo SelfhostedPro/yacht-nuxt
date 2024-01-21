@@ -1,7 +1,7 @@
 <template>
-  <!-- <v-container fluid>
-    <ContainersList />
-  </v-container> -->
+  <div>
+    <LazyContainersList />
+  </div>
 </template>
 
 <script lang="ts" setup>

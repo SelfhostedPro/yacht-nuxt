@@ -1,10 +1,10 @@
-const animate = require("tailwindcss-animate")
+import animate from "tailwindcss-animate"
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: ["class"],
   safelist: ["dark"],
-  
+
   theme: {
     container: {
       center: true,
@@ -13,41 +13,61 @@ module.exports = {
         "2xl": "1400px",
       },
     },
+
     extend: {
       colors: {
+        "primary": "hsl(var(--primary))",
+        "surface-tint": "hsl(var(--surface-tint))",
+        "on-primary": "hsl(var(--on-primary))",
+        "primary-container": "hsl(var(--primary-container))",
+        "on-primary-container": "hsl(var(--on-primary-container))",
+        "secondary": "hsl(var(--secondary))",
+        "on-secondary": "hsl(var(--on-secondary))",
+        "secondary-container": "hsl(var(--secondary-container))",
+        "on-secondary-container": "hsl(var(--on-secondary-container))",
+        "tertiary": "hsl(var(--tertiary))",
+        "on-tertiary": "hsl(var(--on-tertiary))",
+        "tertiary-container": "hsl(var(--tertiary-container))",
+        "on-tertiary-container": "hsl(var(--on-tertiary-container))",
+        "error": "hsl(var(--error))",
+        "on-error": "hsl(var(--on-error))",
+        "error-container": "hsl(var(--error-container))",
+        "on-error-container": "hsl(var(--on-error-container))",
+        "background": "hsl(var(--background))",
+        "on-background": "hsl(var(--on-background))",
+        "surface": "hsl(var(--surface))",
+        "on-surface": "hsl(var(--on-surface))",
+        "surface-variant": "hsl(var(--surface-variant))",
+        "on-surface-variant": "hsl(var(--on-surface-variant))",
+        "outline": "hsl(var(--outline))",
+        "outline-variant": "hsl(var(--outline-variant))",
+        "shadow": "hsl(var(--shadow))",
+        "scrim": "hsl(var(--scrim))",
+        "inverse-surface": "hsl(var(--inverse-surface))",
+        "inverse-on-surface": "hsl(var(--inverse-on-surface))",
+        "inverse-primary": "hsl(var(--inverse-primary))",
+        "primary-fixed": "hsl(var(--primary-fixed))",
+        "on-primary-fixed": "hsl(var(--on-primary-fixed))",
+        "primary-fixed-dim": "hsl(var(--primary-fixed-dim))",
+        "on-primary-fixed-variant": "hsl(var(--on-primary-fixed-variant))",
+        "secondary-fixed": "hsl(var(--secondary-fixed))",
+        "on-secondary-fixed": "hsl(var(--on-secondary-fixed))",
+        "secondary-fixed-dim": "hsl(var(--secondary-fixed-dim))",
+        "on-secondary-fixed-variant": "hsl(var(--on-secondary-fixed-variant))",
+        "tertiary-fixed": "hsl(var(--tertiary-fixed))",
+        "on-tertiary-fixed": "hsl(var(--on-tertiary-fixed))",
+        "tertiary-fixed-dim": "hsl(var(--tertiary-fixed-dim))",
+        "on-tertiary-fixed-variant": "hsl(var(--on-tertiary-fixed-variant))",
+        "surface-dim": "hsl(var(--surface-dim))",
+        "surface-bright": "hsl(var(--surface-bright))",
+        "surface-container-lowest": "hsl(var(--surface-container-lowest))",
+        "surface-container-low": "hsl(var(--surface-container-low))",
+        "surface-container": "hsl(var(--surface-container))",
+        "surface-container-high": "hsl(var(--surface-container-high))",
+        "surface-container-highest": "hsl(var(--surface-container-highest))",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
-        background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
-        primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
-        },
-        secondary: {
-          DEFAULT: "hsl(var(--secondary))",
-          foreground: "hsl(var(--secondary-foreground))",
-        },
-        destructive: {
-          DEFAULT: "hsl(var(--destructive))",
-          foreground: "hsl(var(--destructive-foreground))",
-        },
-        muted: {
-          DEFAULT: "hsl(var(--muted))",
-          foreground: "hsl(var(--muted-foreground))",
-        },
-        accent: {
-          DEFAULT: "hsl(var(--accent))",
-          foreground: "hsl(var(--accent-foreground))",
-        },
-        popover: {
-          DEFAULT: "hsl(var(--popover))",
-          foreground: "hsl(var(--popover-foreground))",
-        },
-        card: {
-          DEFAULT: "hsl(var(--card))",
-          foreground: "hsl(var(--card-foreground))",
-        },
       },
       borderRadius: {
         lg: "var(--radius)",

@@ -1,39 +1,15 @@
-<svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet" id="achacffb"
-	viewBox="47 0 156.25 156.16">
-	<defs id="SvgjsDefs1001"></defs>
-	<g id="SvgjsG1007" featurekey="symbolGroupContainer"
-		transform="matrix(3.055936098098755,0,0,3.055936098098755,47,-0.061118718912935306)"
-		fill="#47978F">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="47 0 156.25 156.16">
+	<g fill="#47978F">
 		<path xmlns="http://www.w3.org/2000/svg"
-			d="M34.56 47.26H16.5L3.73 34.51V16.43L16.5 3.66h18.06l12.77 12.77v18.08zm-17.57-1.19h17.08L46.14 34V16.93L34.07 4.86H17L4.93 16.93V34z"></path>
+			d="M152.613 144.362h-55.19L58.399 105.4V50.148l39.024-39.024h55.19l39.024 39.024v55.251zm-53.693-3.636h52.196L188 103.84V51.676L151.116 14.79H98.95L62.066 51.676v52.165z" />
 		<path xmlns="http://www.w3.org/2000/svg"
-			d="M25.57 51.12L7.49 43.63 0 25.51l7.49-18L25.57.02l18.1 7.49 7.46 18-7.46 18.13zm-17.16-8.4l17.16 7.11 17.16-7.11 7.11-17.21-7.11-17.16-17.16-7.11L8.41 8.35 1.29 25.51z"></path>
+			d="M125.14 156.158 69.89 133.27 47 77.896l22.889-55.007L125.14 0l55.313 22.889 22.797 55.007-22.797 55.404zm-52.44-25.67 52.44 21.728 52.44-21.728 21.728-52.592-21.728-52.44-52.44-21.728L72.7 25.456l-21.758 52.44z" />
 	</g>
-	<g id="SvgjsG1008" featurekey="symbolFeature-0"
-		transform="matrix(2.17391300201416,0,0,2.17391300201416,72.82608695652173,26.056521830351457)"
-		fill="#47978F">
-		<g xmlns="http://www.w3.org/2000/svg">
-			<path fill="none" stroke="#47978F" stroke-width="2" stroke-linecap="round"
-				stroke-linejoin="round" stroke-miterlimit="10"
-				d="   M8.694,41.018l-4.256-8.126l3.285-0.449l35.408-2.646c0,0-5.934,3.609-7.547,11.221"></path>
-			<polyline fill="none" stroke="#47978F" stroke-width="2" stroke-linecap="round"
-				stroke-linejoin="round" stroke-miterlimit="10"
-				points="   16.3,31.27 16.3,26.185 7.789,26.185 7.789,32.342  "></polyline>
-			<polyline fill="none" stroke="#47978F" stroke-width="2" stroke-linecap="round"
-				stroke-linejoin="round" stroke-miterlimit="10"
-				points="   14.366,24.65 14.366,18.933 35.053,18.933 35.053,30.663  "></polyline>
-			<line fill="none" stroke="#47978F" stroke-width="2" stroke-linecap="round"
-				stroke-linejoin="round" stroke-miterlimit="10" x1="29.145" y1="23.888" x2="29.145"
-				y2="25.709"></line>
-			<line fill="none" stroke="#47978F" stroke-width="2" stroke-linecap="round"
-				stroke-linejoin="round" stroke-miterlimit="10" x1="22.086" y1="23.888" x2="22.086"
-				y2="25.709"></line>
-			<path fill="none" stroke="#47978F" stroke-width="2" stroke-linecap="round"
-				stroke-linejoin="round" stroke-miterlimit="10"
-				d="   M1,41.208c2.39,0.833,4.486,1.372,7.095,1.289c2.479-0.077,3.396-1.22,5.585-1.987c3.492-1.225,8.266-0.367,11.554,0.69   c2.074,0.669,3.623,1.36,6.061,1.093c1.852-0.203,3.426-1.24,5.172-1.515c3.932-0.62,6.844,1.479,10.533,1.503"></path>
-			<line fill="none" stroke="#47978F" stroke-width="2" stroke-linecap="round"
-				stroke-linejoin="round" stroke-miterlimit="10" x1="21.801" y1="18.933" x2="21.801"
-				y2="5.494"></line>
-		</g>
+	<g xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#47978F" stroke-linecap="round" stroke-linejoin="round"
+		stroke-miterlimit="10" stroke-width="2">
+		<path stroke-width="4.34"
+			d="m91.726 115.226-9.252-17.665 7.141-.976 76.974-5.752s-12.9 7.845-16.406 22.393M108.26 94.035V82.98H89.76v13.385" />
+		<path stroke-width="4.34"
+			d="M104.057 83V67.215h44.971v24M136.185 77.987v3.959M120.84 77.987v3.959M72 115.64c5.196 1.81 9.752 2.982 15.424 2.801 5.389-.167 7.383-2.652 12.141-4.32 7.592-2.662 17.97-.797 25.118 1.5 4.508 1.455 7.876 2.957 13.176 2.377 4.026-.441 7.448-2.696 11.243-3.294 8.548-1.347 14.878 3.216 25 3.268M120.22 67.215V38" />
 	</g>
 </svg>

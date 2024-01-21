@@ -5,17 +5,30 @@ export default defineNuxtConfig({
   experimental: {
     renderJsonPayloads: false
   },
+  app: {
+    pageTransition: { name: 'slide-right', mode: 'out-in' }
+  },
   modules: [
     '@pinia/nuxt',
     "@vueuse/nuxt",
+    "@vueuse/motion/nuxt",
     "@formkit/auto-animate",
     '@nuxtjs/tailwindcss',
     'shadcn-nuxt',
     'nuxt-svgo',
     '@nuxtjs/color-mode',
     "nuxt-icon",
-    "@nuxtjs/device"
+    "@nuxtjs/device",
+    "@nuxt/devtools",
+    'notivue/nuxt'
   ],
+  css: [
+    'notivue/notifications.css',
+    'notivue/animations.css'
+  ],
+  notivue: {
+    position: 'bottom-center'
+  },
   colorMode: {
     classSuffix: ''
   },

@@ -10,7 +10,7 @@ const props = defineProps<MenubarTriggerProps & { class?: string }>()
     v-bind="props"
     :class="
       cn(
-        'flex cursor-default select-none items-center rounded-sm px-3 py-1.5 text-sm font-medium outline-none focus:bg-accent focus:text-accent-foreground data-[state=open]:bg-accent data-[state=open]:text-accent-foreground',
+        'flex cursor-default select-none items-center rounded-sm px-3 py-1.5 text-sm font-medium outline-none focus:bg-tertiary focus:text-on-tertiary data-[state=open]:bg-tertiary data-[state=open]:text-on-tertiary',
         props.class,
       )
     "
