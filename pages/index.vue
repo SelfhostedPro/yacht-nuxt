@@ -1,9 +1,9 @@
 <template>
-  <card>
-    <card-title>
+  <v-card color="foreground">
+    <v-card-title>
       HI
-    </card-title>
-  </card>
+    </v-card-title>
+  </v-card>
 </template>
 
 <script lang="ts" setup>

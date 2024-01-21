@@ -1,20 +1,5 @@
 <template>
-  <div>
-    <nav-app-bar @toggle="sidebarOpen = !sidebarOpen" :links="links" />
-    <div>
-      <div class="bg-background">
-        <div v-auto-animate class="flex min-h-screen">
-          <nav-sidebar v-if="!isMobile || sidebarOpen" :links="links" />
-          <div class="border-l">
-            <div class="h-full min-w-full px-4 py-6 lg:px-8">
-              <slot />
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- <v-app>
+  <v-app>
     <nav-sidebar :links="links" />
     <nav-app-bar :links="links" />
     <v-main>
@@ -23,21 +8,12 @@
       </v-container>
     </v-main>
     <lazy-notifications />
-  </v-app> -->
+  </v-app>
 </template>
   
 <script lang="ts" setup>
 // const notificationsStore = useNotificationsStore()
 // const { connected } = storeToRefs(notificationsStore)
-const { isMobile } = useDevice()
-const sidebarOpen = ref(false)
-export interface Link {
-  to: string
-  icon: string
-  text: string
-  divider?: boolean
-  subLinks?: Link[]
-}
 const links = [
   {
     to: "/",

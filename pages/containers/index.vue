@@ -1,7 +1,7 @@
 <template>
-  <!-- <v-container fluid>
+  <v-container fluid>
     <ContainersList />
-  </v-container> -->
+  </v-container>
 </template>
 
 <script lang="ts" setup>

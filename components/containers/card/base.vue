@@ -1,5 +1,5 @@
 <template>
-    <!-- <v-card-item class="px-2 pb-0" density="compact"
+    <v-card-item class="px-2 pb-0" density="compact"
         :prepend-avatar="container.info.icon ? container.info.icon : 'https://cdn.vuetifyjs.com/images/cards/halcyon.png'">
         <v-card-title>
             <v-tooltip :text="container.state" location="bottom">
@@ -12,7 +12,7 @@
         </v-card-title>
         <v-card-subtitle>{{ 'image: ' + container.image }}</v-card-subtitle>
         <v-card-subtitle>{{ 'id: ' + container.shortId }}</v-card-subtitle>
-    </v-card-item> -->
+    </v-card-item>
 </template>
 
 <script lang="ts" setup>
