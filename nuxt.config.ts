@@ -13,6 +13,9 @@ export default defineNuxtConfig({
   vuetify: {
     vuetifyOptions: "./vuetify.config.ts",
   },
+  devServer: {
+    https: true,
+  },
   vite: {
     plugins: [basicSsl()]
   },
@@ -22,9 +25,9 @@ export default defineNuxtConfig({
       asyncContext: true
     },
     storage: {
-      config: {
+      base: {
         driver: 'fsLite',
-        base: './config',
+        base: process.env.CONFIG_PATH || './config',
       }
     }
   },

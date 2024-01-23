@@ -1,7 +1,12 @@
 <template>
-    <v-navigation-drawer app v-model="drawer" location="bottom" temporary>
-        <v-list :items="links"></v-list>
-    </v-navigation-drawer>
+  <v-navigation-drawer
+    v-model="drawer"
+    app
+    location="bottom"
+    temporary
+  >
+    <v-list :items="links" />
+  </v-navigation-drawer>
 </template>
 
 <script lang="ts" setup>

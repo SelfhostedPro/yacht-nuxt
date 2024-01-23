@@ -73,7 +73,7 @@ const containerNetworkSettingsSchema = z.object({
 })
 export type ContainerNetworkSettings = z.infer<typeof containerNetworkSettingsSchema>
 
-const containerOciInfoSchema = z.object({
+export const containerOciInfoSchema = z.object({
     title: z.string().optional(),
     description: z.string().optional(),
     docs: z.string().optional(),
@@ -108,6 +108,27 @@ const containerSchema = z.object({
     labels: z.record(z.string()).optional(),
 })
 export type Container = z.infer<typeof containerSchema>
-
 // END: Container Schemas that yacht uses to display more readable information
+
+export const containerStatSchema = z.object({
+    name: z.string(),
+    memoryPercentage: z.string(),
+    cpuUsage: z.string()
+})
+// export type ContainerStat = z.infer<typeof containerStatSchema>
+
+export interface ContainerStats {
+    [key: string]: ContainerStat
+}
+
+export interface ContainerStat {
+    name: string,
+    memoryPercentage: string,
+    cpuUsage: string
+}
+
+// const containerStatsSchema = z.record(z.string(), containerStatSchema)
+// export type ContainerStats = z.infer<typeof containerStatsSchema>
+
+
 export { containerSchema }

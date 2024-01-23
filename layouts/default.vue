@@ -1,13 +1,14 @@
 <template>
   <v-app>
-    <nav-sidebar :links="links" />
-    <nav-app-bar :links="links" />
+    <lazy-nav-sidebar :links="links" />
+    <lazy-nav-app-bar :links="links" />
     <v-main>
       <v-container fluid>
         <slot />
       </v-container>
     </v-main>
     <lazy-notifications />
+    <NuxtLoadingIndicator />
   </v-app>
 </template>
   

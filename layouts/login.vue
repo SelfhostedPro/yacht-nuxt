@@ -1,7 +1,7 @@
 <template>
-  <!-- <v-app>
+  <v-app>
     <v-main>
       <slot />
     </v-main>
-  </v-app> -->
+  </v-app>
 </template>

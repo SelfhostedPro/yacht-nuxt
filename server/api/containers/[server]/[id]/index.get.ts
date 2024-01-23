@@ -1,3 +1,5 @@
+import { getContainerInfo } from "~/server/services/containers/info"
+
 export default defineEventHandler(async (event) => {
   // event.context.params.slug to get the route segment: 'bar/baz'
   const server = event.context.params?.server

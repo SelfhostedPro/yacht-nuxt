@@ -7,11 +7,14 @@
     "dev": "nuxt dev --https",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
   },
   "devDependencies": {
     "@formkit/auto-animate": "^0.8.1",
     "@nuxt/devtools": "^1.0.6",
+    "@nuxt/eslint-config": "^0.2.0",
     "@pinia/nuxt": "latest",
     "@types/dockerode": "^3.3.23",
     "@types/eventsource": "^1.1.15",
@@ -20,6 +23,7 @@
     "@vueuse/nuxt": "^10.7.1",
     "add": "^2.0.6",
     "bun-types": "^1.0.21",
+    "eslint": "^8.56.0",
     "nuxt": "^3.9.0",
     "typescript": "^5.3.3",
     "vue": "^3.4.3",
@@ -29,6 +33,8 @@
   },
   "dependencies": {
     "@microsoft/fetch-event-source": "^2.0.1",
+    "@types/sshpk": "^1.17.4",
+    "consola": "^3.2.3",
     "date-fns": "^3.0.6",
     "dockerode": "^4.0.2",
     "drizzle-orm": "^0.29.3",
@@ -36,7 +42,9 @@
     "install": "^0.13.0",
     "js-yaml": "^4.1.0",
     "npm": "^10.2.5",
+    "sshpk": "^1.18.0",
     "vuetify-sonner": "^0.3.12",
+    "winston": "^3.11.0",
     "zod": "^3.22.4"
   }
 }

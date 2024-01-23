@@ -1,7 +1,7 @@
 // import { useAuthStore } from "~/stores/auth";
 // import { useNotifyStore } from "~/stores/notifications";
 // import { createFetch, useFetch } from "@vueuse/core";
-import { fetchEventSource, type FetchEventSourceInit } from '@microsoft/fetch-event-source'
+// import { fetchEventSource, type FetchEventSourceInit } from '@microsoft/fetch-event-source'
 
 
 // export const AuthFetch = createFetch({

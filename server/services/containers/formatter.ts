@@ -35,7 +35,7 @@ const getIconUrl = async (labels: Container['labels']) => {
         switch (vendor) {
             case 'linuxserver.io': {
                 const url = `https://raw.githubusercontent.com/linuxserver/docker-templates/master/linuxserver.io/img/${title}-logo.png`;
-                checkUrl(url);
+                return await checkUrl(url);
             }
             case 'portainer.io': {
                 return labels['com.docker.desktop.extension.icon']
@@ -44,7 +44,7 @@ const getIconUrl = async (labels: Container['labels']) => {
                 return labels['sh.yacht.icon']
             }
         }
-    };
+    }
 }
 
 /**
@@ -110,7 +110,7 @@ const formatInspectPorts = (data: ContainerInspectInfo): ContainerPort[] => {
         portList.add(formattedPort);
     });
     // Check config for additional ports that might not be mapped
-    Object.entries(Config.ExposedPorts).forEach(([port, _]) => {
+    Object.entries(Config.ExposedPorts).forEach(([port, ]) => {
         const { containerPort, type } = splitPort(port);
         // Check to make sure the port doesn't already exist
         if (containerPort! in portList.values()) {

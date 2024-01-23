@@ -2,6 +2,10 @@ import type { ServerConfig } from "~/types/config"
 import type { ServerDict } from "~/types/servers"
 import Docker from 'dockerode';
 
+// Service Dependency Imports
+import { useConfig } from "../config"
+
+
 let _servers: ServerDict
 
 export const useServers = async () => {
@@ -17,7 +21,7 @@ export const getServer = async (name: string) => {
 }
 
 export const getServers = async () => {
-  return getConfig().then(async (config) => {
+  return useConfig().then(async (config) => {
     const servers = config.base.servers
     const returnServers = {} as ServerDict
     const serverPromises = servers.map(async (server) => {

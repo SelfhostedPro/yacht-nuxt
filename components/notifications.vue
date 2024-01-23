@@ -1,14 +1,14 @@
 <template>
-  <!-- <v-sonner v-if="!pending" /> -->
+  <v-sonner v-if="!pending" />
 </template>
 
 <script lang="ts" setup>
-// import { VSonner, toast } from 'vuetify-sonner';
-// import 'vuetify-sonner/style.css'
-// import type { Notification } from '~/types/notifications';
+import { VSonner } from 'vuetify-sonner';
+import 'vuetify-sonner/style.css'
+import type { Notification } from '~/types/notifications';
 const connected = notificationsConnected()
 
-const { execute, data, pending, refresh, error } = useAsyncData(
+const { execute, data, pending } = useAsyncData(
   'notification-data',
   async () => {
     const abort = new AbortController()
@@ -18,14 +18,14 @@ const { execute, data, pending, refresh, error } = useAsyncData(
           console.log('Connected to notifications SSE')
         } else {
           console.log('Failed to connect to notifications SSE')
-          // useToast({ title: 'Error', level: 'error', message: `Failed to connect to notifications SSE: ${response.statusText}` })
+          useToast({ title: 'Error', level: 'error', message: `Failed to connect to notifications SSE: ${response.statusText}` })
           connected.value = false
         }
       },
       async onmessage(event) {
         connected.value = true
         const notification = JSON.parse(event.data) as Notification
-        // useToast(notification)
+        useToast(notification)
       },
       signal: abort.signal
     })

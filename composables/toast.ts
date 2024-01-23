@@ -4,7 +4,7 @@ import { type Notification } from '~/types/notifications'
 const notifications = ref([] as Notification[])
 const currentNotifications = ref([] as Notification[])
 
-export const useToast = ({ title, message, level, from, timeout, dedupe, vertical }: Notification) => {
+export const useToast = ({ title, message, level, from, timeout, dedupe }: Notification) => {
   const previous = notifications.value.find(n => n.message === message)
   const existing = currentNotifications.value.findIndex(n => n.message === message)
 
