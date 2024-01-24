@@ -1,10 +1,13 @@
 import { generateKeyPairSync } from 'crypto';
 import { createCipheriv, createDecipheriv } from 'crypto';
-import { parseKey, parsePrivateKey } from 'sshpk';
+import * as sshpk from 'sshpk';
 import * as path from 'path';
 import { Client } from 'ssh2';
+
+// Service Dependency Imports
 import { useConfig } from '../config';
-import consola from 'consola'
+
+
 type PassphraseFile = Map<string, string>;
 
 interface SSHKeyInfo {
@@ -18,7 +21,7 @@ interface SSHKeyInfo {
     }
 }
 
-const logger = consola.withTag('servers:keys')
+const logger = useLog('servers:keys')
 // Generate an SSH key
 export const createSSHKey = async (keyName: string, passphrase: string) => {
     // Check if key already exists
@@ -46,7 +49,7 @@ export const createSSHKey = async (keyName: string, passphrase: string) => {
     // Save the keys to the filesystem
     await useStorage('base').setItem(privateKey.path, newKeys.privateKey);
     await useStorage('base').setItem(publicKey.path, newKeys.publicKey);
-    logger.success(`SSH key ${keyName} created`);
+    logger.info(`SSH key ${keyName} created`);
 
     // Save the passphrase to a file if requested
     if (!(await checkSavedPassphrases(keyName))) {
@@ -77,7 +80,7 @@ export const removePublicKeyFromRemoteServer = async (
 ): Promise<void> => {
     const { publicKey, privateKey } = await getSSHKeyInfo(keyName);
     if (!publicKey.value || privateKey.value) {
-        logger.log('SSH key does not exist');
+        logger.warn('SSH key does not exist');
         return;
     }
     const decryptedPrivateKey = await getPrivateKey(keyName);
@@ -94,7 +97,7 @@ export const removePublicKeyFromRemoteServer = async (
                         if (err) reject(err);
                         stream
                             .on('close', () => {
-                                logger.success('SSH key removed');
+                                logger.info('SSH key removed');
                                 conn.end();
                                 resolve();
                             })
@@ -102,7 +105,7 @@ export const removePublicKeyFromRemoteServer = async (
                                 logger.info('STDOUT: ' + data);
                             })
                             .stderr.on('data', (data: string) => {
-                                logger.log('STDERR: ' + data);
+                                logger.error('STDERR: ' + data);
                             });
                     },
                 );
@@ -133,7 +136,7 @@ export const copyPublicKeyToRemoteServer = async (
         YachtError('SSH key does not exist', 'servers:keys#copyPublicKeyToRemoteServer')
         return;
     }
-    const convertedPublicKey = parseKey(publicKey.value, 'pem').toString('ssh');
+    const convertedPublicKey = sshpk.parseKey(publicKey.value, 'pem').toString('ssh');
     const conn = new Client();
     // Copy the public key to the remote server
     logger.info(`Copying SSH key to ${remoteHost}`);
@@ -147,21 +150,21 @@ export const copyPublicKeyToRemoteServer = async (
                         if (err) reject(err);
                         stream
                             .on('close', () => {
-                                logger.log('SSH key copied');
+                                logger.info('SSH key copied');
                                 conn.end();
                                 resolve();
                             })
                             .on('data', (data: string) => {
-                                logger.log('STDOUT: ' + data);
+                                logger.info('STDOUT: ' + data);
                             })
                             .stderr.on('data', (data) => {
-                                logger.log('STDERR: ' + data);
+                                logger.error('STDERR: ' + data);
                             });
                     },
                 );
             })
             .on('error', (err) => {
-                logger.log(`Connection error: \${err}`);
+                logger.error(`Connection error: \${err}`);
                 reject(err);
             })
             .connect({
@@ -178,7 +181,7 @@ export const getAllKeys = async (): Promise<string[]> => {
     return Array.from(passphrases.keys());
 }
 
-const getPrivateKey = async (keyName: string, passphrase?: string) => {
+export const getPrivateKey = async (keyName: string, passphrase?: string) => {
     passphrase = passphrase || (await getSavedPassphrase(keyName));
     const { privateKey } = await getSSHKeyInfo(keyName);
     if (!privateKey.value) {
@@ -186,7 +189,7 @@ const getPrivateKey = async (keyName: string, passphrase?: string) => {
         return;
     }
     // Decrypt and return the private key
-    return parsePrivateKey(privateKey.value, 'pem', {
+    return sshpk.parsePrivateKey(privateKey.value, 'pem', {
         passphrase: passphrase,
     }).toString('ssh-private');
 }

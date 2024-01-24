@@ -15,7 +15,7 @@
       </v-tab>
     </v-tabs>
     <v-toolbar class="px-2">
-      <v-row>
+      <v-row justify="space-between">
         <v-col>
           <v-text-field
             v-model="search"
@@ -30,11 +30,11 @@
         </v-col>
         <v-spacer />
         <v-col
-          cols="1"
-          offset="1"
+          cols="2"
+          class="d-flex justify-end"
         >
+          <containers-create />
           <v-btn
-            class="float-right"
             icon
             :loading="loading.includes('containers')"
             @click="containersStore.fetchContainers()"

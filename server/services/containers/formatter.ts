@@ -2,6 +2,9 @@ import type { Container, ContainerMount, ContainerPort } from "~/types/container
 import type { FixedContainerInfo, FixedContainerInspectInfo } from "~/types/containers/fixedDockerode";
 import type { Port, ContainerInspectInfo, ContainerInfo } from "~/types/containers/dockerode"
 import { format, parseISO } from 'date-fns';
+import { type CreateContainerForm } from "~/types/containers/create";
+import { type ContainerCreateOptions } from "dockerode";
+import { useConfig } from "../config";
 
 /**
  * Checks to see if the icon url is valid and loads.
@@ -110,7 +113,7 @@ const formatInspectPorts = (data: ContainerInspectInfo): ContainerPort[] => {
         portList.add(formattedPort);
     });
     // Check config for additional ports that might not be mapped
-    Object.entries(Config.ExposedPorts).forEach(([port, ]) => {
+    Object.entries(Config.ExposedPorts).forEach(([port,]) => {
         const { containerPort, type } = splitPort(port);
         // Check to make sure the port doesn't already exist
         if (containerPort! in portList.values()) {
@@ -218,4 +221,96 @@ export const normalizeContainerInspectInfo = async (data: FixedContainerInspectI
         labels: data.Config.Labels,
         env: data.Config.Env,
     } as Container;
+}
+
+/**
+ * Normalize data from frontend and transform it into a valid ContainerCreateOptions object.
+ */
+export const normalizeCreate = async (
+    data: CreateContainerForm,
+): Promise<ContainerCreateOptions> => {
+    const {
+        name,
+        image,
+        restart,
+        network,
+        network_mode,
+        mounts,
+        ports,
+        env,
+        command,
+        devices,
+        sysctls,
+        capabilities,
+        limits,
+    } = await transformVariables(data);
+    const transformedLabels = await transformInfo(data);
+    const containerCreateOptions: ContainerCreateOptions = {
+        name,
+        Image: image,
+        HostConfig: {
+            RestartPolicy: { Name: restart || 'never' },
+            NetworkMode: network_mode || network,
+            Binds: mounts?.map(
+                ({ source, destination, read_only }) =>
+                    `${source}:${destination}${read_only ? ':ro' : ''}`,
+            ),
+            Devices: devices,
+            PortBindings: ports?.reduce((acc, { container, host, protocol }) => {
+                acc[container + '/' + protocol] = [{ HostPort: host }];
+                return acc;
+            }, {} as { [index: string]: object }),
+            Sysctls: sysctls?.reduce((acc, { key, value }) => {
+                acc[key] = value;
+                return acc;
+            }, {} as { [index: string]: string }),
+            CapAdd: capabilities?.add,
+            CapDrop: capabilities?.drop,
+            CpuShares: limits?.cpus,
+            Memory: limits?.mem_limit,
+        },
+        Env: env ? env.map(({ name, value }) => `${name}=${value}`) : undefined,
+        Labels: transformedLabels,
+        Cmd: command,
+    };
+    return containerCreateOptions;
+}
+
+/**
+ * Transform data from container create into labels in order to provide additional information about the container.
+ */
+const transformInfo = async (data: CreateContainerForm) => {
+    const { labels, info, ports, env } = data;
+
+    const [baseLabels, infoLabels, portLabels, envLabels] = await Promise.all([
+        labels ? Object.fromEntries(labels.map(({ key, value }) => [key, value]),) : null,
+        info ? Object.fromEntries(Object.entries(info).map(([key, value]) => [`sh.yacht.${key}`, value])) : null,
+        ports ? Object.fromEntries(ports.map((port) => [`sh.yacht.${port.host}`, port.label])) : null,
+        env ? Object.fromEntries(Object.entries(env).map(([name, env]) => [`sh.yacht.env.${name}.label`, env.label, `sh.yacht.env.${name}.description`, env.description])) : null
+    ])
+
+    const transformedLabels: { [label: string]: string } = {
+        ...baseLabels,
+        ...infoLabels,
+        ...portLabels,
+        ...envLabels
+    }
+    return transformedLabels;
+}
+
+const transformVariables = async (data: CreateContainerForm): Promise<CreateContainerForm> => {
+    const config = await useConfig()
+    if (!config.base['templateVariables']) {
+        return data;
+    }
+    const variables = config.base['templateVariables'];
+    const stringData = JSON.stringify(data)
+    if (variables) {
+        for (const variable of variables) {
+            stringData.replaceAll(variable.variable, variable.replacement)
+        }
+        const replacedData: CreateContainerForm = JSON.parse(stringData)
+        return replacedData
+    }
+    return data;
 }

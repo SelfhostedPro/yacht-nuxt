@@ -19,6 +19,7 @@
     "@types/dockerode": "^3.3.23",
     "@types/eventsource": "^1.1.15",
     "@types/js-yaml": "^4.0.9",
+    "@vee-validate/nuxt": "latest",
     "@vitejs/plugin-basic-ssl": "^1.1.0",
     "@vueuse/nuxt": "^10.7.1",
     "add": "^2.0.6",
@@ -34,6 +35,7 @@
   "dependencies": {
     "@microsoft/fetch-event-source": "^2.0.1",
     "@types/sshpk": "^1.17.4",
+    "@vee-validate/zod": "^4.12.4",
     "consola": "^3.2.3",
     "date-fns": "^3.0.6",
     "dockerode": "^4.0.2",
@@ -42,7 +44,10 @@
     "install": "^0.13.0",
     "js-yaml": "^4.1.0",
     "npm": "^10.2.5",
+    "pino": "^8.17.2",
+    "pino-pretty": "^10.3.1",
     "sshpk": "^1.18.0",
+    "tslog": "^4.9.2",
     "vuetify-sonner": "^0.3.12",
     "winston": "^3.11.0",
     "zod": "^3.22.4"

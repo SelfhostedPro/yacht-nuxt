@@ -9,9 +9,17 @@ export default defineNuxtConfig({
     transpile: ['vuetify', 'vue-sonner'],
   },
   modules: [
-    '@pinia/nuxt', "@vueuse/nuxt", "@formkit/auto-animate", "vuetify-nuxt-module"],
+    '@pinia/nuxt',
+    "@vueuse/nuxt",
+    "@formkit/auto-animate",
+    "vuetify-nuxt-module",
+    "@vee-validate/nuxt"
+  ],
   vuetify: {
     vuetifyOptions: "./vuetify.config.ts",
+  },
+  veeValidate: {
+    autoImports: true
   },
   devServer: {
     https: true,
@@ -23,6 +31,13 @@ export default defineNuxtConfig({
     experimental: {
       openAPI: true,
       asyncContext: true
+    },
+    alias: {
+      "consola/core": "consola/core",
+      consola: "consola",
+    },
+    logging: {
+      compressedSizes: true,
     },
     storage: {
       base: {
