@@ -13,11 +13,11 @@
       persistent
       :fullscreen="maximize"
       :width="maximize ? undefined : '80vw'"
+      height="80vh"
       scrollable
     >
       <template #default>
-        <containers-create-base
-          class="mx-auto"
+        <containers-create-card
           :maximize="maximize"
           @close="dialog = false"
           @maximize="maximize = !maximize"

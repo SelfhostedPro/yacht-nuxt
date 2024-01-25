@@ -14,7 +14,6 @@
   "devDependencies": {
     "@formkit/auto-animate": "^0.8.1",
     "@nuxt/devtools": "^1.0.6",
-    "@nuxt/eslint-config": "^0.2.0",
     "@pinia/nuxt": "latest",
     "@types/dockerode": "^3.3.23",
     "@types/eventsource": "^1.1.15",
@@ -34,6 +33,7 @@
   },
   "dependencies": {
     "@microsoft/fetch-event-source": "^2.0.1",
+    "@types/markdown-it": "^13.0.7",
     "@types/sshpk": "^1.17.4",
     "@vee-validate/zod": "^4.12.4",
     "consola": "^3.2.3",
@@ -43,13 +43,10 @@
     "eventsource": "^2.0.2",
     "install": "^0.13.0",
     "js-yaml": "^4.1.0",
+    "markdown-it": "^14.0.0",
     "npm": "^10.2.5",
-    "pino": "^8.17.2",
-    "pino-pretty": "^10.3.1",
     "sshpk": "^1.18.0",
     "tslog": "^4.9.2",
-    "vuetify-sonner": "^0.3.12",
-    "winston": "^3.11.0",
     "zod": "^3.22.4"
   }
 }

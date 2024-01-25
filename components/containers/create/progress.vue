@@ -8,8 +8,10 @@
   >
     <v-timeline-item
       v-for="step, i in steps"
+      :dot-color="currentStep >= i ? 'primary' : 'secondary'"
       :key="i"
       @click="currentStep = i"
+      :class="currentStep === i ? 'font-weight-regular' : 'font-weight-light text-disabled'"
     >
       <v-fade-transition hide-on-leave>
         <v-alert

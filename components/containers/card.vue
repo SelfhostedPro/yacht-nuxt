@@ -1,9 +1,10 @@
 <template>
   <v-card
-    class="pa-2 justify-start"
+    class="pa-2 justify-start fill-height"
     density="compact"
     style="transition: height 0.3s ease-in-out; position: relative;"
     :loading="loading ? 'primary' : false"
+    v-auto-animate
   >
     <containers-card-stats
       v-if="stats"
