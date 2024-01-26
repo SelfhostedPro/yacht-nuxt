@@ -81,7 +81,9 @@ export const containerOciInfoSchema = z.object({
     source: z.string().optional(),
     vendor: z.string().optional(),
     icon: z.string().optional(),
-    notes: z.string().optional()
+    notes: z.string().optional(),
+    external: z.string().optional(),
+    subdomain: z.string().optional(),
 })
 export type ContainerOciInfo = z.infer<typeof containerOciInfoSchema>
 

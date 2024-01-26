@@ -33,5 +33,5 @@ export const useSSE = (event: H3Event, hookName: string) => {
   event._handled = true
   event.node.req.on("close", close)
 
-  return { send, close }
+  return { send, close, id }
 }

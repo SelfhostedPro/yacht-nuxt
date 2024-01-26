@@ -25,7 +25,8 @@ export const useContainersStore = defineStore({
     },
     async fetchContainerAction(server: string, id: string, action: string) {
       this.startLoading(id)
-      const { error, data } = await useFetch(`/api/containers/${server}/${id}/${action}`, { lazy: true, cache: 'no-cache' })
+      const { error, data } = await useFetch(`/api/containers/${server}/${id}/actions/${action}`, { lazy: true, cache: 'no-cache' })
+      // @ts-ignore
       data.value ? this.servers = data.value : console.log(data.value)
       if (error.value) console.error(error.value.statusMessage)
       this.stopLoading(id)

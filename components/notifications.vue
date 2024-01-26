@@ -27,7 +27,8 @@ const { execute, data, pending } = useAsyncData(
         const notification = JSON.parse(event.data) as Notification
         useToast(notification)
       },
-      signal: abort.signal
+      signal: abort.signal,
+      openWhenHidden: true,
     })
     return { sse, abort }
   },
