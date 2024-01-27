@@ -1,20 +1,18 @@
 <template>
   <v-app>
-    <lazy-nav-sidebar :links="links" />
-    <lazy-nav-app-bar :links="links" />
+    <nav-sidebar :links="links" />
+    <nav-app-bar :links="links" />
     <v-main>
       <v-container fluid>
+        <NuxtLoadingIndicator />
         <slot />
       </v-container>
     </v-main>
     <lazy-notifications />
-    <NuxtLoadingIndicator />
   </v-app>
 </template>
   
 <script lang="ts" setup>
-// const notificationsStore = useNotificationsStore()
-// const { connected } = storeToRefs(notificationsStore)
 const links = [
   {
     to: "/",

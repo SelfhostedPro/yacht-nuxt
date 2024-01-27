@@ -4,7 +4,7 @@ import { type FixedContainerStats, formatStats } from "./streams"
 import { normalizeContainers } from "./formatter"
 
 // Service Dependency Imports
-import { useServers, getServers } from '../servers'
+import { useServers } from '../servers'
 
 
 export const getContainers = async () => {
@@ -25,14 +25,13 @@ export const getContainers = async () => {
 }
 
 export const getContainerInfo = async (server: string, id: string) => {
-    const _server = await getServers().then((servers: ServerDict) => servers[server])
-    if (_server) {
-        try {
-            return _server.getContainer(id).inspect()
-        } catch (e) {
-            YachtError(e)
-        }
-    } else throw createError(`Server ${server} not found!`)
+    const _server = await useServers().then((servers: ServerDict) => servers[server])
+    if (!_server) throw YachtError(new Error(`Server ${server} not found!`), '/services/containers/info - getContainerInfo')
+    try {
+        return _server.getContainer(id).inspect()
+    } catch (e) {
+        YachtError(e)
+    }
 }
 
 export const getContainerStats = async () => {

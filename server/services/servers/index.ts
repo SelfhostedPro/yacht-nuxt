@@ -1,1 +1,1 @@
-export { useServers, getServers, getServer } from './actions'
+export { useServers, getServer } from './actions'

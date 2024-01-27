@@ -15,6 +15,9 @@ node_modules
 logs
 *.log
 
+# Certs
+*.pem
+
 # Misc
 .DS_Store
 .fleet

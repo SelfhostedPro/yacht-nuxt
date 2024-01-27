@@ -5,11 +5,11 @@ import type Dockerode from "dockerode"
 
 // Service Dependency Imports
 import { getContainers } from './info'
-import { getServers } from '~/server/services/servers'
+import { useServers } from '~/server/services/servers'
 
 export const createContainer = async (server: string, form: CreateContainerForm) => {
     const containerLog = useLog(`container - ${form.name} - ${server}}`)
-    const _server: Dockerode | null = await getServers().then((servers: ServerDict) => servers[server])
+    const _server: Dockerode | null = await useServers().then((servers: ServerDict) => servers[server])
     if (!_server) {
         throw createError(`Server ${server} not found!`)
     }
@@ -41,7 +41,7 @@ export const createContainer = async (server: string, form: CreateContainerForm)
 
 
 export const getContainerAction = async (server: string, id: string, action: string) => {
-    const _server: Dockerode | null = await getServers().then((servers: ServerDict) => servers[server])
+    const _server: Dockerode | null = await useServers().then((servers: ServerDict) => servers[server])
 
     if (_server) {
         const container = _server.getContainer(id)

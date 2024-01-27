@@ -4,14 +4,13 @@ export const YachtError = (error: any, from?: string) => {
     if (error instanceof H3Error) {
         YachtLog(error.data, error)
     } else if (error.reason === "server error" && String(error.message).includes("failed: port is already allocated")) {
-        YachtLog({ title: 'DockerError', level: 'error', message: error.message, from: from, vertical: true })
+        YachtLog({ title: 'Docker Error', level: 'error', message: error.message, from: from, vertical: true })
+    }
+    else if (error.code = 'ENOENT' && error.address == '/var/run/docker.sock') {
+        YachtLog({ title: 'Docker Error', level: 'error', message: 'Docker is not running or the socket is not accessible!', from: from})
     }
     else {
-        console.log('instanceof', typeof error)
-        console.log('name', error.name)
-        console.log('cause', error.cause)
-        console.log('stack', error.stack)
-        console.log('message', error.message)
+        console.log(JSON.stringify(error, null, 2))
         throw error
     }
 }

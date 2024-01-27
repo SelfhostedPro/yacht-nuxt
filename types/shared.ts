@@ -49,5 +49,3 @@ export const capAddSchema = z.object({
         z.literal("BLOCK_SUSPEND")
     ])
 })
-
-module.exports = { keyValueSchema, capAddSchema, capDropSchema }

@@ -1,6 +1,6 @@
 import { getServer } from "../servers"
-import type { Container } from "dockerode"
-import { Duplex, PassThrough as StreamPassThrough } from "stream"
+import { type Container, type ExecCreateOptions } from "dockerode"
+import { PassThrough as StreamPassThrough } from "stream"
 
 
 export const streamContainerStdout = async (server: string, id: string, send: (callback: (id: number) => any) => void, close: () => void, reqId: string) => {
@@ -11,7 +11,7 @@ export const streamContainerStdout = async (server: string, id: string, send: (c
     // get the container
     const container: Container = _server.getContainer(id);
     // form container command to get shell
-    const cmd = {
+    const cmd: ExecCreateOptions = {
         AttachStdout: true,
         AttachStderr: true,
         AttachStdin: true,

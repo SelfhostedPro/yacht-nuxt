@@ -14,7 +14,7 @@
             class="mx-auto mt-5 mb-5"
             max-height="200"
             alt="Yacht logo"
-            src="~/assets/yacht.svg"
+            src="~/assets/icons/yacht/full.svg"
             style="filter: brightness(5)"
           />
           <LoginForm :setup="true" />

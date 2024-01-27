@@ -6,12 +6,14 @@
     <v-card-text>
       <containers-create-section-dynamic-string :field="networkModeField" />
     </v-card-text>
-    <v-card-title v-if="form.values.network_mode === 'bridge'" class="d-flex align-center">
-      Ports
-      <v-spacer />
-      <v-btn color="primary" class="float-right my-3" @click="pushPortField()">+</v-btn>
-    </v-card-title>
-    <v-card-text>
+    <v-slide-y-transition group>
+      <v-card-title v-if="form.network_mode === 'bridge'" class="d-flex align-center">
+        Ports
+        <v-spacer />
+        <v-btn color="primary" class="float-right my-3" @click="pushPortField()">+</v-btn>
+      </v-card-title>
+    </v-slide-y-transition>
+    <v-card-text v-if="form.network_mode === 'bridge'">
       <containers-create-section-dynamic-array :arrayFields="portFields" />
     </v-card-text>
   </div>
@@ -21,8 +23,7 @@
 import type { Field } from "./dynamic-string.vue";
 const portFields: Ref<Field[][]> = ref([]);
 
-// Get form state for displaying ports in the right network mode.
-const form = useContainerFormState()
+const form = useFormValues()
 
 const networkModeField: Field = {
   label: "Network Mode",

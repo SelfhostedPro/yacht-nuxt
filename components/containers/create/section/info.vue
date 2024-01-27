@@ -9,7 +9,7 @@
     <v-card-text v-show="!preview">
       <v-row no-gutters>
         <v-col :cols="xs ? '3' : '2'">
-          <v-avatar size="60" :image="previews.values.info?.icon || fields['icon'].placeholder" />
+          <v-avatar size="60" :image="form.info?.icon || fields['icon'].placeholder" />
         </v-col>
         <v-col>
           <containers-create-section-dynamic-string :field="fields['icon']" />
@@ -21,11 +21,11 @@
     <v-card v-show="preview">
       <v-card-text>
         <v-card-title class="text-h3">
-          <v-avatar size="60" :image="previews.values.info?.icon || fields['icon'].placeholder" />
-          {{ previews.values.info?.title || fields['title'].placeholder }}
+          <v-avatar size="60" :image="form.info?.icon || fields['icon'].placeholder" />
+          {{ form.info?.title || fields['title'].placeholder }}
         </v-card-title>
         <v-card></v-card>
-        <v-card-text v-html="$mdRenderer.render(previews.values.info?.notes || fields['notes'].placeholder || '')">
+        <v-card-text v-html="$mdRenderer.render(form.info?.notes || fields['notes'].placeholder || '')">
         </v-card-text>
         <v-card-text class="font-weight-black">DO NOT STORE SENSITIVE INFO HERE OR R/SELFHOSTED WILL JUDGE YOU
           😤</v-card-text>
@@ -37,8 +37,9 @@
 <script lang="ts" setup>
 import type { Field } from "./dynamic-string.vue";
 const { xs } = useDisplay()
-const previews = useContainerFormState();
 const preview = ref(false)
+const form = useFormValues()
+
 
 const fields: { [name: string]: Field } = {
   icon: {

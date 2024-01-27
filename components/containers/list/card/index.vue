@@ -1,85 +1,45 @@
 <template>
-  <v-card
-    class="pa-2 justify-start fill-height"
-    density="compact"
-    style="transition: height 0.3s ease-in-out; position: relative;"
-    :loading="loading ? 'primary' : false"
-    v-auto-animate
-  >
-    <containers-card-stats
-      v-if="stats"
-      :stats="(stats as ContainerStat)"
-    />
-    <v-row
-      dense
-      no-gutters
-    >
+  <v-card :to="`/containers/${server}/${container.name}`" class="pa-2 justify-start fill-height" density="compact"
+    style="transition: height 0.3s ease-in-out; position: relative;" :loading="loading ? 'primary' : false"
+    v-auto-animate>
+    <containers-list-card-stats v-if="stats" :stats="(stats as ContainerStat)" />
+    <v-row dense no-gutters>
       <v-col>
-        <containers-card-base :container="container" />
+        <containers-list-card-base :container="container" />
       </v-col>
     </v-row>
-    <v-row
-      dense
-      no-gutters
-      class="align-center justify-start"
-    >
+    <v-row dense no-gutters class="align-center justify-start">
       <v-col>
         <!-- Expansion Buttons -->
-        <v-btn-toggle
-          v-model="reveal"
-          :rounded="false"
-          multiple
-          variant="text"
-          color="primary"
-        >
-          <v-btn
-            :active="reveal.includes(actions)"
-            :icon="reveal.includes(actions) ? 'mdi-chevron-up' : 'mdi-chevron-down'"
-            :value="actions"
-          />
-          <v-btn
-            v-if="container.mounts && container.mounts[0]"
-            :active="reveal.includes(mounts)"
-            :icon="reveal.includes(mounts) ? 'mdi-file-tree' : 'mdi-file-tree-outline'"
-            :value="mounts"
-          />
-          <v-btn
-            v-if="container.ports && container.ports[0]"
-            :active="reveal.includes(ports)"
-            :icon="reveal.includes(ports) ? 'mdi-lan-pending' : 'mdi-lan-connect'"
-            :value="ports"
-          />
-          <v-btn
-            :active="reveal.includes(raw)"
-            :icon="reveal.includes(raw) ? 'mdi-code-braces-box' : 'mdi-code-braces'"
-            :value="raw"
-          />
+        <v-btn-toggle @click.prevent v-model="reveal" :rounded="false" multiple variant="text" color="primary">
+          <v-tooltip v-for="component in infoComponents" :key="component.name" :text="component.name"
+            location="left center">
+            <template v-slot:activator="{ props }">
+              <v-btn v-bind="props" :active="reveal.includes(component.component)"
+                :icon="reveal.includes(component.component) ? component.icon[0] : component.icon[1]"
+                :value="component.component" />
+            </template>
+          </v-tooltip>
         </v-btn-toggle>
       </v-col>
     </v-row>
     <!-- Expansion Ref -->
     <ul v-auto-animate>
       <!-- Dynamic Components -->
-      <component
-        :is="revealItem"
-        v-for="revealItem, i in reveal"
-        :key="i"
+      <component :is="revealItem" v-for="revealItem, i in reveal" :key="i"
         :mounts="container.mounts && container.mounts[0] ? container.mounts : []"
-        :ports="container.ports && container.ports[0] ? container.ports : []"
-        :labels="container.labels"
+        :ports="container.ports && container.ports[0] ? container.ports : []" :labels="container.labels"
         :container="reveal.includes(raw) || reveal.includes(actions) ? container : null"
-        :server="reveal.includes(actions) ? server : null"
-        @start-loading="loading = true"
-        @stop-loading="loading = false"
-      />
+        :server="reveal.includes(actions) ? server : null" @start-loading="loading = true"
+        @stop-loading="loading = false" />
     </ul>
   </v-card>
 </template>
 
 <script lang="ts" setup>
-import { LazyContainersCardMounts, LazyContainersCardPorts, LazyContainersCardRaw, LazyContainersCardActions } from '#components'
+import { LazyContainersListCardActions, LazyContainersListCardMounts, LazyContainersListCardPorts, LazyContainersListCardRaw } from '#components'
 import type { Container, ContainerStat } from '~/types/containers/yachtContainers';
-type DynamicComponent = typeof LazyContainersCardMounts | typeof LazyContainersCardPorts | typeof LazyContainersCardRaw | typeof LazyContainersCardActions
+type DynamicComponent = typeof LazyContainersListCardActions | typeof LazyContainersListCardMounts | typeof LazyContainersListCardPorts | typeof LazyContainersListCardRaw
 
 // Loading State
 const loading = ref(false)
@@ -88,12 +48,31 @@ const loading = ref(false)
 const props = defineProps<{ container: Container, stats?: ContainerStat, server: string }>()
 const reveal = useState(`reveal-${props.container.shortId}`, () => [] as DynamicComponent[])
 
-// Define Dynamic Components
-const mounts = markRaw(LazyContainersCardMounts)
-const ports = markRaw(LazyContainersCardPorts)
-const raw = markRaw(LazyContainersCardRaw)
-const actions = markRaw(LazyContainersCardActions)
 
+const raw = markRaw(LazyContainersListCardRaw)
+const actions = markRaw(LazyContainersListCardActions)
+const infoComponents = [
+  {
+    name: 'Actions',
+    icon: ['mdi-chevron-up', 'mdi-chevron-down'],
+    component: actions
+  },
+  {
+    name: 'Ports',
+    icon: ['mdi-lan-pending', 'mdi-lan-connect'],
+    component: markRaw(LazyContainersListCardPorts)
+  },
+  {
+    name: 'Mounts',
+    icon: ['mdi-file-tree', 'mdi-file-tree-outline'],
+    component: markRaw(LazyContainersListCardMounts)
+  },
+  {
+    name: 'Raw',
+    icon: ['mdi-code-braces-box', 'mdi-code-braces'],
+    component: raw
+  }
+]
 </script>
 
 <style>
