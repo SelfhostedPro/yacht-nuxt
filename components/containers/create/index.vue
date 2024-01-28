@@ -54,6 +54,10 @@ const dialog = ref(false)
 
 
 defineEmits(['close', 'maximize'])
+
+onBeforeUnmount(() => {
+  
+})
 </script>
 
 <style></style>

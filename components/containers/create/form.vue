@@ -1,13 +1,15 @@
 <template>
   <div class="fill-height">
     <v-row no-gutters class="fill-height">
-      <v-col :cols="smAndDown ? 12 : 4" class="fill-height overflow-y-auto">
+      <!-- Form Progress -->
+      <v-col :cols="smAndDown ? 12 : 4" :class="`${!smAndDown ? 'fill-height' : null} overflow-y-auto`">
         <v-sheet color="surface" class="fill-height">
           <v-sheet class="d-flex align-start justify-start">
             <containers-create-progress v-model:step="step" />
           </v-sheet>
         </v-sheet>
       </v-col>
+      <!-- Form Fields -->
       <v-col class="fill-height">
         <v-window v-model="step" direction="vertical" class="fill-height">
           <v-window-item v-for="(section, i) in sections" :key="i" :value="i" class="fill-height overflow-y-auto">
@@ -23,7 +25,7 @@
 
 <script lang="ts" setup>
 import { useDisplay } from 'vuetify';
-import { LazyContainersCreateSectionBase, LazyContainersCreateSectionInfo, LazyContainersCreateSectionNetworking } from '#components';
+import { LazyContainersCreateSectionBase, LazyContainersCreateSectionInfo, LazyContainersCreateSectionNetworking, LazyContainersCreateSectionStorage } from '#components';
 
 const { smAndDown } = useDisplay()
 
@@ -32,6 +34,7 @@ const step = useState('containerFormStep', () => 0)
 const sections = [
   LazyContainersCreateSectionBase,
   LazyContainersCreateSectionInfo,
-  LazyContainersCreateSectionNetworking
+  LazyContainersCreateSectionNetworking,
+  LazyContainersCreateSectionStorage
 ]
 </script>

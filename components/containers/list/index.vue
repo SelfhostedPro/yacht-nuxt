@@ -1,5 +1,12 @@
 <template>
   <v-container fluid>
+    <!-- <template v-if="loading.includes('containers')">
+      <v-card>
+        <v-card-title class="text-center">
+          Loading Containers
+        </v-card-title>
+      </v-card>
+    </template> -->
     <v-tabs v-model="tab" bg-color="surface" color="primry" align-tabs="center">
       <v-tab v-for="server, i in Object.keys(servers)" :key="i" :value="i">
         {{ server }}
@@ -14,7 +21,7 @@
         <v-spacer />
         <v-col cols="2" class="d-flex justify-end">
           <containers-create />
-          <v-btn icon :loading="loading.includes('containers')" @click="containersStore.fetchContainers()">
+          <v-btn icon :loading="loading.includes('containers')" @click="refresh()">
             <v-icon>mdi-refresh</v-icon>
           </v-btn>
         </v-col>
@@ -61,6 +68,22 @@
         </div>
       </v-window-item>
     </v-window>
+    <!-- <template v-else>
+      <v-card class="pa-3">
+        <v-card-title class="text-center">
+          No Servers Found
+        </v-card-title>
+        <v-card-text class="text-center">
+          <v-icon size="100">
+            mdi-docker
+          </v-icon>
+          <div class="text-h6">
+            Check your configuration and server logs to see if there are any errors.
+          </div>
+          <i>If everything looks right, check to make sure that docker is running correctly.</i>
+        </v-card-text>
+      </v-card>
+    </template> -->
   </v-container>
 </template>
 
@@ -71,10 +94,25 @@ const containersStore = useContainersStore()
 const { servers, loading, stats } = storeToRefs(containersStore)
 const notifications = notificationsConnected()
 
-onMounted(async () => {
+const refresh = async () => {
   await until(notifications).toBe(true)
-  await containersStore.fetchContainers()
-  await containersStore.fetchContainerStats()
+  await useAsyncData('containerList', () => containersStore.fetchContainers(), {
+    default() {
+      return {}
+    },
+  })
+  await useAsyncData('containerStats', () => containersStore.fetchContainerStats(), {
+    default() {
+      return {}
+    },
+  })
+
+}
+
+
+
+onMounted(() => {
+  refresh()
 })
 </script>
 

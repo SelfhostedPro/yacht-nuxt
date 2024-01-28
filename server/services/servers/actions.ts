@@ -23,13 +23,15 @@ const getServers = async () => {
         const servers = config.base.servers
         const returnServers = {} as ServerDict
         const serverPromises = servers.map(async (server) => {
-            switch (server.options?.protocol) {
+            if (server.options) switch (server.options?.protocol) {
                 case 'ssh':
                     returnServers[server.name] = await sshAdapter(server);
                     break;
                 default:
                     returnServers[server.name] = await localAdapter(server)
                     break;
+            } else {
+                returnServers[server.name] = await localAdapter(server)
             }
         }
         )

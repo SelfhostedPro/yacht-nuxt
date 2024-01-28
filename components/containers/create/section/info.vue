@@ -1,30 +1,35 @@
 <template>
   <div>
     <v-card-title class="d-flex">
-      Meta Info
+      Info
       <v-spacer />
       <v-btn :color="preview ? 'warning' : 'primary'" @click="preview = !preview">{{ preview ? 'edit' : 'preview'
       }}</v-btn>
     </v-card-title>
-    <v-card-text v-show="!preview">
-      <v-row no-gutters>
+    <v-card-text v-show="!preview" class="mt-2">
+      <v-row align="center" justify="space-around">
         <v-col :cols="xs ? '3' : '2'">
           <v-avatar size="60" :image="form.info?.icon || fields['icon'].placeholder" />
         </v-col>
         <v-col>
           <containers-create-section-dynamic-string :field="fields['icon']" />
         </v-col>
+        <v-col cols="12">
+          <containers-create-section-dynamic-string :field="fields['title']" />
+        </v-col>
+        <v-col cols="12">
+          <containers-create-section-dynamic-string :field="fields['notes']" />
+          <v-card-text class="font-weight-black">DO NOT STORE SENSITIVE INFO HERE OR R/SELFHOSTED WILL JUDGE YOU
+          😤</v-card-text>
+        </v-col>
       </v-row>
-      <containers-create-section-dynamic-string :field="fields['title']" />
-      <containers-create-section-dynamic-string :field="fields['notes']" />
     </v-card-text>
-    <v-card v-show="preview">
+    <v-card v-show="preview" class="mx-5">
       <v-card-text>
         <v-card-title class="text-h3">
           <v-avatar size="60" :image="form.info?.icon || fields['icon'].placeholder" />
           {{ form.info?.title || fields['title'].placeholder }}
         </v-card-title>
-        <v-card></v-card>
         <v-card-text v-html="$mdRenderer.render(form.info?.notes || fields['notes'].placeholder || '')">
         </v-card-text>
         <v-card-text class="font-weight-black">DO NOT STORE SENSITIVE INFO HERE OR R/SELFHOSTED WILL JUDGE YOU

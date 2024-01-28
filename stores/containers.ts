@@ -1,11 +1,12 @@
 import type { ServerContainers } from '~/types/servers'
-import type { ContainerStats } from '~/types/containers/yachtContainers'
+import type { Container, ContainerStats } from '~/types/containers/yachtContainers'
 import { defineStore } from 'pinia'
 
 export const useContainersStore = defineStore({
   id: 'containersStore',
   state: () => ({
     servers: {} as ServerContainers,
+    container: {} as Container,
     stats: {} as ContainerStats,
     loading: [] as string[],
   }),
@@ -17,15 +18,22 @@ export const useContainersStore = defineStore({
     async stopLoading(name: string) { this.loading = this.loading.filter((item) => item !== name) },
     async fetchContainers() {
       this.startLoading('containers')
-      const { error, data } = await useFetch('/api/containers', { lazy: true, cache: 'no-cache' })
+      const { error, data } = await useFetch('/api/containers', { lazy: false})
       data.value ? this.servers = data.value : console.log(data.value)
-      if (error.value) console.error(error.value.statusMessage)
+      if (error.value) console.error(error.value)
       this.stopLoading('containers')
       return { error, data }
     },
+    async fetchContainerDetails(server: string, id: string) {
+      this.startLoading('container')
+      const {error, data} = await useFetch(`/api/containers/${server}/${id}`)
+      data.value ? this.container = data.value : console.log(data.value)
+      if (error.value) console.error(error.value.statusMessage)
+      return { error, data}
+    },
     async fetchContainerAction(server: string, id: string, action: string) {
       this.startLoading(id)
-      const { error, data } = await useFetch(`/api/containers/${server}/${id}/actions/${action}`, { lazy: true, cache: 'no-cache' })
+      const { error, data } = await useFetch(`/api/containers/${server}/${id}/actions/${action}`)
       // @ts-ignore
       data.value ? this.servers = data.value : console.log(data.value)
       if (error.value) console.error(error.value.statusMessage)
@@ -36,21 +44,34 @@ export const useContainersStore = defineStore({
       this.startLoading('stats')
       const abort = new AbortController()
       const self = this
-      useSse('/api/containers/stats', {
+      await useSse('/api/containers/stats', {
         async onopen(response) {
           if (response.ok) {
             console.log('Connected to stats SSE')
             self.stopLoading('stats')
           } else {
             console.log('Failed to connect to stats SSE')
+            self.stopLoading('stats')
           }
         },
         async onmessage(event) {
           const stat = JSON.parse(JSON.parse(event.data))
           self.stats[stat.name] = stat
         },
-        signal: abort.signal
+        onclose() {
+          console.log('Closed stats SSE')
+          self.stopLoading('stats')
+        },
+        onerror(error) {
+          console.log('Error connecting to stats SSE')
+          console.log(error)
+          self.stopLoading('stats')
+        },
+        signal: abort.signal,
+        openWhenHidden: true,
       })
-    }
+      return true
+    },
+    
   }
 })

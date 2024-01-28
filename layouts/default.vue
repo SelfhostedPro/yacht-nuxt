@@ -8,7 +8,7 @@
         <slot />
       </v-container>
     </v-main>
-    <lazy-notifications />
+    <notifications />
   </v-app>
 </template>
   

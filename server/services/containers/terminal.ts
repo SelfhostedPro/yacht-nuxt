@@ -3,7 +3,7 @@ import { type Container, type ExecCreateOptions } from "dockerode"
 import { PassThrough as StreamPassThrough } from "stream"
 
 
-export const streamContainerStdout = async (server: string, id: string, send: (callback: (id: number) => any) => void, close: () => void, reqId: string) => {
+export const streamContainerStdout = async (server: string, id: string, send: (callback: (id: number) => any) => void, close: () => void, error: (message: string) => void, reqId: string) => {
     const _server = await getServer(server)
     // const _containerStream: StreamPassThrough = new StreamPassThrough()
     const _commandStream = new StreamPassThrough()
@@ -20,6 +20,11 @@ export const streamContainerStdout = async (server: string, id: string, send: (c
     };
     // Send the command to the container
     container.exec(cmd, (err, exec) => {
+        if (err) { 
+            YachtError(err, '/services/containers/terminal - streamContainerStdout', true, 'Docker Terminal')
+            error(err.message || 'Unable to create exec!')
+            close() 
+        }
         const options = {
             Tty: true,
             follow: true,

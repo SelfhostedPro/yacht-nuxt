@@ -26,12 +26,18 @@ export const useSSE = (event: H3Event, hookName: string) => {
     sseHooks.callHook(hookName, callback(id))
   }
 
-  const close = () => {
+  const close = (message?: string) => {
+    if (message) sseHooks.callHook(hookName, message)
     event.node.res.end()
+  }
+
+  const error = (message: string) => {
+    event.node.res.write(`id: ${id += 1}\n`)
+    event.node.res.write(`error: ${message}\n`)
   }
 
   event._handled = true
   event.node.req.on("close", close)
 
-  return { send, close, id }
+  return { send, close, error, id }
 }

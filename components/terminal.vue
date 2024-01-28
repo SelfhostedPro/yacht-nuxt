@@ -13,6 +13,7 @@ const term: Ref<Terminal | null> = useState('terminal', () => null)
 const fitAddon: Ref<FitAddon | null> = useState('fitAddon', () => null)
 const command = ref("");
 const sessionId = useState('sessionId', () => '')
+const notifications = notificationsConnected()
 
 // Make post request to send command to container
 const sendCommand = (data: ArrayBuffer | Uint8Array | string) => {
@@ -37,6 +38,7 @@ onMounted(async () => {
   term.value = new Terminal()
 
   // Getting SSE Stream for container output
+  await until(notifications).toBe(true)
   const { eventSource, error } = useEventSource('/api/containers/local/38a384153b87/terminal')
   if (!eventSource.value) return console.error('Failed to connect to container SSE', error.value)
   eventSource.value.addEventListener('message', (event) => {
@@ -44,6 +46,10 @@ onMounted(async () => {
   })
   eventSource.value.onopen = (ev) => {
     console.log('Connected to container SSE')
+  }
+  eventSource.value.onerror = (ev) => {
+    console.error('Failed to connect to container SSE', ev)
+    eventSource.value?.close()
   }
   const attachAddon = new AttachAddon(eventSource.value, { bidirectional: true, send: sendCommand, selector: 'data' })
   fitAddon.value = new FitAddon()

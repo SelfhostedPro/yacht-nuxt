@@ -8,9 +8,15 @@ export const sshAdapter = async (server: ServerConfig) => {
     const options = { ...server.options, sshOptions: { privateKey } }
     try {
         //@ts-expect-error - Dockerode type missing the fact you can pass decrypted key as string
-        return new Docker(options)
+        const newServer = new Docker(options)
+        const serverWorks = await newServer.info().catch((e) => {
+            YachtError(e, '/services/servers/adapters - sshAdapter')
+            return false
+        })
+        if (serverWorks === false) return null
+        return newServer
     } catch (e) {
-        YachtError(e, '/services/servers/adapters - sshAdapter')
+        YachtError(e, '/services/servers/adapters - sshAdapter#2')
         return null
     }
 }
@@ -18,9 +24,15 @@ export const sshAdapter = async (server: ServerConfig) => {
 export const localAdapter = async (server: ServerConfig) => {
     try {
         //@ts-expect-error - Dockerode type missing the fact you can pass decrypted key as string
-        return new Docker(server.options)
+        const newServer = new Docker(server.options)
+        const serverWorks = await newServer.info().catch((e) => {
+            YachtError(e, '/services/servers/adapters - localAdapter')
+            return false
+        })
+        if (serverWorks === false) return null
+        return newServer
     } catch (e) {
-        YachtError(e, '/services/servers/adapters - sshAdapter')
+        YachtError(e, '/services/servers/adapters - localAdapter#2')
         return null
     }
 }

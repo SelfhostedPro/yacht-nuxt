@@ -1,6 +1,6 @@
 <template>
   <v-container fluid>
-    <containers-list />
+    <lazy-containers-list />
   </v-container>
 </template>
 

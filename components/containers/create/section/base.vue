@@ -1,10 +1,14 @@
 <template>
   <div>
     <v-card-title>
-      Base Info
+      base
     </v-card-title>
     <v-card-text>
-      <containers-create-section-dynamic-string v-for="field, i in fields" :key="i" :field="field" />
+      <v-row>
+        <v-col cols="12" v-for="field, i in fields" :key="i">
+          <containers-create-section-dynamic-string :field="field" />
+        </v-col>
+      </v-row>
     </v-card-text>
   </div>
 </template>

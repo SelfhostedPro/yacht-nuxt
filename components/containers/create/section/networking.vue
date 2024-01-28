@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-card-title>
-      Networking Info
+      Networking
     </v-card-title>
     <v-card-text>
       <containers-create-section-dynamic-string :field="networkModeField" />

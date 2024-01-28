@@ -14,9 +14,9 @@ export default defineEventHandler(async (event) => {
     // Generate unique ID for this request
     const reqId = v4().toString()
     // Get SSE send and close functions
-    const { send, close } = useSSE(event, `terminal:${containerId}-${reqId}`)
+    const { send, close, error } = useSSE(event, `terminal:${containerId}-${reqId}`)
 
-    terminalSessions[`terminal:${containerId}-${reqId}`] = await streamContainerStdout(server, containerId, send, close, reqId)
+    terminalSessions[`terminal:${containerId}-${reqId}`] = await streamContainerStdout(server, containerId, send, close, error, reqId)
 
     // Send initial connection notification
     send(() => ({ id: reqId, data: '' }))
