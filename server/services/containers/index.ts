@@ -1,2 +1,3 @@
 export { getContainerAction } from './actions'
-export { getContainers, getContainerInfo, getContainerStats, } from './info'
+export { getContainers, getContainerInfo } from './info'
+export { getContainerStats, getContainerLogs } from './streams'

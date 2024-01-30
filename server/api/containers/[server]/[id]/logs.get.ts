@@ -1,0 +1,11 @@
+import { getContainerLogs } from "~/server/services/containers/streams"
+
+export default defineEventHandler(async (event) => {
+  const server = event.context.params?.server
+  const containerId = event.context.params?.id
+  if (!server || !containerId) throw createError('Server or container not specified')
+
+  const { close } = useSSE(event, "sse:containerLogs")
+  getContainerLogs(server, containerId, close)
+  event.node.req.on("close", () => close())
+})

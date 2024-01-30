@@ -18,7 +18,7 @@ export const useContainersStore = defineStore({
     async stopLoading(name: string) { this.loading = this.loading.filter((item) => item !== name) },
     async fetchContainers() {
       this.startLoading('containers')
-      const { error, data } = await useFetch('/api/containers', { lazy: false})
+      const { error, data } = await useFetch('/api/containers', { lazy: false })
       data.value ? this.servers = data.value : console.log(data.value)
       if (error.value) console.error(error.value)
       this.stopLoading('containers')
@@ -26,10 +26,10 @@ export const useContainersStore = defineStore({
     },
     async fetchContainerDetails(server: string, id: string) {
       this.startLoading('container')
-      const {error, data} = await useFetch(`/api/containers/${server}/${id}`)
+      const { error, data } = await useFetch(`/api/containers/${server}/${id}`)
       data.value ? this.container = data.value : console.log(data.value)
       if (error.value) console.error(error.value.statusMessage)
-      return { error, data}
+      return { error, data }
     },
     async fetchContainerAction(server: string, id: string, action: string) {
       this.startLoading(id)
@@ -72,6 +72,5 @@ export const useContainersStore = defineStore({
       })
       return true
     },
-    
   }
 })

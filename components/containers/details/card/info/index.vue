@@ -13,6 +13,20 @@
         </v-tooltip>
         {{ ' ' + container.name }}
       </v-toolbar-title>
+      <v-tooltip text="logs" location="top">
+        <template v-slot:activator="{ props: tooltip }">
+          <v-btn :rounded="0" v-bind="tooltip" icon="mdi-note-text-outline" @click="logsOpen = true"></v-btn>
+        </template>
+      </v-tooltip>
+      <v-tooltip text="terminal" location="top">
+        <template v-slot:activator="{ props: tooltip }">
+          <v-btn :rounded="0" v-bind="tooltip" icon="mdi-console" @click="terminalOpen = true"></v-btn>
+        </template>
+      </v-tooltip>
+      <containers-logs @close="logsOpen = false" v-if="logsOpen" v-model="logsOpen" :server="server"
+        :name="container.name" />
+      <containers-terminal @close="terminalOpen = false" v-if="terminalOpen" v-model="terminalOpen" :server="server"
+        :name="container.name" />
       <template v-slot:extension>
         <containers-details-card-info-actions :container="container" :server="server" />
         <v-spacer />
@@ -48,7 +62,8 @@
 <script lang="ts" setup>
 import type { Container } from '~/types/containers/yachtContainers';
 const { mdAndDown } = useDisplay()
-
+const logsOpen = ref(false)
+const terminalOpen = ref(false)
 interface Props {
   container: Container,
   server: string

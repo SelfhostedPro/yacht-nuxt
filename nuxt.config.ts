@@ -13,8 +13,13 @@ export default defineNuxtConfig({
     "@vueuse/nuxt",
     "@formkit/auto-animate",
     "vuetify-nuxt-module",
-    "@vee-validate/nuxt"
+    "@vee-validate/nuxt",
+    "nuxt-lodash"
   ],
+  lodash: {
+    prefix: "_",
+    upperAfterPrefix: false
+  },
   vuetify: {
     vuetifyOptions: "./vuetify.config.ts",
   },

@@ -5,12 +5,13 @@
  * Implements the attach method, that attaches the terminal to a WebSocket stream.
  */
 
-import type { Terminal, IDisposable, ITerminalAddon } from 'xterm';
-import type { AttachAddon as IAttachApi } from 'xterm-addon-attach';
+import type { Terminal, IDisposable, ITerminalAddon } from '@xterm/xterm';
+import type { AttachAddon as IAttachApi } from '@xterm/addon-attach';
+import async from 'async';
 
 interface IAttachOptions {
   bidirectional?: boolean;
-  send: (data: ArrayBuffer | Uint8Array | string) => void;
+  send?: (data: ArrayBuffer | Uint8Array | string) => void;
   selector?: string | undefined;
 }
 
@@ -28,13 +29,27 @@ export class AttachAddon implements ITerminalAddon, IAttachApi {
     this._selector = options && options.selector || undefined;
   }
 
+
   public activate(terminal: Terminal): void {
+    let messageQueue: (string | ArrayBuffer)[] = [];
+    let messageQueueTimeout: NodeJS.Timeout | undefined;
+
+    // Create function to write to terminal and clear queue
+    const throttledFunc = () => {
+      for (const data of messageQueue) {
+        if (data) terminal.write(typeof data === 'string' ? data : new Uint8Array(data));
+      }
+      messageQueue = [];
+      if (messageQueueTimeout !== undefined) clearTimeout(messageQueueTimeout);
+    }
+
     this._disposables.push(
-      addSocketListener(this._socket, 'message', ev => {
-        console.log(ev)
-        const data: ArrayBuffer | string = this._selector ? JSON.parse(ev.data)[this._selector] : ev.data;
-        terminal.write(typeof data === 'string' ? data : new Uint8Array(data));
-      })
+      addSocketListener(this._socket, 'message',
+        (ev) => {
+          const parsedData: ArrayBuffer | string = this._selector ? JSON.parse(ev.data)[this._selector] : JSON.parse(ev.data);
+          messageQueue.push(parsedData);
+          messageQueueTimeout = setInterval(throttledFunc, 10) // Increase interval to reduce function calls
+        })
     );
 
     if (this._bidirectional) {

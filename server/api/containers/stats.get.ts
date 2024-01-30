@@ -1,4 +1,4 @@
-import { getContainerStats } from "~/server/services/containers/info"
+import { getContainerStats } from "~/server/services/containers/streams"
 
 export default defineEventHandler(async (event) => {
   const { close } = useSSE(event, "sse:containerStats")

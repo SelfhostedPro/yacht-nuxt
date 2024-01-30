@@ -4,8 +4,8 @@
 
 <script lang="ts" setup>
 import type { VCard } from 'vuetify/components'
-import type { Terminal } from 'xterm'
-import type { FitAddon } from 'xterm-addon-fit'
+import type { Terminal } from '@xterm/xterm'
+import type { FitAddon } from '@xterm/addon-fit'
 
 import 'xterm/css/xterm.css';
 const terminalCard: Ref<VCard | null> = useState('terminalRef', () => null)
@@ -32,10 +32,10 @@ const resize = () => {
 }
 
 onMounted(async () => {
-  const { Terminal } = await import('xterm')
+  const { Terminal } = await import('@xterm/xterm')
   const { AttachAddon } = await import('~/composables/containers/xterm-ws-to-sse');
-  const { FitAddon } = await import('xterm-addon-fit')
-  term.value = new Terminal()
+  const { FitAddon } = await import('@xterm/addon-fit')
+  term.value = new Terminal({ disableStdin: false })
 
   // Getting SSE Stream for container output
   await until(notifications).toBe(true)
@@ -64,4 +64,4 @@ onMounted(async () => {
 })
 </script>
 
-<style></style>~/composables/containers/xterm-ws-to-sse
+<style></style>

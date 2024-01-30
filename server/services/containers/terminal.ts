@@ -20,10 +20,10 @@ export const streamContainerStdout = async (server: string, id: string, send: (c
     };
     // Send the command to the container
     container.exec(cmd, (err, exec) => {
-        if (err) { 
+        if (err) {
             YachtError(err, '/services/containers/terminal - streamContainerStdout', true, 'Docker Terminal')
             error(err.message || 'Unable to create exec!')
-            close() 
+            close()
         }
         const options = {
             Tty: true,
