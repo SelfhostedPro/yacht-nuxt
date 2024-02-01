@@ -9,7 +9,9 @@ import { sshAdapter, localAdapter } from "./adapters";
 let _servers: ServerDict
 
 export const useServers = async () => {
-    if (!_servers) _servers = await getServers()
+    // Disable caching for now.
+    // if (!_servers) 
+    _servers = await getServers()
     return _servers
 }
 

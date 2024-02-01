@@ -6,7 +6,7 @@
     <v-card-text>
       <v-row>
         <v-col cols="12" v-for="field, i in fields" :key="i">
-          <containers-create-section-dynamic-string :field="field" />
+          <common-form-dynamic-string :field="field" />
         </v-col>
       </v-row>
     </v-card-text>
@@ -14,7 +14,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { Field } from './dynamic-string.vue'
+import { type Field} from '~/types/forms'
 const { servers } = useContainersStore()
 
 const fields: Field[] = [

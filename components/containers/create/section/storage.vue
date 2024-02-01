@@ -9,13 +9,13 @@
       <v-btn color="primary" class="float-right my-3" @click="pushStorageField()">+</v-btn>
     </v-card-title>
     <v-card-text>
-      <containers-create-section-dynamic-array :arrayFields="storageFields" />
+      <common-form-dynamic-array :arrayFields="storageFields" />
     </v-card-text>
   </div>
 </template>
 
 <script lang="ts" setup>
-import type { Field } from './dynamic-string.vue'
+import { type Field} from '~/types/forms'
 const storageFields: Ref<Field[][]> = ref([]);
 
 const pushStorageField = () => {

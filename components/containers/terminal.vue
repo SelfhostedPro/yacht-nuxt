@@ -1,5 +1,6 @@
 <template>
-  <Xterm ref="xterm" v-if="attachAddon" :attach-addon="attachAddon" term-type="terminal" @close="$emit('close')" @refresh="refresh()">
+  <Xterm ref="xterm" v-if="attachAddon" :attach-addon="attachAddon" term-type="terminal" @close="$emit('close')"
+    @refresh="refresh()">
     <template #btns>
       <!-- <v-tooltip v-if="isSupported" :text="'copy logs to clipboard'">
         <template v-slot:activator="{ props }">

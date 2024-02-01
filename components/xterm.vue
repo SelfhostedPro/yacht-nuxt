@@ -1,7 +1,7 @@
 
 <template>
-  <v-dialog scrollable :fullscreen="fullscreen" :max-width="fullscreen ? '100vw' : '70vw'"
-    :max-height="fullscreen ? '100vh' : '70vh'" transition="dialog-bottom-transition">
+  <v-dialog scrollable :fullscreen="fullscreen || sm" :max-width="fullscreen || sm ? '100vw' : '70vw'"
+    :max-height="fullscreen || sm ? '100vh' : '70vh'" transition="dialog-bottom-transition">
     <template #default>
       <v-card :loading="!term">
         <!-- title bar -->
@@ -36,7 +36,7 @@ defineEmits(['close', 'maximize', 'refresh', 'copy'])
 // Window Controls
 const fullscreen: Ref<boolean> = ref(false)
 const loading = ref(false)
-
+const { sm } = useDisplay()
 
 const terminalCard: Ref<VCard | null> = useState('terminalRef', () => null)
 const term: Ref<Terminal | null> = useState('terminal', () => null)

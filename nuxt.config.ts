@@ -1,7 +1,7 @@
 import basicSsl from '@vitejs/plugin-basic-ssl'
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  devtools: { enabled: true },
+  devtools: { enabled: false }, // Temporary https://github.com/oven-sh/bun/issues/4743#issuecomment-1874052751
   experimental: {
     renderJsonPayloads: false
   },

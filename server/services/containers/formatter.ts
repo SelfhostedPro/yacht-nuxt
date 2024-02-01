@@ -259,13 +259,13 @@ export const normalizeCreate = async (
                 ({ source, destination, read_only }) =>
                     `${source}:${destination}${read_only ? ':ro' : ''}`,
             ),
-            Devices: devices,
+            Devices: devices?.map(({ host, container, permissions }) => ({ PathOnHost: host, PathInContainer: container, CgroupPermissions: permissions })),
             PortBindings: ports?.reduce((acc, { container, host, protocol }) => {
                 acc[container + '/' + protocol] = [{ HostPort: host }];
                 return acc;
             }, {} as { [index: string]: object }),
-            Sysctls: sysctls?.reduce((acc, { key, value }) => {
-                acc[key] = value;
+            Sysctls: sysctls?.reduce((acc, { name, value }) => {
+                acc[name] = value;
                 return acc;
             }, {} as { [index: string]: string }),
             CapAdd: capabilities?.add,
@@ -287,7 +287,7 @@ const transformInfo = async (data: CreateContainerForm) => {
     const { labels, info, ports, env } = data;
 
     const [baseLabels, infoLabels, portLabels, envLabels] = await Promise.all([
-        labels ? Object.fromEntries(labels.map(({ key, value }) => [key, value]),) : null,
+        labels ? Object.fromEntries(labels.map(({ name, value }) => [name, value]),) : null,
         info ? Object.fromEntries(Object.entries(info).map(([key, value]) => [`sh.yacht.${key}`, value])) : null,
         ports ? Object.fromEntries(ports.map((port) => [`sh.yacht.${port.host}`, port.label])) : null,
         env ? Object.fromEntries(Object.entries(env).map(([name, env]) => [`sh.yacht.env.${name}.label`, env.label, `sh.yacht.env.${name}.description`, env.description])) : null

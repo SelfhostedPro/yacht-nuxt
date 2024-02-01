@@ -15,6 +15,7 @@
             <containers-create-form />
           </form>
           <v-card-actions style="background-color: rgb(var(--v-theme-surface)) !important;">
+            <v-btn color="warning" @click="resetForm()">reset</v-btn>
             <v-spacer />
             <v-btn v-if="step !== 0" @click="step--">
               prev
@@ -34,20 +35,25 @@
 
 <script lang="ts" setup>
 import { type YachtTemplate } from '~/types/templates/yacht';
-import { createContainerFormSchema } from "~/types/containers/create"
+import { createContainerFormSchema, type CreateContainerForm } from "~/types/containers/create"
 interface Props {
   template?: YachtTemplate,
 }
 defineProps<Props>()
 const loading = ref(false)
 const step = useState('containerFormStep', () => 0)
-const { values, validate, handleSubmit, defineField } = useForm({
-  validationSchema: toTypedSchema(createContainerFormSchema)
-},)
+const { servers } = useContainersStore()
+
+const { values, validate, handleSubmit, resetForm, setValues } = useForm({
+  initialValues: {
+    image: '',
+    server: Object.keys(servers)[0] || '',
+  },
+  validationSchema: toTypedSchema(createContainerFormSchema),
+  keepValuesOnUnmount: true
+})
 
 const test = useFormValues()
-
-
 
 const maximize = ref(false)
 const dialog = ref(false)
@@ -55,8 +61,24 @@ const dialog = ref(false)
 
 defineEmits(['close', 'maximize'])
 
+onMounted(() => {
+  // Load and validate values on mount
+  const savedContainerForm = localStorage.getItem('yacht_savedContainerForm')
+  if (savedContainerForm) {
+    const savedValues = JSON.parse(savedContainerForm) as CreateContainerForm
+    const isValid = createContainerFormSchema.safeParse(savedValues)
+    if (isValid.success) {
+      setValues(savedValues)
+    } else {
+      console.log(isValid.error)
+      localStorage.removeItem('yacht_savedContainerForm')
+    }
+  }
+})
+
 onBeforeUnmount(() => {
-  
+  // Save values before unmount
+  localStorage.setItem('yacht_savedContainerForm', JSON.stringify(values))
 })
 </script>
 

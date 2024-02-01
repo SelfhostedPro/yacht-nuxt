@@ -7,7 +7,6 @@
 
 import type { Terminal, IDisposable, ITerminalAddon } from '@xterm/xterm';
 import type { AttachAddon as IAttachApi } from '@xterm/addon-attach';
-import async from 'async';
 
 interface IAttachOptions {
   bidirectional?: boolean;

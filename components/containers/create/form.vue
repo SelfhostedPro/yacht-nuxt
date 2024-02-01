@@ -25,7 +25,15 @@
 
 <script lang="ts" setup>
 import { useDisplay } from 'vuetify';
-import { LazyContainersCreateSectionBase, LazyContainersCreateSectionInfo, LazyContainersCreateSectionNetworking, LazyContainersCreateSectionStorage } from '#components';
+import {
+  LazyContainersCreateSectionBase,
+  LazyContainersCreateSectionInfo,
+  LazyContainersCreateSectionNetworking,
+  LazyContainersCreateSectionStorage,
+  LazyContainersCreateSectionEnvironment,
+  LazyContainersCreateSectionAdvanced,
+  LazyContainersCreateSectionPreview
+} from '#components';
 
 const { smAndDown } = useDisplay()
 
@@ -35,6 +43,9 @@ const sections = [
   LazyContainersCreateSectionBase,
   LazyContainersCreateSectionInfo,
   LazyContainersCreateSectionNetworking,
-  LazyContainersCreateSectionStorage
+  LazyContainersCreateSectionStorage,
+  LazyContainersCreateSectionEnvironment,
+  LazyContainersCreateSectionAdvanced,
+  LazyContainersCreateSectionPreview
 ]
 </script>

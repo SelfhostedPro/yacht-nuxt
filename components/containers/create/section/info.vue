@@ -12,13 +12,13 @@
           <v-avatar size="60" :image="form.info?.icon || fields['icon'].placeholder" />
         </v-col>
         <v-col>
-          <containers-create-section-dynamic-string :field="fields['icon']" />
+          <common-form-dynamic-string :field="fields['icon']" />
         </v-col>
         <v-col cols="12">
-          <containers-create-section-dynamic-string :field="fields['title']" />
+          <common-form-dynamic-string :field="fields['title']" />
         </v-col>
         <v-col cols="12">
-          <containers-create-section-dynamic-string :field="fields['notes']" />
+          <common-form-dynamic-string :field="fields['notes']" />
           <v-card-text class="font-weight-black">DO NOT STORE SENSITIVE INFO HERE OR R/SELFHOSTED WILL JUDGE YOU
           😤</v-card-text>
         </v-col>
@@ -40,7 +40,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { Field } from "./dynamic-string.vue";
+import { type Field} from '~/types/forms'
 const { xs } = useDisplay()
 const preview = ref(false)
 const form = useFormValues()

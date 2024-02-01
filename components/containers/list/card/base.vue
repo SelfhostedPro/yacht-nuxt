@@ -18,7 +18,7 @@
           />
         </template>
       </v-tooltip>
-      {{ container.info.title || container.name }}
+      {{ container.name }}
     </v-card-title>
     <v-card-subtitle>{{ 'image: ' + container.image }}</v-card-subtitle>
     <v-card-subtitle>{{ 'id: ' + container.shortId }}</v-card-subtitle>

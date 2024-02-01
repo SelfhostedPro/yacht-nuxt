@@ -13,3 +13,14 @@ export const ServerContainersSchema = z.record(containerSchema)
 export type ServerContainers = {
     [key: string]: Container[]
 }
+
+// Resources
+export type ServerImages = {
+    [key: string]: Docker.ImageInfo[]
+}
+export type ServerVolumes = {
+    [key: string]: Docker.VolumeInspectInfo[]
+}
+export type ServerNetworks = {
+    [key: string]: Docker.NetworkInspectInfo[]
+}

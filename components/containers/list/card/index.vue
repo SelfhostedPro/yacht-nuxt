@@ -13,7 +13,7 @@
         <!-- Expansion Buttons -->
         <v-btn-toggle @click.prevent v-model="reveal" :rounded="false" multiple variant="text" color="primary">
           <v-tooltip v-for="component in infoComponents" :key="component.name" :text="component.name"
-            location="left center">
+            location="bottom">
             <template v-slot:activator="{ props }">
               <v-btn v-bind="props" :active="reveal.includes(component.component)"
                 :icon="reveal.includes(component.component) ? component.icon[0] : component.icon[1]"

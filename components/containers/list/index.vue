@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid>
+  <v-container fluid class="px-0">
     <!-- <template v-if="loading.includes('containers')">
       <v-card>
         <v-card-title class="text-center">
@@ -18,8 +18,7 @@
           <v-text-field v-model="search" clearable density="comfortable" hide-details placeholder="Search"
             prepend-inner-icon="mdi-magnify" style="max-width: 300px;" variant="solo" />
         </v-col>
-        <v-spacer />
-        <v-col cols="2" class="d-flex justify-end">
+        <v-col cols="3" class="d-flex justify-end">
           <containers-create />
           <v-btn icon :loading="loading.includes('containers')" @click="refresh()">
             <v-icon>mdi-refresh</v-icon>
@@ -34,7 +33,7 @@
             <v-row>
               <v-col v-for="container in items" :key="container.raw.id" cols="12" sm="6" md="4" lg="4" xl="3">
                 <lazy-containers-list-card :container="container.raw" :server="server"
-                  :stats="stats[container.raw.name] || undefined" />
+                  :stats="stats[container.raw.name] ? stats[container.raw.name] : undefined" />
               </v-col>
             </v-row>
           </template>
@@ -93,6 +92,7 @@ const tab: Ref<number> = useState('tab', () => 0)
 const containersStore = useContainersStore()
 const { servers, loading, stats } = storeToRefs(containersStore)
 const notifications = notificationsConnected()
+const { xs } = useDisplay()
 
 const refresh = async () => {
   await until(notifications).toBe(true)
@@ -107,8 +107,6 @@ const refresh = async () => {
     },
   })
 }
-
-
 
 onMounted(() => {
   refresh()

@@ -4,7 +4,7 @@
       Networking
     </v-card-title>
     <v-card-text>
-      <containers-create-section-dynamic-string :field="networkModeField" />
+      <common-form-dynamic-string :field="networkModeField" />
     </v-card-text>
     <v-slide-y-transition group>
       <v-card-title v-if="form.network_mode === 'bridge'" class="d-flex align-center">
@@ -14,13 +14,13 @@
       </v-card-title>
     </v-slide-y-transition>
     <v-card-text v-if="form.network_mode === 'bridge'">
-      <containers-create-section-dynamic-array :arrayFields="portFields" />
+      <common-form-dynamic-array :arrayFields="portFields" />
     </v-card-text>
   </div>
 </template>
 
 <script lang="ts" setup>
-import type { Field } from "./dynamic-string.vue";
+import { type Field} from '~/types/forms'
 const portFields: Ref<Field[][]> = ref([]);
 
 const form = useFormValues()

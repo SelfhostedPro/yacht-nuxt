@@ -1,6 +1,6 @@
 import { z } from "zod"
 import { containerOciInfoSchema } from "./yachtContainers"
-import { keyValueSchema, capAddSchema, capDropSchema } from "../shared"
+import { keyValueSchema, capAddSchema, capDropSchema, nameValueSchema } from "../shared"
 
 export const containerFormEnvsSchema = z.object({
     name: z.string().optional(),
@@ -43,6 +43,20 @@ export const networkModesSchema = z.object({
     ])
 })
 
+export const devicesSchema = z.object({
+    host: z.string().optional(),
+    container: z.string().optional(),
+    permissions: z.union([
+        z.literal('r'),
+        z.literal('w'),
+        z.literal('m'),
+        z.literal('mw'),
+        z.literal('rm'),
+        z.literal('rwm'),
+        z.literal('rw'),
+    ]).optional()
+})
+
 
 export const createContainerFormSchema = z.object({
     name: z.string().optional(),
@@ -55,10 +69,10 @@ export const createContainerFormSchema = z.object({
     mounts: z.array(containerFormVolumesSchema).optional(),
     ports: z.array(containerFormPortsSchema).optional(),
     env: z.array(containerFormEnvsSchema).optional(),
-    labels: z.array(keyValueSchema).optional(),
+    labels: z.array(nameValueSchema).optional(),
     command: z.array(z.string()).optional(),
-    devices: z.array(z.string()).optional(),
-    sysctls: z.array(keyValueSchema).optional(),
+    devices: z.array(devicesSchema).optional(),
+    sysctls: z.array(nameValueSchema).optional(),
     capabilities: z
         .object({
             add: z.array(capAddSchema).optional(),
