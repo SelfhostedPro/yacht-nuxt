@@ -1,6 +1,16 @@
 import { z } from "zod"
 import { capAddSchema, capDropSchema, keyValueSchema } from "../shared"
 
+
+
+export const addTemplateSchema = z.object({
+  url: z.string(),
+  name: z.string(),
+  title: z.string().optional()
+})
+
+export type AddTemplate = z.infer<typeof addTemplateSchema>
+
 export const yachtTemplateLinkSchema = z.object({
   url: z.string(),
   text: z.string().optional(),
@@ -37,7 +47,7 @@ export const yachtV2TemplatePortSchema = z.record(
   yachtV2TemplatePortValueSchema
 )
 
-export const yachtV1TemplatePortSchema = z.record(z.string())
+export const yachtV1TemplatePortSchema = z.array(z.union([z.string(), z.record(z.string())]))
 export const yachtTemplateVolumeSchema = z.object({
   container: z.string(),
   bind: z.string().optional(),
@@ -71,10 +81,10 @@ export const portainerTemplateAccessControlSchema = z.object({
 
 
 export const yachtV1TemplateSchema = z.object({
-  type: z.number().optional(),
+  type: z.string().or(z.number()).optional(),
   title: z.string(),
   name: z.string().optional(),
-  description: z.string().optional(),
+  description: z.string().optional().nullable(),
   logo: z.string().optional(),
   note: z.string().optional(),
   image: z.string(),
@@ -87,12 +97,8 @@ export const yachtV1TemplateSchema = z.object({
   categories: z.array(z.string()).optional(),
   platform: z.union([z.literal("linux"), z.literal("windows")]).optional(),
   restart_policy: z.string().optional(),
-  ports: z
-    .union([
-      yachtV1TemplatePortSchema,
-      z.array(z.string())
-    ])
-    .optional(),
+  featured_image: z.string().optional(), //TODO: See about moving this to just v2 templates
+  ports: z.union([yachtV1TemplatePortSchema, yachtV2TemplatePortSchema, z.array(z.string())]).optional(), //TODO: See about moving this to just v2 templates
   volumes: z.array(yachtTemplateVolumeSchema).optional(),
   env: z.array(yachtTemplateEnvironmentSchema).optional(),
   labels: z.array(keyValueSchema).optional(),
@@ -111,21 +117,20 @@ export const yachtV1TemplateSchema = z.object({
     .optional()
 })
 
+export type YachtV1Template = z.infer<typeof yachtV1TemplateSchema>
+
 export const yachtV2TemplateSchema = yachtV1TemplateSchema.extend({
-  featured_image: z.string().optional(),
-  ports: z
-    .union([
-      yachtV1TemplatePortSchema,
-      yachtV2TemplatePortSchema,
-      z.array(z.string())
-    ])
-    .optional(),
-})
+  featured_image: z.string().optional()
+});
+
+export type YachtV2Template = z.infer<typeof yachtV2TemplateSchema>
 
 export const portainerV1TemplateSchema = yachtV1TemplateSchema.extend({
   type: z.number(),
   ports: z.array(z.string()).optional()
 })
+
+export type PortainerV1Template = z.infer<typeof portainerV1TemplateSchema>
 
 
 
@@ -133,6 +138,8 @@ export const portainerV2TemplateSchema = z.object({
   version: z.literal("2"),
   templates: z.array(portainerV1TemplateSchema)
 })
+
+export type PortainerV2Template = z.infer<typeof portainerV2TemplateSchema>
 
 export const yachtTemplateSchema = z.object({
   name: z.string(),

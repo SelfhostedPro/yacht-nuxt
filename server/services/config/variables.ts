@@ -27,5 +27,6 @@ export const configPaths = {
     backups: {
       config: process.env.BACKUP_CONFIG_PATH || 'backups/config',
       instance: process.env.BACKUP_INSTANCE_PATH || 'backups/instance'
-    }
+    },
+    templates: process.env.TEMPLATE_PATH || 'templates/'
   }

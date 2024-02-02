@@ -47,6 +47,12 @@ export default defineNuxtConfig({
     storage: {
       base: {
         driver: 'fsLite',
+        base: process.env.CONFIG_PATH || '../config',
+      }
+    },
+    devStorage: {
+      base: {
+        driver: 'fsLite',
         base: process.env.CONFIG_PATH || './config',
       }
     }

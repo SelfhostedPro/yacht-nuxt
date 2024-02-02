@@ -25,12 +25,11 @@ const links = [
     to: "/containers",
     icon: "mdi-application"
   },
-  // },
-  // {
-  //   text: "Templates",
-  //   to: "/templates",
-  //   icon: "mdi-folder"
-  // },
+  {
+    text: "Templates",
+    to: "/templates",
+    icon: "mdi-folder"
+  },
   // {
   //   text: "Projects",
   //   to: "/projects",

@@ -3,4 +3,4 @@
 
 exec \
     s6-notifyoncheck -d -n 300 -w 1000 -c "nc -z localhost 3000" \
-        cd /app/ s6-setuidgid abc /usr/bin/node output/server.js
+        cd /app/ s6-setuidgid abc /usr/bin/node server/index.mjs

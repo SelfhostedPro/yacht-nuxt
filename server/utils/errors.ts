@@ -11,7 +11,8 @@ export const YachtError = (error: any, from?: string, internal?: boolean, servic
         YachtLog({ title: 'Docker Error', level: 'error', message: 'Docker is not running or the socket is not accessible!', from: from, dedupe: false })
     }
      else if (internal) {
-        YachtLog({ title: `${service || 'Internal'} Error`, level: 'error', message: error.reason, from: from })
+        YachtLog({ title: `${service || 'Internal'} Error`, level: 'error', message: error.reason || error.message, from: from })
+        throw createError(error)
     }
     else {
         console.log(JSON.stringify(error, null, 2))

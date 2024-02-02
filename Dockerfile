@@ -43,7 +43,7 @@ WORKDIR /app
 RUN apk add --no-cache \
     nodejs
 COPY --from=install /temp/prod/node_modules /app/node_modules
-COPY --from=prerelease /usr/src/app/.output /app/.output
+COPY --from=prerelease /usr/src/app/.output /app/
 COPY package.json /app/
 COPY root /
 

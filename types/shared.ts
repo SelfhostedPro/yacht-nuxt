@@ -1,8 +1,8 @@
 import { z } from "zod"
 
 export const keyValueSchema = z.object({
-    key: z.string(),
-    value: z.string()
+    key: z.string().optional(),
+    value: z.string().optional()
 })
 export const nameValueSchema = z.object({
     name: z.string(),
