@@ -14,14 +14,19 @@
 </template>
 
 <script lang="ts" setup>
-import { type Field} from '~/types/forms'
-const { servers } = useContainersStore()
+import { type Field } from '~/types/forms'
+
+const containerStore = useContainersStore()
+const { servers } = storeToRefs(containerStore)
+await useAsyncData('servers', () => containerStore.fetchContainers().then(() => true))
+
+
 
 const fields: Field[] = [
   { label: 'Name', value: 'name', placeholder: 'yacht', type: 'VTextField' },
   { label: 'Image', value: 'image', placeholder: 'ghcr.io/selfhostedpro/yacht-api:main', type: 'VTextField' },
   { label: 'Restart', value: 'restart', items: ['always', 'on-failure', 'unless-stopped', 'none'], type: 'VSelect' },
-  { label: 'Server', value: 'server', items: Object.keys(servers), type: 'VSelect' }
+  { label: 'Server', value: 'server', items: Object.keys(servers.value), type: 'VSelect' }
 ]
 </script>
 

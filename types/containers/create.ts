@@ -1,6 +1,6 @@
 import { z } from "zod"
 import { containerOciInfoSchema } from "./yachtContainers"
-import { keyValueSchema, capAddSchema, capDropSchema, nameValueSchema } from "../shared"
+import { keyValueSchema, capAddSchema, capDropSchema, nameValueSchema, optionalNameValueSchema } from "../shared"
 
 export const containerFormEnvsSchema = z.object({
     name: z.string().optional(),
@@ -8,6 +8,7 @@ export const containerFormEnvsSchema = z.object({
     description: z.string().optional(),
     label: z.string().optional()
 })
+export type ContainerFormEnvs = z.infer<typeof containerFormEnvsSchema>
 
 export const containerFormUnchangableSchema = z.object({
     property: z.union([
@@ -24,7 +25,16 @@ export const containerFormPortsSchema = z.object({
     protocol: z.union([z.literal("tcp"), z.literal("udp")]).optional(),
     description: z.string().optional(),
     unchangable: z
-        .union([z.boolean(), z.array(containerFormUnchangableSchema)])
+        .union([
+            z.boolean(),
+            z.array(
+                z.union([
+                    z.literal("host"),
+                    z.literal("container"),
+                    z.literal("protocol")
+                ])
+            )
+        ])
         .optional()
 })
 
@@ -69,7 +79,7 @@ export const createContainerFormSchema = z.object({
     mounts: z.array(containerFormVolumesSchema).optional(),
     ports: z.array(containerFormPortsSchema).optional(),
     env: z.array(containerFormEnvsSchema).optional(),
-    labels: z.array(nameValueSchema).optional(),
+    labels: z.array(optionalNameValueSchema).optional(),
     command: z.array(z.string()).optional(),
     devices: z.array(devicesSchema).optional(),
     sysctls: z.array(nameValueSchema).optional(),

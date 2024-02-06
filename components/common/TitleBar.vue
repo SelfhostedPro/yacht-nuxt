@@ -1,6 +1,6 @@
 <template>
   <v-toolbar
-    :color="color"
+    v-bind="$attrs"
     align-center
   >
     <v-toolbar-title>

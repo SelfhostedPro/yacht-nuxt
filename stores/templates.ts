@@ -12,7 +12,7 @@ export const useTemplatesStore = defineStore({
     async stopLoading(name: string) { this.loading = this.loading.filter((item) => item !== name) },
     async fetchTemplates() {
       this.startLoading('templates')
-      const { error, data } = await useFetch('/api/templates', { lazy: false })
+      const { error, data } = await useFetch<YachtTemplate[]>('/api/templates', { lazy: false })
       data.value ? this.templates = data.value : console.log(data.value)
       if (error.value) console.error(error.value)
       this.stopLoading('templates')

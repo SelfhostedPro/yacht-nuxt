@@ -14,7 +14,7 @@
             </v-card-text>
             <v-btn color="primary" class="float-right my-3" @click="pushCommandField()">+</v-btn>
           </div>
-          <common-form-dynamic-array :arrayFields="commandField" />
+          <common-form-dynamic-array path="command" :arrayFields="commands" />
         </v-expansion-panel-text>
       </v-expansion-panel>
 
@@ -24,9 +24,9 @@
             <v-card-text>
               Add custom labels to your container.
             </v-card-text>
-            <v-btn color="primary" class="float-right my-3" @click="pushLabelField()">+</v-btn>
+            <v-btn color="primary" class="float-right my-3" @click="pushLabel()">+</v-btn>
           </div>
-          <common-form-dynamic-array :arrayFields="labelsField" />
+          <common-form-dynamic-array path="labels" :arrayFields="labels" />
         </v-expansion-panel-text>
       </v-expansion-panel>
 
@@ -38,7 +38,7 @@
             </v-card-text>
             <v-btn color="primary" class="float-right my-3" @click="pushSysctls()">+</v-btn>
           </div>
-          <common-form-dynamic-array :arrayFields="sysctlFields" />
+          <common-form-dynamic-array path="sysctls" :arrayFields="sysctls" />
         </v-expansion-panel-text>
       </v-expansion-panel>
 
@@ -48,9 +48,9 @@
             <v-card-text>
               Add custom devices to your container.
             </v-card-text>
-            <v-btn color="primary" class="float-right my-3" @click="pushDeviceField()">+</v-btn>
+            <v-btn color="primary" class="float-right my-3" @click="pushDevices()">+</v-btn>
           </div>
-          <common-form-dynamic-array :arrayFields="deviceFields" />
+          <common-form-dynamic-array path="devices" :arrayFields="devices" />
         </v-expansion-panel-text>
       </v-expansion-panel>
 
@@ -83,37 +83,49 @@
 
 <script lang="ts" setup>
 
+import type { CreateContainerForm } from '~/types/containers/create';
 import { type Field } from '~/types/forms'
-const commandField: Ref<Field[][]> = ref([]);
-const labelsField: Ref<Field[][]> = ref([]);
-const sysctlFields: Ref<Field[][]> = ref([]);
-const deviceFields: Ref<Field[][]> = ref([]);
 const panelsOpen = ref([])
 const { xs } = useDisplay()
+
+const form = useFormValues<CreateContainerForm>()
+
+const commands: ComputedRef<Field[][]> = computed(() => { return form.value.command?.map((command, index) => ([{ label: "command", value: `command[${index}]`, placeholder: "/bin/sh", cols: "12", type: "VTextField" }])) || [] })
 const pushCommandField = () => {
-  commandField.value.push([
-    { label: "Command", value: `command[${commandField.value.length}]`, placeholder: "/bin/sh", cols: "12", type: "VTextField" },
-  ])
+  form.value.command ? form.value.command.push('') : form.value.command = ['']
 }
-const pushLabelField = () => {
-  labelsField.value.unshift([
-    { label: "name", cols: '6', value: `labels[${labelsField.value.length}].name`, placeholder: "TZ", type: "VTextField" },
-    { label: "value", cols: '6', value: `labels[${labelsField.value.length}].value`, placeholder: "America/Los_Angeles", type: "VTextField" },
-  ])
+
+const labels: ComputedRef<Field[][]> = computed(() => {
+  return form.value.labels?.map((label, index) => ([
+    { label: "name", cols: '6', value: `labels[${index}].name`, placeholder: "TZ", type: "VTextField" },
+    { label: "value", cols: '6', value: `labels[${index}].value`, placeholder: "America/Los_Angeles", type: "VTextField" },
+  ])) || []
+})
+const pushLabel = () => {
+  form.value.labels ? form.value.labels.unshift({ name: '', value: '' }) : form.value.labels = []
 }
+
+const sysctls: ComputedRef<Field[][]> = computed(() => {
+  return form.value.sysctls?.map((sysctl, index) => ([
+    { label: "name", value: `sysctls[${index}].name`, placeholder: "net.ipv6.conf.all.disable_ipv6", cols: "12", type: "VTextField" },
+    { label: "value", value: `sysctls[${index}].value`, placeholder: "1", cols: "12", type: "VTextField" },
+  ])) || []
+})
 const pushSysctls = () => {
-  sysctlFields.value.unshift([
-    { label: "name", value: `sysctls[${sysctlFields.value.length}].name`, placeholder: "net.ipv6.conf.all.disable_ipv6", cols: "12", type: "VTextField" },
-    { label: "value", value: `sysctls[${sysctlFields.value.length}].value`, placeholder: "1", cols: "12", type: "VTextField" },
-  ])
+  form.value.sysctls ? form.value.sysctls.unshift({ name: '', value: '' }) : form.value.sysctls = []
 }
-const pushDeviceField = () => {
-  deviceFields.value.unshift([
-    { label: "host", value: `devices[${deviceFields.value.length}].name`, placeholder: "name", cols: "12", type: "VTextField" },
-    { label: "container", value: `devices[${deviceFields.value.length}].path`, placeholder: "path", cols: "8", type: "VTextField" },
-    { label: "permissions", value: `devices[${deviceFields.value.length}].permissions`, placeholder: "rwm", items: ['r', 'w', 'm', 'mw', 'rm', 'rwm', 'rw'], cols: "4", type: "VSelect" },
-  ])
+
+const devices: ComputedRef<Field[][]> = computed(() => {
+  return form.value.devices?.map((device, index) => ([
+    { label: "host", value: `devices[${index}].name`, placeholder: "name", cols: "12", type: "VTextField" },
+    { label: "container", value: `devices[${index}].path`, placeholder: "path", cols: "8", type: "VTextField" },
+    { label: "permissions", value: `devices[${index}].permissions`, placeholder: "rwm", items: ['r', 'w', 'm', 'mw', 'rm', 'rwm', 'rw'], cols: "4", type: "VSelect" },
+  ])) || []
+})
+const pushDevices = () => {
+  form.value.devices ? form.value.devices.push({ host: '', container: '', permissions: 'rwm' }) : form.value.devices = []
 }
+
 const capAddField: Field = {
   label: "capability",
   value: `capabilities.add`,

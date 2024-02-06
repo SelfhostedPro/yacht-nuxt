@@ -8,3 +8,5 @@ export interface Field {
     multiple?: boolean;
     type: "VTextField" | "VSelect" | "VTextarea" | "VBtn" | "VBtnToggle";
 }
+
+export interface Structure extends Omit<Field, "value"> {}

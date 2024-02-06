@@ -34,8 +34,7 @@
               </v-col>
               <v-col>
                 <v-card-title>{{ form.info?.title }}</v-card-title>
-                <v-card-text v-if="form.info && form.info.notes"
-                  v-html="$mdRenderer.render(form.info?.notes || '')" />
+                <v-card-text v-if="form.info && form.info.notes" v-html="$mdRenderer.render(form.info?.notes || '')" />
                 <v-card-text v-else text="No notes defined."><i style="color:red;">No notes
                     defined.</i></v-card-text>
               </v-col>
@@ -52,19 +51,19 @@
               <v-col xs="12" sm="12" md="6" v-for="port in form.ports">
                 <v-card color="foreground">
                   <v-card-title>
-                    {{ port.label || null }}
+                    {{ port?.label || null }}
                   </v-card-title>
                   <v-card-subtitle>
-                    host: {{ port.host }}
+                    host: {{ port?.host }}
                   </v-card-subtitle>
                   <v-card-subtitle>
-                    container {{ port.container }}
+                    container {{ port?.container }}
                   </v-card-subtitle>
                   <v-card-subtitle>
-                    protocol {{ port.protocol }}
+                    protocol {{ port?.protocol }}
                   </v-card-subtitle>
                   <v-card-text>
-                    {{ port.description }}
+                    {{ port?.description }}
                   </v-card-text>
                 </v-card>
               </v-col>

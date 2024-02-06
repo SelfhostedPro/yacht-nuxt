@@ -19,7 +19,10 @@
             prepend-inner-icon="mdi-magnify" style="max-width: 300px;" variant="solo" />
         </v-col>
         <v-col cols="3" class="d-flex justify-end">
-          <containers-create />
+          <v-btn icon color="primary" @click="createDialog = true">
+            <v-icon icon="mdi-plus" />
+          </v-btn>
+          <containers-create v-if="createDialog" v-model:open="createDialog" />
           <v-btn icon :loading="loading.includes('containers')" @click="refresh()">
             <v-icon>mdi-refresh</v-icon>
           </v-btn>
@@ -88,11 +91,12 @@
 
 <script lang="ts" setup>
 const search = useState('search', () => "")
-const tab: Ref<number> = useState('tab', () => 0)
+const tab: Ref<number> = ref(0)
 const containersStore = useContainersStore()
 const { servers, loading, stats } = storeToRefs(containersStore)
 const notifications = notificationsConnected()
 const { xs } = useDisplay()
+const createDialog = ref(false)
 
 const refresh = async () => {
   await until(notifications).toBe(true)

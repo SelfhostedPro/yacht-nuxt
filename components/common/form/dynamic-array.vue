@@ -22,11 +22,20 @@
 <script lang="ts" setup>
 import { type Field } from '~/types/forms'
 import { useDisplay } from "vuetify";
+import type { CreateContainerForm } from '~/types/containers/create';
 const { xs } = useDisplay();
 const arrayFields = defineModel<Field[][]>("arrayFields", { required: true });
 
+interface Props {
+  path: keyof CreateContainerForm;
+}
+const { path } = defineProps<Props>()
+const form = useFormValues<CreateContainerForm>()
+
 const delRow = (i: number) => {
-  arrayFields.value.splice(i, 1);
+  if (form.value[path] && Array.isArray(form.value[path])) {
+    (form.value[path] as any[]).splice(i, 1)
+  }
 };
 
 </script>

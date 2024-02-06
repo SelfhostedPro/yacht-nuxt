@@ -10,20 +10,20 @@
       <v-card-title v-if="form.network_mode === 'bridge'" class="d-flex align-center">
         Ports
         <v-spacer />
-        <v-btn color="primary" class="float-right my-3" @click="pushPortField()">+</v-btn>
+        <v-btn color="primary" class="float-right my-3" @click="pushPort()">+</v-btn>
       </v-card-title>
     </v-slide-y-transition>
     <v-card-text v-if="form.network_mode === 'bridge'">
-      <common-form-dynamic-array :arrayFields="portFields" />
+      <common-form-dynamic-array path="ports" :arrayFields="ports" />
     </v-card-text>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { type Field} from '~/types/forms'
-const portFields: Ref<Field[][]> = ref([]);
+import { type Field } from '~/types/forms'
+import type { CreateContainerForm } from '~/types/containers/create';
 
-const form = useFormValues()
+const { value: form } = useFormValues<CreateContainerForm>()
 
 const networkModeField: Field = {
   label: "Network Mode",
@@ -33,13 +33,17 @@ const networkModeField: Field = {
   type: "VSelect",
 };
 
-const pushPortField = () => {
-  portFields.value.unshift([
-    { label: "Label", value: `ports[${portFields.value.length}].label`, placeholder: "WebUI", type: "VTextField" },
-    { label: "Host", value: `ports[${portFields.value.length}].host`, placeholder: "8080", type: "VTextField" },
-    { label: "Container", value: `ports[${portFields.value.length}].container`, placeholder: "80", type: "VTextField" },
-    { label: "Protocol", value: `ports[${portFields.value.length}].protocol`, items: ["tcp", "udp"], type: "VSelect" },
-  ])
+const ports: ComputedRef<Field[][]> = computed(() => {
+  return form.ports?.map((port, index) => (
+    [{ label: "Label", value: `ports[${index}].label`, placeholder: "WebUI", type: "VTextField" },
+    { label: "Host", value: `ports[${index}].host`, placeholder: "8080", type: "VTextField" },
+    { label: "Container", value: `ports[${index}].container`, placeholder: "80", type: "VTextField" },
+    { label: "Protocol", value: `ports[${index}].protocol`, items: ["tcp", "udp"], type: "VSelect" },]
+  )) || []
+}
+)
+const pushPort = () => {
+  form.ports ? form.ports.unshift({ label: '', host: '', container: '', protocol: undefined }) : form.ports = []
 }
 </script>
 
