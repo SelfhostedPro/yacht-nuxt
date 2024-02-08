@@ -48,7 +48,6 @@
     "js-yaml": "^4.1.0",
     "lodash": "^4.17.21",
     "markdown-it": "^14.0.0",
-    "npm": "^10.2.5",
     "sshpk": "^1.18.0",
     "uuid": "^9.0.1",
     "vuetify-sonner": "^0.3.12",
