@@ -16,8 +16,7 @@ RUN cd /temp/dev && \
 # Since some dependencies might be needed for the build process
 RUN mkdir -p /temp/prod
 COPY package.json bun.lockb /temp/prod/
-ENV NODE_ENV=production
-RUN cd /temp/prod && bun install --frozen-lockfile --ignore-scripts
+RUN cd /temp/prod && bun install --frozen-lockfile --ignore-scripts --production
 
 
 # Copy node_modules from the temp directory
@@ -39,12 +38,12 @@ LABEL build_version="Yacht version:- ${VERSION} Build-date:- ${BUILD_DATE}"
 LABEL maintainer="SelfhostedPro"
 
 WORKDIR /app
+COPY root /
 RUN apk add --no-cache \
     nodejs
 COPY --from=install /temp/prod/node_modules /app/node_modules
 COPY --from=prerelease /usr/src/app/.output /app/
 COPY package.json /app/
-COPY root /
 
 # Get Host from environment variable
 # This is used to allow the container to be run on any host
