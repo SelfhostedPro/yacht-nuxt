@@ -1,18 +1,13 @@
 import { yachtTemplateSchema, type PortainerV1Template, type PortainerV2Template, type YachtTemplate, type YachtV1Template, type YachtV2Template } from "~/types/templates/yacht";
-import { useConfig } from "../config";
 import { typeTemplate, getTemplateType } from "./formatter";
 
-// setup storage
+
+// External Dependencies
+import { useConfig } from "../config";
+
+
 const configStorage = useStorage('base')
 const logger = useLog('templates')
-
-// interface getYachtTemplateDTO extends YachtTemplate {
-//     name: string;
-//     url: string;
-//     description?: string;
-//     featured?: number[];
-//     templates: PortainerV1Template[] | PortainerV2Template['templates'] | YachtV1Template[] | YachtV2Template[];
-// }
 
 export interface addYachtTemplate {
     url: string;

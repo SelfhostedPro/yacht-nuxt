@@ -4,6 +4,8 @@ import type { Port, ContainerInspectInfo, ContainerInfo } from "~/types/containe
 import { format, parseISO } from 'date-fns';
 import { type CreateContainerForm } from "~/types/containers/create";
 import type { ContainerCreateOptions, ContainerStats as DockerodeContainerStats } from "dockerode";
+
+// External Imports
 import { useConfig } from "../config";
 
 /**
@@ -303,21 +305,36 @@ const transformInfo = async (data: CreateContainerForm) => {
 }
 
 const transformVariables = async (data: CreateContainerForm): Promise<CreateContainerForm> => {
-    const config = await useConfig()
+    const config = await useConfig();
     if (!config.base['templateVariables']) {
         return data;
     }
     const variables = config.base['templateVariables'];
-    const stringData = JSON.stringify(data)
-    if (variables) {
-        for (const variable of variables) {
-            stringData.replaceAll(variable.variable, variable.replacement)
-        }
-        const replacedData: CreateContainerForm = JSON.parse(stringData)
-        return replacedData
+    for (const variable of variables) {
+        data = replaceVariables(data, variable.variable, variable.replacement) as CreateContainerForm;
     }
     return data;
-}
+};
+
+const replaceVariables = (obj: Record<string, any>, oldValue: string, newValue: string): Record<string, any> => {
+    // Use Object.assign to create a shallow copy of the object
+    const resultObj = JSON.parse(JSON.stringify(obj));
+    const stack = [{ obj: resultObj }];
+
+    while (stack.length) {
+        const item = stack.pop() as { obj: Record<string, any> };
+        for (const key in item.obj) {
+            if (typeof item.obj[key] === 'string') {
+                item.obj[key] = item.obj[key].replace(oldValue, newValue);
+            } else if (typeof item.obj[key] === 'object') {
+                // Push a new object onto the stack for nested objects
+                stack.push({ obj: item.obj[key] });
+            }
+        }
+    }
+    return resultObj;
+};
+
 
 export interface FixedContainerStats extends DockerodeContainerStats {
     name?: string;

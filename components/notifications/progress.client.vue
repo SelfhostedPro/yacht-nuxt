@@ -1,11 +1,12 @@
 <template>
   <span>
-    <v-snackbar color="surface" location="bottom center" width="50vw" :timeout="-1" v-model="snackbar">
+    <v-snackbar color="foreground" variant="elevated" location="bottom center" width="50vw" :timeout="-1" v-model="snackbar">
       <v-card-title>{{ progressTitle }}</v-card-title>
       <v-card-item v-for="progress, i in progressDict" :key="i">
         {{ progress.message }}
-        <v-progress-linear :model-value="progress.progress" color="primary" />
-        {{ progress.progress !== 100 ? `${progress.current} / ${progress.total}` : null }}
+        <v-progress-linear :model-value="progress.status === 'Download complete' ? 100 : progress.progress || 0"
+          color="primary" />
+        {{ !Number.isNaN(progress.progress) ? `${progress.current} / ${progress.total}` : null }}
       </v-card-item>
     </v-snackbar>
   </span>
@@ -20,7 +21,7 @@ interface ProgressDict {
   [key: string]: {
     status: string;
     message: string;
-    progress: number;
+    progress: number | null;
     current: string;
     total: string;
   }
@@ -54,15 +55,10 @@ const { execute, data, pending } = useAsyncData(
   { lazy: true, immediate: false }
 )
 
-watch(progressDict, (newVal) => {
-  if (Object.keys(newVal).length > 0) {
-    snackbar.value = true
-  } else {
-    snackbar.value = false
-  }
-}
-  , { deep: true }
-)
+watch(() => Object.values(progressDict.value).filter(p => p.progress !== 100), (progressItems) => {
+  snackbar.value = progressItems.length > 0;
+}, { deep: true });
+
 onMounted(async () => {
   if (!connected.value && !data.value) {
     await execute()
@@ -90,7 +86,7 @@ const notificationProgress = ({ id, item, progress }: Progress) => {
   if (Object.keys(progressDict.value).length === 0) {
     progressTitle.value = item
   }
-  progressDict.value[id] = { message: `${progress.status} - ${progress.id}`, status: progress.status, total: formatBytes(progress.progressDetail.total || 0), current: formatBytes(progress.progressDetail.current || 0), progress: progress.progressDetail.current && progress.progressDetail.total ? progress.progressDetail.current / progress.progressDetail.total * 100 : 100 }
+  progressDict.value[id] = { message: `${progress.status} - ${progress.id}`, status: progress.status, total: formatBytes(progress.progressDetail.total || 0), current: formatBytes(progress.progressDetail.current || 0), progress: (progress.progressDetail.current || 0) / (progress.progressDetail.total || 0) * 100 }
   if (progress.status === 'Pull complete') {
     delete progressDict.value[id]
   }
