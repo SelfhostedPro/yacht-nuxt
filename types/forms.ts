@@ -6,7 +6,7 @@ export interface Field {
     icons?: string[];
     cols?: number | string;
     multiple?: boolean;
-    type: "VTextField" | "VSelect" | "VTextarea" | "VBtn" | "VBtnToggle";
+    type: "VTextField" | "VSelect" | "VTextarea" | "VBtn" | "VBtnToggle" | "description" | "label";
 }
 
 export interface Structure extends Omit<Field, "value"> {}

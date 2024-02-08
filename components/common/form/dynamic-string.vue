@@ -1,13 +1,20 @@
 <template>
   <div>
-    <component v-bind="$attrs" v-if="field.type !== 'VBtnToggle'" :clearable="field.multiple ?? true"
-      :multiple="field.multiple ?? field.multiple" :hide-details="true" :is="getComponent(field.type)" v-model="value"
-      :label="field.label" :items="field.items ?? field.items" :placeholder="field.placeholder"
-      :auto-expand="field.type === 'VTextarea'" />
-    <component v-bind="$attrs" v-else color="primary" :is="getComponent(field.type)" v-model="value"
-      :label="field.label" @click="value = !value">
+    <v-card-title v-if="field.type === 'label' && value" type="info">
+      {{ value }}
+    </v-card-title>
+    <component v-bind="$attrs" v-else-if="field.type !== 'VBtnToggle' && field.type !== 'description'"
+      :clearable="field.multiple ? true : false" :multiple="field.multiple ?? field.multiple"
+      :hide-details="errorMessage ? false : true" :is="getComponent(field.type)" v-model="value" :label="field.label"
+      :items="field.items ?? field.items" :placeholder="field.placeholder" :auto-expand="field.type === 'VTextarea'"
+      :error-messages="errorMessage" />
+    <component v-bind="$attrs" v-else-if="field.type === 'VBtnToggle'" color="primary" :is="getComponent(field.type)"
+      v-model="value" :label="field.label" @click="value = !value">
       <v-icon v-if="field.icons" :icon="value ? field.icons[0] : field.icons[1]" /> {{ field.label }}
     </component>
+    <v-alert color="primary" v-else-if="field.type === 'description' && value" type="info">
+      <v-card-text>{{ value }}</v-card-text>
+    </v-alert>
   </div>
 </template>
 
@@ -31,7 +38,7 @@ const getComponent = (type: Field["type"]) => {
   }
 };
 
-const { value, errorMessage } = useField(() => model.value.value);
+const { value, errorMessage } = useField(() => model.value.value, {}, { validateOnMount: true, validateOnValueUpdate: true });
 </script>
 
 <style></style>

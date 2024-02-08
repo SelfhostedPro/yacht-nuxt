@@ -8,7 +8,8 @@
         <slot />
       </v-container>
     </v-main>
-    <notifications />
+    <NotificationsSonner />
+    <NotificationsProgress />
   </v-app>
 </template>
   

@@ -26,9 +26,8 @@ export const getTemplates = async (): Promise<YachtTemplate[]> => {
     const templateList = await configStorage.getKeys(config.static.paths.templates)
     const teamplatePromises = templateList.map(async (template) => {
         const _template = await configStorage.getItem(template)
-        const isValid = yachtTemplateSchema.safeParse(_template)
-        logger.info(`Checking template ${template}: ${isValid}`)
-        if (_template) {
+        const isValid = yachtTemplateSchema.deepPartial().safeParse(_template).success
+        if (_template && isValid) {
             templates.push(_template as YachtTemplate)
         } else {
             logger.error(`Invalid template found at ${template}: ${isValid}`)

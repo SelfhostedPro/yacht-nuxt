@@ -1,5 +1,7 @@
 <template>
-  <v-sonner v-if="!pending" />
+  <span>
+    <v-sonner v-if="!pending" />
+  </span>
 </template>
 
 <script lang="ts" setup>
@@ -7,6 +9,7 @@ import { VSonner } from 'vuetify-sonner';
 import 'vuetify-sonner/style.css'
 import type { Notification } from '~/types/notifications';
 const connected = notificationsConnected()
+
 
 const { execute, data, pending } = useAsyncData(
   'notification-data',
@@ -23,6 +26,7 @@ const { execute, data, pending } = useAsyncData(
         }
       },
       async onmessage(event) {
+        console.log('Received notification')
         connected.value = true
         const notification = JSON.parse(event.data) as Notification
         useToast(notification)

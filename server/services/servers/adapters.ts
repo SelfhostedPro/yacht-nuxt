@@ -26,13 +26,13 @@ export const localAdapter = async (server: ServerConfig) => {
         //@ts-expect-error - Dockerode type missing the fact you can pass decrypted key as string
         const newServer = new Docker(server.options)
         const serverWorks = await newServer.info().catch((e) => {
-            YachtError(e, '/services/servers/adapters - localAdapter')
+            YachtError(e, `/services/servers/adapters - localAdapter - server: ${server.name}`)
             return false
         })
         if (serverWorks === false) return null
         return newServer
     } catch (e) {
-        YachtError(e, '/services/servers/adapters - localAdapter#2')
+        YachtError(e, `/services/servers/adapters - localAdapter#2 - server: ${server.name}`)
         return null
     }
 }

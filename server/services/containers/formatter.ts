@@ -261,7 +261,7 @@ export const normalizeCreate = async (
             ),
             Devices: devices?.map(({ host, container, permissions }) => ({ PathOnHost: host, PathInContainer: container, CgroupPermissions: permissions })),
             PortBindings: ports?.reduce((acc, { container, host, protocol }) => {
-                acc[container + '/' + protocol] = [{ HostPort: host }];
+                acc[container?.toString() + '/' + protocol?.toString()] = [{ HostPort: host?.toString() }];
                 return acc;
             }, {} as { [index: string]: object }),
             Sysctls: sysctls?.reduce((acc, { name, value }) => {

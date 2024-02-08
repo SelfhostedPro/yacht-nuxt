@@ -3,8 +3,8 @@ import { containerOciInfoSchema } from "./yachtContainers"
 import { keyValueSchema, capAddSchema, capDropSchema, nameValueSchema, optionalNameValueSchema } from "../shared"
 
 export const containerFormEnvsSchema = z.object({
-    name: z.string().optional(),
-    value: z.string().optional(),
+    name: z.string().min(1, { message: 'Name must be at least 1 character long'}),
+    value: z.string().min(1, { message: 'Value must be at least 1 character long'}),
     description: z.string().optional(),
     label: z.string().optional()
 })
@@ -20,8 +20,8 @@ export const containerFormUnchangableSchema = z.object({
 
 export const containerFormPortsSchema = z.object({
     label: z.string().optional(),
-    host: z.string().optional(),
-    container: z.string().optional(),
+    host: z.coerce.number().int().min(0).max(65535).optional(),
+    container: z.coerce.number().int().min(0).max(65535).optional(),
     protocol: z.union([z.literal("tcp"), z.literal("udp")]).optional(),
     description: z.string().optional(),
     unchangable: z
@@ -67,13 +67,12 @@ export const devicesSchema = z.object({
     ]).optional()
 })
 
-
 export const createContainerFormSchema = z.object({
     name: z.string().optional(),
     image: z.string(),
     info: containerOciInfoSchema.optional(),
     restart: z.string().optional(),
-    server: z.string(),
+    server: z.string().min(1),
     network: z.string().optional(),
     network_mode: z.string().optional(),
     mounts: z.array(containerFormVolumesSchema).optional(),

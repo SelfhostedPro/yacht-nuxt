@@ -2,38 +2,43 @@ import { type CreateContainerForm } from "~/types/containers/create"
 import { type ServerDict } from "~/types/servers"
 import { normalizeContainerInspectInfo, normalizeCreate } from "./formatter"
 import type Dockerode from "dockerode"
+import type { Notification, Progress } from "~/types/notifications"
+import type { ImagePullProgress } from "~/types/images"
 
 // Service Dependency Imports
 import { getContainers } from './info'
 import { useServers } from '~/server/services/servers'
 
-export const createContainer = async (server: string, form: CreateContainerForm) => {
-    const containerLog = useLog(`container - ${form.name} - ${server}}`)
-    const _server: Dockerode | null = await useServers().then((servers: ServerDict) => servers[server])
-    if (!_server) {
-        throw createError(`Server ${server} not found!`)
+
+
+export const createContainer = async (form: CreateContainerForm) => {
+    const containerLog = useLog(`container - ${form.name} - ${form.server}}`)
+    const server: Dockerode | null = await useServers().then((servers: ServerDict) => servers[form.server])
+    if (!server) {
+        throw createError(`Server ${form.server} not found!`)
     }
-    YachtLog({ title: 'CreateContainer', level: 'info', from: `services/containers - createContainer`, message: `Creating container: ${form.name} from image: ${form.image} on server: ${server}` })
-    const pullStream = await _server.pull(form.image);
-    await new Promise((res) => _server.modem.followProgress(pullStream, res, (progress) => {
-        containerLog.info(progress)
+    // YachtLog({ title: 'CreateContainer', level: 'info', from: `services/containers - createContainer`, message: `Creating container: ${form.name} from image: ${form.image} on server: ${server}` })
+    const pullStream = await server.pull(form.image);
+    await new Promise((res) => server.modem.followProgress(pullStream, res, (progress: ImagePullProgress) => {
+        sseHooks.callHook("sse:progress", { id: progress.id, item: `Pulling ${form.image}`, status: progress.status, progress } as Progress)
     }));
-    YachtLog({ title: 'CreateContainer', level: 'info', from: `services/containers - createContainer`, message: `Image: ${form.image} pulled successfully.` })
+    // YachtLog({ title: 'CreateContainer', level: 'info', from: `services/containers - createContainer`, message: `Image: ${form.image} pulled successfully.` })
     let createdContainer: Dockerode.Container;
-    return await _server
+    return await server
         .createContainer(
             await normalizeCreate(form),
         )
         .catch((err) => {
-            throw err;
+            throw YachtError(err, `services/containers - createContainer ${form.name} on ${form.server} failed!`);
         }).then(async (container) => {
+            if (!container) throw YachtError(`Container ${form.name} not created!`)
             createdContainer = container
-            container.start().catch((err) => {
+            container?.start().catch((err) => {
                 throw err;
             });
-            YachtLog({ title: 'CreateContainer', level: 'info', from: `services/containers - createContainer`, message: `Container: ${form.name} created successfully on ${server}.` })
+            YachtLog({ title: 'CreateContainer', level: 'info', from: `services/containers - createContainer`, message: `Container: ${form.name} created successfully on ${form.server}.` })
             return await normalizeContainerInspectInfo(
-                await _server.getContainer(createdContainer.id).inspect(),
+                await server.getContainer(createdContainer.id).inspect(),
             );
         })
 

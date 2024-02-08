@@ -32,7 +32,7 @@
           <v-btn @click.prevent="removeDialog = false">
             Cancel
           </v-btn>
-          <v-btn color="error" @click.prevent="removeDialog = false">
+          <v-btn color="error" @click.prevent="handleAction('remove'); removeDialog = false">
             Remove
           </v-btn>
         </v-card-actions>
@@ -57,7 +57,7 @@ const emit = defineEmits(["startLoading", "stopLoading"])
 const removeDialog: Ref<boolean> = ref(false)
 
 const handleAction = async (action: string) => {
-  if (action === "remove") {
+  if (action === "remove" && removeDialog.value === false) {
     removeDialog.value = true
     return
   } else {

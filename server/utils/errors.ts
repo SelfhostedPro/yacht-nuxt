@@ -10,7 +10,15 @@ export const YachtError = (error: any, from?: string, internal?: boolean, servic
     else if (error.code = 'ENOENT' && error.address == '/var/run/docker.sock') {
         YachtLog({ title: 'Docker Error', level: 'error', message: 'Docker is not running or the socket is not accessible!', from: from, dedupe: false })
     }
-     else if (internal) {
+    else if (error.statusCode === 409) {
+        YachtLog({ title: 'Docker Error', level: 'error', message: error.message, from: from, dedupe: false })
+        throw createError(error)
+    }
+    else if (error.statusCode === 500) {
+        YachtLog({ title: 'Docker Error', level: 'error', message: error.message, from: from, dedupe: false })
+        throw createError(error)
+    }
+    else if (internal) {
         YachtLog({ title: `${service || 'Internal'} Error`, level: 'error', message: error.reason || error.message, from: from })
         throw createError(error)
     }

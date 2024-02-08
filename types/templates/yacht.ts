@@ -46,9 +46,11 @@ export const yachtV2TemplatePortValueSchema = z.object({
 export const yachtV2TemplatePortSchema = z.record(yachtV2TemplatePortValueSchema)
 export type YachtV2TemplatePort = z.infer<typeof yachtV2TemplatePortSchema>
 
-export const yachtV1TemplatePortSchema = z.array(z.union([z.string(), z.record(z.string())]))
-
+export const yachtV1TemplatePortSchema = z.union([z.string(), z.record(z.string())])
 export type YachtV1TemplatePort = z.infer<typeof yachtV1TemplatePortSchema>
+
+export const yachtV1TemplatePortsSchema = z.array(z.union([yachtV1TemplatePortSchema, z.string()]))
+export type yachtV1TemplatePorts = z.infer<typeof yachtV1TemplatePortsSchema>
 
 export const yachtTemplateVolumeSchema = z.object({
   container: z.string(),
@@ -113,7 +115,7 @@ export const yachtV1TemplateSchema = z.object({
   platform: z.union([z.literal("linux"), z.literal("windows")]).optional(),
   restart_policy: z.string().optional(),
   featured_image: z.string().optional(), //TODO: See about moving this to just v2 templates
-  ports: z.union([yachtV1TemplatePortSchema, z.array(z.string())]).optional(), //TODO: See about moving this to just v2 templates
+  ports: z.union([yachtV1TemplatePortsSchema, yachtV2TemplatePortSchema]).optional(),
   volumes: z.array(yachtTemplateVolumeSchema).optional(),
   env: z.array(yachtTemplateEnvironmentSchema).optional(),
   labels: z.array(yachtTemplateLabelsSchema).optional(),
@@ -185,3 +187,18 @@ export const yachtTemplateSchema = z.object({
 })
 
 export type YachtTemplate = z.infer<typeof yachtTemplateSchema>
+
+// const test: YachtTemplate['templates'][0]['ports'] = [
+//   {
+//     "WebUI": "32400:32400/tcp",
+//     "DNLA": "1900:1900/udp",
+//     "Companion": "3005:3005/tcp",
+//     "Bonjour/Avahi": "5353:5353/udp",
+//     "Roku Control": "8324:8324/tcp",
+//     "GDM-1": "32410:32410/udp",
+//     "GDM-2": "32412:32412/udp",
+//     "GDM-3": "32413:32413/udp",
+//     "GDM-4": "32414:32414/udp",
+//     "DNLA TCP": "32469:32469/udp"
+//   }
+// ]

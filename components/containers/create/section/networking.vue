@@ -38,12 +38,12 @@ const ports: ComputedRef<Field[][]> = computed(() => {
     [{ label: "Label", value: `ports[${index}].label`, placeholder: "WebUI", type: "VTextField" },
     { label: "Host", value: `ports[${index}].host`, placeholder: "8080", type: "VTextField" },
     { label: "Container", value: `ports[${index}].container`, placeholder: "80", type: "VTextField" },
-    { label: "Protocol", value: `ports[${index}].protocol`, items: ["tcp", "udp"], type: "VSelect" },]
+    { label: "Protocol", value: `ports[${index}].protocol`, items: ["tcp", "udp"], type: "VSelect" },
+    { label: "description", value: `ports[${index}].description`, type: "description" },]
   )) || []
-}
-)
+})
 const pushPort = () => {
-  form.ports ? form.ports.unshift({ label: '', host: '', container: '', protocol: undefined }) : form.ports = []
+  form.ports ? form.ports.unshift({ label: undefined, host: undefined, container: undefined, protocol: undefined }) : form.ports = []
 }
 </script>
 

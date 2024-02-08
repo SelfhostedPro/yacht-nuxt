@@ -1,6 +1,7 @@
 import type { ServerContainers } from '~/types/servers'
 import type { Container, ContainerStats } from '~/types/containers/yachtContainers'
 import { defineStore } from 'pinia'
+import type { CreateContainerForm } from '~/types/containers/create'
 
 export const useContainersStore = defineStore({
   id: 'containersStore',
@@ -25,10 +26,22 @@ export const useContainersStore = defineStore({
       return { error, data }
     },
     async fetchContainerDetails(server: string, id: string) {
-      this.startLoading('container')
+      this.startLoading(id)
       const { error, data } = await useFetch(`/api/containers/${server}/${id}`)
       data.value ? this.container = data.value : console.log(data.value)
       if (error.value) console.error(error.value.statusMessage)
+      this.stopLoading(id)
+      return { error, data }
+    },
+    async fetchCreateContainer(form: CreateContainerForm) {
+      this.startLoading('create')
+      const { error, data } = await useFetch(`/api/containers/`, {
+        method: 'POST',
+        body: form,
+      })
+      data.value ? this.container = data.value : console.log(error.value)
+      if (error.value) { this.stopLoading('create'); throw error.value }
+      this.stopLoading('create')
       return { error, data }
     },
     async fetchContainerAction(server: string, id: string, action: string) {

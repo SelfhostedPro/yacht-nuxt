@@ -26,26 +26,26 @@
 <script lang="ts" setup>
 import { useDisplay } from 'vuetify';
 import {
-  LazyContainersCreateSectionBase,
-  LazyContainersCreateSectionInfo,
-  LazyContainersCreateSectionNetworking,
-  LazyContainersCreateSectionStorage,
-  LazyContainersCreateSectionEnvironment,
-  LazyContainersCreateSectionAdvanced,
-  LazyContainersCreateSectionPreview
+  ContainersCreateSectionBase,
+  ContainersCreateSectionInfo,
+  ContainersCreateSectionNetworking,
+  ContainersCreateSectionStorage,
+  ContainersCreateSectionEnvironment,
+  ContainersCreateSectionAdvanced,
+  ContainersCreateSectionPreview
 } from '#components';
+import type { CreateContainerForm } from '~/types/containers/create';
 
 const { smAndDown } = useDisplay()
-
 const step = useState('containerFormStep', () => 0)
 
 const sections = [
-  LazyContainersCreateSectionBase,
-  LazyContainersCreateSectionInfo,
-  LazyContainersCreateSectionNetworking,
-  LazyContainersCreateSectionStorage,
-  LazyContainersCreateSectionEnvironment,
-  LazyContainersCreateSectionAdvanced,
-  LazyContainersCreateSectionPreview
+  ContainersCreateSectionBase,
+  ContainersCreateSectionInfo,
+  ContainersCreateSectionNetworking,
+  ContainersCreateSectionStorage,
+  ContainersCreateSectionEnvironment,
+  ContainersCreateSectionAdvanced,
+  ContainersCreateSectionPreview
 ]
 </script>
