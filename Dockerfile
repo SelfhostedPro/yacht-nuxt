@@ -32,7 +32,7 @@ WORKDIR /app
 COPY root /
 RUN apk add --no-cache \
     nodejs
-COPY --from=prerelease /usr/src/app/.output /app/
+COPY --from=prerelease /app/.output /app/
 COPY package.json /app/
 
 # Get Host from environment variable
