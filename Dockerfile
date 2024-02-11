@@ -19,7 +19,7 @@ WORKDIR /app
 COPY --from=install /app/node_modules /app/node_modules
 COPY . .
 
-RUN npm -ci run build
+RUN npm run build
 
 # Copy production dependencies and built files into the final image
 # Start fresh from the base to reduce the final image size
