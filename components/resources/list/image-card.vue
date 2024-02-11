@@ -1,25 +1,36 @@
 <template>
-  <v-card max-height="600" id="images-card" class="pa-1 pb-1 overflow-auto fill-height" density="compact">
-    <v-card-item :prepend-avatar="vendorIcon || placeHolder">
-      <v-card-title>
-        {{ imageTitle }}
-      </v-card-title>
-      <v-btn size="small" variant="plain" icon @click="reveal = !reveal">
-        <v-icon :icon="reveal ? 'mdi-chevron-up' : 'mdi-chevron-down'" />
-      </v-btn>
-      <v-card-subtitle>{{ resource.RepoTags && resource.RepoTags[0] }}</v-card-subtitle>
-      <v-card-subtitle>size: {{ imageSize.toFixed(2) + ' MB' }}</v-card-subtitle>
-      <v-card-subtitle>created: {{ formatDates(resource.Created) }}</v-card-subtitle>
-    </v-card-item>
-    <v-card-text v-if="labels?.get('description')">
-      {{ labels.get('description') }}
-    </v-card-text>
-    <v-card-text v-else class="text--secondary">
-      {{ imageTitle?.toLowerCase() }} does not provide <a
-        href="https://github.com/opencontainers/image-spec/blob/main/annotations.md">oci labels for a
-        description</a>.
-    </v-card-text>
-    <v-card-actions v-if="labels && (labels.get('url') || labels.get('documentation') || labels.get('source'))">
+  <v-card id="images-card" class="pa-2 fill-height" density="compact"
+    style="transition: height 0.3s ease-in-out; position: relative;" v-auto-animate>
+    <v-row no-gutters>
+      <v-col cols="12">
+        <v-sheet max-height="110px">
+          <v-card-item :prepend-avatar="vendorIcon || placeHolder">
+            <v-card-title>
+              {{ imageTitle }} <v-btn size="small" variant="plain" icon @click="reveal = !reveal">
+                <v-icon :icon="reveal ? 'mdi-chevron-up' : 'mdi-chevron-down'" />
+              </v-btn>
+            </v-card-title>
+            <v-card-subtitle>{{ resource.RepoTags && resource.RepoTags[0] }}</v-card-subtitle>
+            <v-card-subtitle>size: {{ imageSize.toFixed(2) + ' MB' }}</v-card-subtitle>
+            <v-card-subtitle>created: {{ formatDates(resource.Created) }}</v-card-subtitle>
+          </v-card-item>
+        </v-sheet>
+      </v-col>
+      <v-col cols="12">
+        <v-sheet height="110px" class="overflow-auto">
+          <v-card-text v-if="labels?.get('description')" v-html="$mdRenderer.render(labels.get('description'))" />
+          <v-card-text v-else class="text--secondary">
+            {{ imageTitle?.toLowerCase() }} does not provide <a
+              href="https://github.com/opencontainers/image-spec/blob/main/annotations.md">oci labels for a
+              description</a>.
+          </v-card-text>
+        </v-sheet>
+      </v-col>
+    </v-row>
+
+
+    <v-card-actions v-if="labels && (labels.get('url') || labels.get('documentation') || labels.get('source'))"
+      class="pa-0 align-end">
       <v-btn size="small" target="_blank" variant="plain" icon :href="labels.get('url')" v-if="labels?.get('url')">
         <v-icon icon="mdi-open-in-new" />
       </v-btn>
@@ -37,7 +48,7 @@
     </v-card-actions>
     <v-expand-transition>
       <div v-show="reveal">
-        <pre> {{ resource }}</pre>
+        <pre class="overflow-auto"> {{ resource }}</pre>
       </div>
     </v-expand-transition>
   </v-card>
@@ -48,7 +59,6 @@ import type { ImageInfo } from 'dockerode';
 const reveal = ref(false)
 import placeHolder from '@/assets/docker-placeholder-logo.png'
 import { fromUnixTime } from 'date-fns';
-
 interface Props {
   server: string,
   resource: ImageInfo
@@ -98,7 +108,7 @@ const imageTitle = computed(() => {
   } else if (props.resource.RepoTags && props.resource.RepoTags.length > 0 && props.resource.RepoTags[0] !== '<none>:<none>') {
     return <string>props.resource.RepoTags[0]
   }
-  return <string>props.resource.Id.slice(7, 19)
+  return <string>props.resource.Id?.slice(7, 19) || <string>props.resource.Id
 })
 
 const imageSize = computed(() => {

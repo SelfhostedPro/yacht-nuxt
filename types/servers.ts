@@ -14,6 +14,7 @@ export type ServerContainers = {
     [key: string]: Container[]
 }
 
+
 // Resources
 export type ServerImages = {
     [key: string]: Docker.ImageInfo[]

@@ -17,12 +17,10 @@
 </template>
 
 <script lang="ts" setup>
-import type { VolumeInspectInfo } from 'dockerode';
 import { parseISO } from 'date-fns';
+import type { FixedVolumeInspectInfo } from '~/types/containers/fixedDockerode';
 
-interface FixedVolumeInspectInfo extends VolumeInspectInfo {
-  CreatedAt?: string
-}
+
 
 const reveal = ref(false)
 

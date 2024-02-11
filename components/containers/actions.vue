@@ -45,7 +45,6 @@
 
 import type { Container } from '~/types/containers/yachtContainers';
 const containers = useContainersStore()
-const { mdAndDown } = useDisplay()
 interface Props {
   container: Container
   server: string

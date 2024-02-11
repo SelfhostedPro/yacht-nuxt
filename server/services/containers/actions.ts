@@ -20,7 +20,7 @@ export const createContainer = async (form: CreateContainerForm) => {
     // YachtLog({ title: 'CreateContainer', level: 'info', from: `services/containers - createContainer`, message: `Creating container: ${form.name} from image: ${form.image} on server: ${server}` })
     const pullStream = await server.pull(form.image);
     await new Promise((res) => server.modem.followProgress(pullStream, res, (progress: ImagePullProgress) => {
-        sseHooks.callHook("sse:progress", { id: progress.id, item: `Pulling ${form.image}`, status: progress.status, progress } as Progress)
+        sseHooks.callHook("sse:progress", { id: progress.id, title: `Pulling ${form.image}`, item: form.image, status: progress.status, progress } as Progress)
     }));
     // YachtLog({ title: 'CreateContainer', level: 'info', from: `services/containers - createContainer`, message: `Image: ${form.image} pulled successfully.` })
     let createdContainer: Dockerode.Container;

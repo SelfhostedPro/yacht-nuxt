@@ -47,8 +47,7 @@
       </template>
     </v-dialog>
   </v-container>
-  <containers-create v-if="createDialog" v-model:open="createDialog"
-    :template="(selectedApp as YachtTemplate['templates'][0])" @close="selectedApp = undefined; createDialog = false" />
+  <containers-create v-model:open="createDialog" :template="selectedApp" @close="createDialog = false" />
 </template>
 <script setup lang="ts">
 import type { YachtTemplate } from '~/types/templates/yacht';
@@ -64,7 +63,7 @@ const selectedApp = ref<YachtTemplate['templates'][0] | undefined>()
 const openInfo = ref(false)
 const maximize = ref(false)
 
-const createContainerFromTemplate = async (app: YachtTemplate['templates'][0]) => {
+const createContainerFromTemplate = (app: YachtTemplate['templates'][0]) => {
   selectedApp.value = app
   createDialog.value = true
 }

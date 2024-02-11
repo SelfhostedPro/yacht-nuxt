@@ -14,11 +14,11 @@
         </v-col>
       </v-row>
     </template>
-    <v-card-title v-if="container && container.name">{{ container.name }}</v-card-title>
+    <!-- <v-card-title v-if="container && container.name">{{ container.name }}</v-card-title>
     <p>{{ server }}</p>
-    <p>{{ name }}</p>
-    <pre v-if="!smAndDown">{{ JSON.stringify(container, null, 2) }}</pre>
-    <v-col></v-col>
+    <p>{{ name }}</p> -->
+    <!-- <pre v-if="!smAndDown">{{ JSON.stringify(container, null, 2) }}</pre> -->
+    <!-- <v-col></v-col> -->
   </div>
 </template>
 

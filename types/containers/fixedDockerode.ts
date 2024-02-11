@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { containerInfoSchema, containerInspectInfoSchema } from './dockerode'
+import type { VolumeInspectInfo } from 'dockerode'
 
 // Types from dockerode are incorrect. These corrected schemas/types should be used.
 
@@ -48,5 +49,7 @@ const fixedContainerInspectInfoSchema = containerInspectInfoSchema.extend({
 
 export type FixedContainerInspectInfo = z.infer<typeof fixedContainerInspectInfoSchema>
 
-
+export interface FixedVolumeInspectInfo extends VolumeInspectInfo {
+    CreatedAt?: string
+  }
 export { readableContainerInfoSchema, fixedContainerInfoSchema, fixedContainerInspectInfoSchema }

@@ -19,6 +19,7 @@ export interface NotificationWithProgress extends Notification {
 export interface Progress {
     id: string,
     item: string,
+    title: string,
     progress: ImagePullProgress
 }
 export interface ProgressInit extends Progress {

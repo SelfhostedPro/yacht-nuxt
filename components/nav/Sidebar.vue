@@ -1,9 +1,15 @@
 <template>
-  <v-navigation-drawer v-if="!mdAndDown" height="100vh" :permanent="locked" elevation="10" floating
+  <v-navigation-drawer v-model="navbar" v-if="!mdAndDown" height="100vh" :permanent="locked" elevation="10" floating
     :expand-on-hover="true" :rail="!locked">
     <v-img max-height="100" class="mx-2 mt-2" src="~/assets/icons/yacht/mini.svg" style="filter: brightness(5)" />
-    <v-btn class="my-2 mx-2" :icon="locked ? 'mdi-lock' : 'mdi-lock-open'" density="comfortable"
-      @click="locked = !locked" />
+    <v-btn icon class="my-2 mx-2" density="comfortable">
+      <v-icon icon="mdi-cog"></v-icon>
+      <v-menu open-on-hover :close-on-content-click="false" location="end center" activator="parent">
+        <v-btn class="my-2 mx-2" :icon="locked ? 'mdi-lock' : 'mdi-lock-open'" density="comfortable"
+          @click="locked = !locked" />
+      </v-menu>
+    </v-btn>
+
     <v-divider />
     <v-list nav dense>
       <div v-for="(link, i) in links" :key="i">
@@ -33,6 +39,7 @@
 
 <script setup lang="ts">
 import { useDisplay } from 'vuetify'
+const navbar = ref()
 const { mdAndDown } = useDisplay()
 defineProps(['links'])
 const locked = ref(false)

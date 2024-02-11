@@ -1,9 +1,9 @@
 export interface ImagePullProgress {
     status: string,
     progressDetail: {
-        current: number | null,
-        total: number | null,
-    },
+        current: number,
+        total: number,
+    } | undefined,
     progress: string,
     id: string
 }

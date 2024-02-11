@@ -1,32 +1,87 @@
 <template>
-  <span>
-    <v-snackbar color="foreground" variant="elevated" location="bottom center" width="50vw" :timeout="-1" v-model="snackbar">
-      <v-card-title>{{ progressTitle }}</v-card-title>
-      <v-card-item v-for="progress, i in progressDict" :key="i">
-        {{ progress.message }}
-        <v-progress-linear :model-value="progress.status === 'Download complete' ? 100 : progress.progress || 0"
-          color="primary" />
-        {{ !Number.isNaN(progress.progress) ? `${progress.current} / ${progress.total}` : null }}
-      </v-card-item>
-    </v-snackbar>
-  </span>
+  <v-bottom-sheet inset persistent no-click-animation v-model="snackbar" :scrim="false">
+    <v-card variant="elevated" color="surface">
+      <v-toolbar>
+        <v-toolbar-title><v-btn variant="plain" icon @click="expanded['__root'] = !expanded['__root']"><v-icon
+              :icon="expanded['__root'] ? 'mdi-chevron-down' : 'mdi-chevron-up'" /></v-btn>progress</v-toolbar-title>
+      </v-toolbar>
+      <v-expand-transition v-show="expanded['__root']">
+        <div>
+        <v-card :rounded="false" v-for="(parent, title, i) in progressDict" :key="i">
+          <v-card-title class="text-center">
+            <!-- <v-btn variant="plain" icon @click="expanded[title] = !expanded[title]"><v-icon
+                :icon="expanded[title] ? 'mdi-chevron-down' : 'mdi-chevron-up'" /></v-btn> -->
+            {{ title }}
+          </v-card-title>
+          <!-- <v-expand-transition v-show="expanded[title]" class="bg-foreground rounded"> -->
+          <div>
+            <v-card-item class="mt-1" v-for="(progress, i) in parent" :key="i">
+              <v-card-subtitle> {{ progress.message }} {{ !Number.isNaN(progress.progress) ? `- ${progress.current} /
+                              ${progress.total}` :
+                null
+              }}</v-card-subtitle>
+              <v-progress-linear :model-value="progress.status === 'Download complete' ? 100 : progress.progress || 0"
+                color="primary" />
+            </v-card-item>
+          </div>
+          <!-- </v-expand-transition> -->
+        </v-card>
+      </div>
+      </v-expand-transition>
+    </v-card>
+  </v-bottom-sheet>
 </template>
 
 <script lang="ts" setup>
 import type { Progress } from '~/types/notifications'
 const connected = ref(false)
 const snackbar = ref(false)
-const progressTitle = ref('')
+const expanded = ref<{ [key: string]: boolean }>({
+  '__root': true
+})
 interface ProgressDict {
   [key: string]: {
-    status: string;
-    message: string;
-    progress: number | null;
-    current: string;
-    total: string;
+    [key: string]: {
+      status: string;
+      message: string;
+      progress?: number | null;
+      current: string;
+      total: string;
+    }
   }
 }
-const progressDict = ref<ProgressDict>({})
+const progressDict = ref<ProgressDict>({
+  // 'test': {
+  //   'test': {
+  //     status: 'test',
+  //     message: 'pulling - test',
+  //     progress: 30,
+  //     current: '0',
+  //     total: '0'
+  //   },
+  //   'downloading - test': {
+  //     status: 'test',
+  //     message: 'test',
+  //     progress: 100,
+  //     current: '0',
+  //     total: '0'
+  //   },
+  //   'image - extracting': {
+  //     status: 'test',
+  //     message: 'test',
+  //     progress: 90,
+  //     current: '0',
+  //     total: '0'
+  //   },
+  //   'image - pulling': {
+  //     status: 'test',
+  //     message: 'test',
+  //     progress: 70,
+  //     current: '0',
+  //     total: '0'
+  //   }
+  // }
+})
 
 const { execute, data, pending } = useAsyncData(
   'progress-data',
@@ -44,7 +99,7 @@ const { execute, data, pending } = useAsyncData(
       },
       async onmessage(event) {
         connected.value = true
-        const notification = JSON.parse(event.data) as Progress
+        const notification = JSON.parse(event.data)
         notificationProgress(notification as Progress)
       },
       signal: abort.signal,
@@ -55,9 +110,10 @@ const { execute, data, pending } = useAsyncData(
   { lazy: true, immediate: false }
 )
 
-watch(() => Object.values(progressDict.value).filter(p => p.progress !== 100), (progressItems) => {
-  snackbar.value = progressItems.length > 0;
-}, { deep: true });
+watch(progressDict.value, () => {
+  snackbar.value = Object.keys(progressDict.value).length > 0
+}, { deep: true })
+
 
 onMounted(async () => {
   if (!connected.value && !data.value) {
@@ -82,15 +138,40 @@ function formatBytes(bytes: number, decimals = 2) {
   return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`
 }
 
-const notificationProgress = ({ id, item, progress }: Progress) => {
-  if (Object.keys(progressDict.value).length === 0) {
-    progressTitle.value = item
+const notificationProgress = ({ id, title, item, progress }: Progress) => {
+  const progressDetail = progress.progressDetail;
+  if (!progressDetail) return; // Early return if progressDetail is undefined
+
+  if (!progressDict.value[title]) {
+    progressDict.value[title] = {};
+    expanded.value[title] = true;
   }
-  progressDict.value[id] = { message: `${progress.status} - ${progress.id}`, status: progress.status, total: formatBytes(progress.progressDetail.total || 0), current: formatBytes(progress.progressDetail.current || 0), progress: (progress.progressDetail.current || 0) / (progress.progressDetail.total || 0) * 100 }
+
+  const formattedCurrent = formatBytes(progressDetail.current);
+  const formattedTotal = formatBytes(progressDetail.total);
+  const calculatedProgress = (progressDetail.current / progressDetail.total) * 100;
+
+  progressDict.value[title][id] = {
+    message: `${progress.status} - ${progress.id}`,
+    status: progress.status,
+    total: formattedTotal,
+    current: formattedCurrent,
+    progress: calculatedProgress
+  };
+
   if (progress.status === 'Pull complete') {
-    delete progressDict.value[id]
+    delete progressDict.value[title][id];
+  } else if (
+    progress.status === `Status: Image is up to date for ${item}` ||
+    progress.status === `Status: Downloaded newer image for ${item}`
+  ) {
+    delete progressDict.value[title];
   }
-}
+  if (Object.keys(progressDict.value[title]).length === 0) {
+    delete progressDict.value[title];
+  }
+};
+
 </script>
 
 <style></style>

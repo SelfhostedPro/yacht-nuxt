@@ -1,19 +1,18 @@
 <template>
-  <v-card :to="`/containers/${server}/${container.name}`" class="pa-2 justify-start fill-height" density="compact"
+  <!-- :to="`/containers/${server}/${container.name}`" -->
+  <v-card @click="$emit('selected')" class="pa-2 justify-start fill-height" density="compact"
     style="transition: height 0.3s ease-in-out; position: relative;" :loading="loading ? 'primary' : false"
-    v-auto-animate>
-    <containers-list-card-stats v-if="stats" :stats="(stats as ContainerStat)" />
+    :color="selected ? 'primary' : 'surface'" v-auto-animate>
     <v-row dense no-gutters>
       <v-col>
-        <containers-list-card-base :container="container" />
+        <containers-list-card-base :container="container" :stats="stats" />
       </v-col>
     </v-row>
     <v-row dense no-gutters class="align-center justify-start">
       <v-col>
         <!-- Expansion Buttons -->
-        <v-btn-toggle @click.prevent v-model="reveal" :rounded="false" multiple variant="text" color="primary">
-          <v-tooltip v-for="component in infoComponents" :key="component.name" :text="component.name"
-            location="bottom">
+        <v-btn-toggle @click.stop v-model="reveal" :rounded="false" multiple variant="text" color="primary">
+          <v-tooltip v-for="component in infoComponents" :key="component.name" :text="component.name" location="bottom">
             <template v-slot:activator="{ props }">
               <v-btn v-bind="props" :active="reveal.includes(component.component)"
                 :icon="reveal.includes(component.component) ? component.icon[0] : component.icon[1]"
@@ -39,13 +38,23 @@
 <script lang="ts" setup>
 import { LazyContainersListCardActions, LazyContainersListCardMounts, LazyContainersListCardPorts, LazyContainersListCardRaw } from '#components'
 import type { Container, ContainerStat } from '~/types/containers/yachtContainers';
+import type { SelectableItem } from '~/types/common/vuetify';
 type DynamicComponent = typeof LazyContainersListCardActions | typeof LazyContainersListCardMounts | typeof LazyContainersListCardPorts | typeof LazyContainersListCardRaw
 
 // Loading State
 const loading = ref(false)
 
+interface Props {
+  container: Container
+  stats?: ContainerStat
+  server: string,
+  selected?: boolean
+}
+
+defineEmits(['selected'])
+
 // Define Props
-const props = defineProps<{ container: Container, stats?: ContainerStat, server: string }>()
+const props = defineProps<Props>()
 const reveal = useState(`reveal-${props.container.shortId}`, () => [] as DynamicComponent[])
 
 
