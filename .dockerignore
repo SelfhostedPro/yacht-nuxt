@@ -6,7 +6,6 @@
 .cache
 dist
 /config
-!/modules/config
 
 # Node dependencies
 node_modules

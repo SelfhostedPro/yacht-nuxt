@@ -2,13 +2,16 @@
   <v-navigation-drawer v-model="navbar" v-if="!mdAndDown" height="100vh" :permanent="locked" elevation="10" floating
     :expand-on-hover="true" :rail="!locked">
     <v-img max-height="100" class="mx-2 mt-2" src="~/assets/icons/yacht/mini.svg" style="filter: brightness(5)" />
-    <v-btn icon class="my-2 mx-2" density="comfortable">
-      <v-icon icon="mdi-cog"></v-icon>
-      <v-menu open-on-hover :close-on-content-click="false" location="end center" activator="parent">
-        <v-btn class="my-2 mx-2" :icon="locked ? 'mdi-lock' : 'mdi-lock-open'" density="comfortable"
-          @click="locked = !locked" />
-      </v-menu>
-    </v-btn>
+    <v-hover>
+      <template #default="{ isHovering, props }">
+        <v-btn @click="settingsExpanded = !settingsExpanded" icon class="my-2 mx-2" density="comfortable" v-bind="props">
+          <v-icon :icon="settingsExpanded ? 'mdi-cog' : 'mdi-cog-outline'"></v-icon>
+        </v-btn>
+        <v-btn v-show="isHovering || settingsExpanded" class="my-2 mx-2" :icon="locked ? 'mdi-lock' : 'mdi-lock-open'"
+          density="comfortable" @click="locked = !locked" />
+      </template>
+    </v-hover>
+
 
     <v-divider />
     <v-list nav dense>
@@ -39,6 +42,7 @@
 
 <script setup lang="ts">
 import { useDisplay } from 'vuetify'
+const settingsExpanded = ref(false)
 const navbar = ref()
 const { mdAndDown } = useDisplay()
 defineProps(['links'])
