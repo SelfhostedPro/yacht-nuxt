@@ -53,7 +53,7 @@ jobs:
             org.opencontainers.image.licenses=MIT
             org.opencontainers.image.base.name=ghcr.io/selfhostedpro/yacht-nuxt:main
             org.opencontainers.image.vendor=SelfhostedPro
-            sh.yacht.icon=https://yacht.sh/img/logo.svg
+            sh.yacht.icon=https://raw.githubusercontent.com/SelfhostedPro/yacht-nuxt/main/assets/icons/yacht/mini.svg
             sh.yacht.self=true
             sh.yacht.ports.3000=WebUI
             sh.yacht.shell=/bin/sh
