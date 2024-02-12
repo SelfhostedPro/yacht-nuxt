@@ -25,10 +25,10 @@
     <v-window v-model="tab">
       <v-window-item v-for="template, i in   templates  " :key="i" :value="i">
         <v-fade-transition>
-          <templates-list-carousel rounded="0" v-if="search.length < 1 && template.featured" :template="template"
+          <templates-list-carousel rounded="0" variant="flat" v-if="search.length < 1 && template.featured" :template="template"
             @create-app="(app: YachtTemplate['templates'][0]) => createContainerFromTemplate(app)" />
         </v-fade-transition>
-        <templates-list-info color="foreground" elevation="8" rounded="0" class="text-center mx-auto"
+        <templates-list-info color="foreground" variant="flat" rounded="0" class="text-center mx-auto"
           v-if="search.length < 1" :template="template" />
         <templates-list-card @create-app="(app: YachtTemplate['templates'][0]) => createContainerFromTemplate(app)"
           class="mt-4" :template="template" :search="search" />

@@ -11,12 +11,23 @@ const yachtDarkTheme: ThemeDefinition = {
         foreground: "#323232"
     },
 }
+const yachtLightTheme: ThemeDefinition = {
+    dark: false,
+    colors: {
+        primary: "#47978F",
+        secondary: "#476460",
+        background: "#FFFFFF",
+        tabs: "#476460",
+        foreground: "#EBEFED"
+    },
+}
 
 export default defineVuetifyConfiguration({
     theme: {
         defaultTheme: 'yachtDarkTheme',
         themes: {
             yachtDarkTheme,
+            yachtLightTheme
         },
         variations: {
             colors: ['primary', 'secondary', 'tabs', 'foreground', 'surface'],

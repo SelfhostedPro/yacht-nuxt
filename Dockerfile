@@ -24,13 +24,6 @@ RUN npm run build
 # Copy production dependencies and built files into the final image
 # Start fresh from the base to reduce the final image size
 FROM ghcr.io/linuxserver/baseimage-alpine:3.17 as deploy
-LABEL org.opencontainers.image.title=Yacht
-LABEL org.opencontainers.image.url=https://github.com/SelfhostedPro/yacht-nuxt/pkgs/container/yacht-nuxt
-LABEL org.opencontainers.image.description="A web interface for managing docker containers with an emphasis on making selfhosting easy"
-LABEL org.opencontainers.image.documentation=https://yacht.sh/docs/
-LABEL org.opencontainers.image.licenses=MIT
-LABEL org.opencontainers.image.base.name=ghcr.io/selfhostedpro/yacht-nuxt:main
-LABEL org.opencontainers.image.vendor=SelfhostedPro
 
 LABEL build_version="Yacht version:- ${VERSION} Build-date:- ${BUILD_DATE}"
 LABEL maintainer="SelfhostedPro"
