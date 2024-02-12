@@ -42,3 +42,4 @@ helm-charts
 .editorconfig
 .idea
 coverage*
+default_template.json
