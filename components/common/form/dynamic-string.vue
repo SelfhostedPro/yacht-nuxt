@@ -38,7 +38,7 @@ const getComponent = (type: Field["type"]) => {
   }
 };
 
-const { value, errorMessage } = useField(() => model.value.value, {}, { validateOnMount: true, validateOnValueUpdate: true });
+const { value, errorMessage } = useField(() => model.value.value, {}, { validateOnMount: model.value.validateOnMount !== undefined ? model.value.validateOnMount : true, validateOnValueUpdate: model.value.validateOnMount !== undefined ? model.value.validateOnMount : true });
 </script>
 
 <style></style>

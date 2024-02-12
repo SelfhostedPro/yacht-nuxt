@@ -42,6 +42,7 @@ export const addTemplate = async ({ url, name: _name, title: _title }: addYachtT
         const templateType = await getTemplateType(_template)
         const template = await typeTemplate(_template, { name: _name, title, url, type: templateType })
         await configStorage.setItem(`${config.static.paths.templates}/${_name}.json`, template)
+        return template
     } else {
         YachtError(new Error('Template already exists.'), '/services/templates/info - addTemplate', true, 'Template')
         // throw createError('Template already exists.')

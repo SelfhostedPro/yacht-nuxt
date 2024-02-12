@@ -1,7 +1,4 @@
 <template>
-  <!-- <div>
-    {{ templates }}
-  </div> -->
   <v-container fluid class="px-0">
     <v-tabs v-model="tab" bg-color="surface" color="primry" align-tabs="center">
       <v-tab v-for="template, i in templates" :key="i" :value="i">
@@ -22,18 +19,35 @@
         </v-col>
       </v-row>
     </v-toolbar>
-    <v-window v-model="tab">
-      <v-window-item v-for="template, i in   templates  " :key="i" :value="i">
+    <v-window v-model="tab" class="mt-5">
+      <v-window-item v-if="templates && templates.length > 0" v-for="template, i in   templates  " :key="i" :value="i">
         <v-fade-transition>
-          <templates-list-carousel rounded="0" variant="flat" v-if="search.length < 1 && template.featured" :template="template"
-            @create-app="(app: YachtTemplate['templates'][0]) => createContainerFromTemplate(app)" />
+          <templates-list-carousel rounded="0" variant="flat" v-if="search.length < 1 && template.featured"
+            :template="template" @create-app="(app: YachtTemplate['templates'][0]) => createContainerFromTemplate(app)" />
         </v-fade-transition>
         <templates-list-info color="foreground" variant="flat" rounded="0" class="text-center mx-auto"
           v-if="search.length < 1" :template="template" />
         <templates-list-card @create-app="(app: YachtTemplate['templates'][0]) => createContainerFromTemplate(app)"
           class="mt-4" :template="template" :search="search" />
       </v-window-item>
+      <div v-else>
+        <v-card class="pa-3">
+          <v-card-title class="text-center">
+            No templates found
+          </v-card-title>
+          <v-card-text class="text-center">
+            <v-icon size="100">
+              mdi-docker
+            </v-icon>
+            <div class="text-h6">
+              Add a new template to see it here.
+            </div>
+            <i>If there should be templates on this server, check the logs for errors.</i>
+          </v-card-text>
+        </v-card>
+      </div>
     </v-window>
+
     <v-dialog v-model="openInfo" :max-width="maximize ? undefined : '800'" :fullscreen="maximize"
       transition="dialog-bottom-transition">
       <template v-slot:default>
@@ -68,13 +82,15 @@ const createContainerFromTemplate = (app: YachtTemplate['templates'][0]) => {
   createDialog.value = true
 }
 
-const refresh = async () => {
-  await until(notifications).toBe(true)
-  await useAsyncData('templateList', () => templatesStore.fetchTemplates(), {
-  })
-}
-onMounted(async () => {
-  refresh()
-})
+const { refresh } = useAsyncData('templateList', () => templatesStore.fetchTemplates(), {})
+
+// const refresh = async () => {
+//   await until(notifications).toBe(true)
+//   await useAsyncData('templateList', () => templatesStore.fetchTemplates(), {
+//   })
+// }
+// onMounted(async () => {
+//   refresh()
+// })
 
 </script>

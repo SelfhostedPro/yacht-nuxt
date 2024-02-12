@@ -5,6 +5,7 @@ export interface Field {
     items?: string[] | boolean[];
     icons?: string[];
     cols?: number | string;
+    validateOnMount?: boolean;
     multiple?: boolean;
     type: "VTextField" | "VSelect" | "VTextarea" | "VBtn" | "VBtnToggle" | "description" | "label";
 }

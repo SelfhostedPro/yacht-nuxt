@@ -11,9 +11,11 @@
           <v-text-field v-model="search" clearable density="comfortable" hide-details placeholder="Search"
             prepend-inner-icon="mdi-magnify" style="max-width: 300px;" variant="solo" />
         </v-col>
-        <v-col v-if="selectedItems.length > 0">
-          <slot name="bulk-buttons" :selectedItems="selectedItems" :server="Object.keys(resource)[tab]" />
-        </v-col>
+        <v-slide-y-transition>
+          <v-col v-if="selectedItems.length > 0">
+            <slot name="bulk-buttons" :selectedItems="selectedItems" :server="Object.keys(resource)[tab]" />
+          </v-col>
+        </v-slide-y-transition>
         <v-col cols="3" class="d-flex justify-end">
           <slot name="buttons" />
         </v-col>
@@ -23,8 +25,8 @@
       <v-window-item v-for="server, i in Object.keys(resource)" :key="i" :value="i">
         <slot name="heading" :selectedItems="selectedItems" :server="server" />
         <v-data-iterator v-model:model-value="selectedItems" v-if="resource[server].length > 0" :items="resource[server]"
-          :search="search" :item-value="name === 'volumes' ? 'Id' : 'id'" :items-per-page="12" multiple show-expand
-          show-select>
+          :search="search" :item-value="name === 'volumes' ? 'Id' : name === 'containers' ? 'name' : 'id'"
+          :items-per-page="12" multiple show-expand show-select>
           <template #default="{ items, ...rest }">
             <v-row>
               <v-col v-for="_resource, i in items" :key="i" cols="12" sm="6" md="4" lg="4" xl="3">
@@ -41,14 +43,13 @@
               </div>
               <v-btn :disabled="page >= pageCount" icon="mdi-arrow-right" density="comfortable" variant="tonal" rounded
                 @click="nextPage" />
-              {{ selectedItems }}
             </div>
           </template>
         </v-data-iterator>
         <div v-else>
           <v-card class="pa-3">
             <v-card-title class="text-center">
-              No {{ name }}s found
+              No {{ name.charAt(name.length - 1) === 's' ? name.substring(0, name.length - 1) : name }}s found
             </v-card-title>
             <v-card-text class="text-center">
               <v-icon size="100">
@@ -57,7 +58,8 @@
               <div class="text-h6">
                 Create a new {{ name }} to see it here.
               </div>
-              <i>If there should be {{ name }}s on this server, check the logs for errors.</i>
+              <i>If there should be {{ name.charAt(name.length - 1) === 's' ? name.substring(0, name.length - 1) : name
+              }}s on this server, check the logs for errors.</i>
             </v-card-text>
           </v-card>
         </div>

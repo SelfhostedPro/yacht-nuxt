@@ -1,7 +1,7 @@
 <template>
   <v-card-item class="px-2 pb-0" density="compact">
     <template #prepend>
-      <containers-list-card-stats v-if="stats" :stats="stats">
+      <containers-list-card-stats v-if="container.status === 'running' && stats" :stats="stats">
         <template #default>
           <v-avatar
             :image="container.info.icon ? container.info.icon : 'https://cdn.vuetifyjs.com/images/cards/halcyon.png'" />

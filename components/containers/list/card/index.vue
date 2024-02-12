@@ -1,15 +1,16 @@
 <template>
   <!-- :to="`/containers/${server}/${container.name}`" -->
   <v-card @click="$emit('selected')" class="pa-2 justify-start fill-height" density="compact"
-    style="transition: height 0.3s ease-in-out; position: relative;" :loading="loading ? 'primary' : false"
-    :color="selected ? 'primary' : 'surface'" v-auto-animate>
+    style="transition: height 0.3s ease-in-out; position: relative;"
+    :loading="loading.includes(container.id) ? 'primary' : false" :color="selected ? 'secondary' : 'surface'"
+    v-auto-animate>
     <v-row dense no-gutters>
       <v-col>
         <containers-list-card-base :container="container" :stats="stats" />
       </v-col>
     </v-row>
     <v-row dense no-gutters class="align-center justify-start">
-      <v-col>
+      <v-col class="d-flex justify-space-between">
         <!-- Expansion Buttons -->
         <v-btn-toggle @click.stop v-model="reveal" :rounded="false" multiple variant="text" color="primary">
           <v-tooltip v-for="component in infoComponents" :key="component.name" :text="component.name" location="bottom">
@@ -20,6 +21,8 @@
             </template>
           </v-tooltip>
         </v-btn-toggle>
+        <v-btn variant="plain" icon @click.stop :to="`/containers/${server}/${container.name}`"><v-icon
+            icon="mdi-information-outline" /></v-btn>
       </v-col>
     </v-row>
     <!-- Expansion Ref -->
@@ -29,8 +32,8 @@
         :mounts="container.mounts && container.mounts[0] ? container.mounts : []"
         :ports="container.ports && container.ports[0] ? container.ports : []" :labels="container.labels"
         :container="reveal.includes(raw) || reveal.includes(actions) ? container : null"
-        :server="reveal.includes(actions) ? server : null" @start-loading="loading = true"
-        @stop-loading="loading = false" />
+        :loading="reveal.includes(actions) && loading.includes(container.id)"
+        :server="reveal.includes(actions) ? server : null" />
     </ul>
   </v-card>
 </template>
@@ -42,7 +45,7 @@ import type { SelectableItem } from '~/types/common/vuetify';
 type DynamicComponent = typeof LazyContainersListCardActions | typeof LazyContainersListCardMounts | typeof LazyContainersListCardPorts | typeof LazyContainersListCardRaw
 
 // Loading State
-const loading = ref(false)
+const { loading } = storeToRefs(useContainersStore())
 
 interface Props {
   container: Container

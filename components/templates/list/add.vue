@@ -1,7 +1,7 @@
 <template>
-  <v-btn @click="menuOpen = true" color="primary">
+  <v-btn color="primary">
     <v-icon icon="mdi-plus" />
-    <v-menu activator="parent" :close-on-content-click="false">
+    <v-menu v-model="menuOpen" activator="parent" :close-on-content-click="false">
       <v-card>
         <v-list width="40vw">
           <v-list-item class="align-center">
@@ -43,10 +43,13 @@
 <script lang="ts" setup>
 import { YAMLException, load } from 'js-yaml'
 import { addTemplateSchema } from '~/types/templates/yacht'
+import type { Field } from '~/types/forms'
 const templateValid = ref(false)
 const loading = ref(false)
 const menuOpen = ref(false)
 const templatesStore = useTemplatesStore()
+
+const emit = defineEmits(["added"])
 
 const { values, validate: finalVal, setFieldValue, handleSubmit, setFieldError, setErrors, errors } = useForm({ validationSchema: toTypedSchema(addTemplateSchema) })
 
@@ -54,13 +57,14 @@ const urlField = {
   label: "url",
   value: "url",
   placeholder: "https://raw.githubusercontent.com/SelfhostedPro/yacht-api/main/default_template.json",
-  type: "VTextField",
+  type: "VTextField"
 } as Field
 const nameField = {
   label: "name",
   value: "name",
   placeholder: "default",
   type: "VTextField",
+  validateOnMount: false
 } as Field
 
 const titleField = {
@@ -68,18 +72,8 @@ const titleField = {
   value: "title",
   placeholder: "Yacht Template",
   type: "VTextField",
+  validateOnMount: false
 } as Field
-
-export interface Field {
-  label: string;
-  value: string;
-  placeholder?: string;
-  items?: string[] | boolean[];
-  icons?: string[];
-  cols?: number | string;
-  multiple?: boolean;
-  type: "VTextField" | "VSelect" | "VTextarea" | "VBtn" | "VBtnToggle";
-}
 
 
 const isGithubUrl = (url: string) => {
@@ -131,9 +125,14 @@ const validate = async () => {
   }
 }
 
-const onSubmit = handleSubmit(async (values) => {
-  await templatesStore.addTemplate(values.url, values.name, values.title)
-  menuOpen.value = false
+const onSubmit = handleSubmit((values) => {
+  loading.value = true
+  templatesStore.addTemplate(values.url, values.name, values.title).then(() => {
+    emit('added')
+    loading.value = false
+    menuOpen.value = false
+
+  })
 })
 
 </script>

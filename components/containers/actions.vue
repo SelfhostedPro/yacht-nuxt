@@ -1,8 +1,8 @@
 <template>
-  <v-btn-group class="mx-auto" :variant="variant">
+  <v-btn-group @click.stop class="mx-auto" :variant="variant">
     <v-tooltip v-for="action in actions" :key="action.name" :text="action.name" location="bottom">
       <template #activator="{ props: props }">
-        <v-btn v-if="action.depends.includes(container.status) || action.depends.includes('all')" v-bind="props"
+        <v-btn :disabled="loading || false" v-if="action.depends.includes(container.status) || action.depends.includes('all')" v-bind="props"
           :size="size" :color="action.color" class="my-1" @click.prevent="handleAction(action.name)">
           <v-icon :icon="action.icon" />
         </v-btn>
@@ -50,6 +50,7 @@ interface Props {
   server: string
   variant?: "flat" | "text" | "elevated" | "tonal" | "outlined" | "plain"
   size?: string
+  loading?: boolean
 }
 const props = defineProps<Props>()
 const emit = defineEmits(["startLoading", "stopLoading"])

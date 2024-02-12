@@ -15,10 +15,7 @@
 
 <script lang="ts" setup>
 import { type Field } from '~/types/forms'
-import Form from '../form.vue';
-import type { CreateContainerForm } from '~/types/containers/create';
 
-const { value: form } = useFormValues<CreateContainerForm>()
 const containerStore = useContainersStore()
 const { servers } = storeToRefs(containerStore)
 await useAsyncData('servers', () => containerStore.fetchContainers().then(() => true))

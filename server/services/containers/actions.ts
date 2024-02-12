@@ -62,11 +62,18 @@ export const getContainerAction = async (server: string, id: string, action: str
         if (action in actions) {
             try {
                 await actions[action]()
-                const _container = await normalizeContainerInspectInfo(await container.inspect())
-                YachtLog({ title: 'ContainerAction', level: 'info', from: `services/containers - getContainerAction`, message: `${action} performed on ${_container.info.title || _container.name}: ${_container.shortId}`, timeout: 2000 })
+                if (action !== 'remove') {
+                    const _container = await normalizeContainerInspectInfo(await container.inspect())
+                    YachtLog({ title: 'ContainerAction', level: 'info', from: `services/containers - getContainerAction`, message: `${action} performed on ${_container.info.title || _container.name}: ${_container.shortId}`, timeout: 2000 })
+
+                } else YachtLog({ title: 'ContainerAction', level: 'info', from: `services/containers - getContainerAction`, message: `${action} performed on ${id}: ${container.id}`, timeout: 2000 })
                 return await getContainers()
-            } catch (e) {
-                YachtError(e)
+            } catch (e: Error | any) {
+                if (e.statusCode && e.statusCode === 304) {
+                    YachtLog({ message: `Container ${id} is already ${action}ed!`, level: 'info', from: `services/containers - getContainerAction` }, undefined, true)
+                } else {
+                    YachtError(e)
+                }
                 return await getContainers()
             }
 

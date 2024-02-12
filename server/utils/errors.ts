@@ -14,7 +14,7 @@ export const YachtError = (error: any, from?: string, internal?: boolean, servic
     } else if (error.code === 'ENOENT' && error.address === '/var/run/docker.sock') {
         logDockerError('Docker Error', 'Docker is not running or the socket is not accessible!', from);
         isDockerError = true;
-    } else if ([409, 500].includes(error.statusCode)) {
+    } else if ([409, 500, 304].includes(error.statusCode)) {
         logDockerError('Docker Error', error.message, from);
         isDockerError = true;
     }

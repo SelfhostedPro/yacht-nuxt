@@ -3,7 +3,7 @@
     <v-row>
       <v-col cols="12">
         <v-btn-group v-auto-animate divided class="d-flex justify-center">
-          <containers-actions :size="xs ? 'small' : 'default'" :container="container" :server="server" @start-loading="emit('startLoading')"
+          <containers-actions :loading="loading" :size="xs ? 'small' : 'default'" :container="container" :server="server" @start-loading="emit('startLoading')"
             @stop-loading="emit('stopLoading')" />
         </v-btn-group>
       </v-col>
@@ -14,7 +14,7 @@
 <script lang="ts" setup>
 import type { Container } from '~/types/containers/yachtContainers';
 const { xs } = useDisplay()
-defineProps<{ container: Container, server: string }>()
+defineProps<{ container: Container, server: string, loading?: boolean }>()
 const emit = defineEmits(["startLoading", "stopLoading"])
 </script>
 
