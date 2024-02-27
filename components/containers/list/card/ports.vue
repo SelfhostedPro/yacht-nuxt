@@ -61,4 +61,4 @@ defineProps<{ ports: ContainerPort[], labels: Container['labels'] }>()
 const disableIpv6 = (ports: ContainerPort[]) => {
     return ports.filter((port) => port.hostIP !== '::')
 }
-</script>
+</script>~/shared/containers/yachtContainers

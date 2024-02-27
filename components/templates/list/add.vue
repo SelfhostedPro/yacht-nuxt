@@ -131,10 +131,9 @@ const onSubmit = handleSubmit((values) => {
     emit('added')
     loading.value = false
     menuOpen.value = false
-
   })
 })
 
 </script>
 
-<style></style>
+<style></style>~/shared/templates/yacht~/shared/forms

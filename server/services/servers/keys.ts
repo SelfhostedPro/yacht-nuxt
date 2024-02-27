@@ -4,9 +4,6 @@ import * as sshpk from 'sshpk';
 import * as path from 'path';
 import { Client } from 'ssh2';
 
-// Service Dependency Imports
-import { useConfig } from '../config';
-
 
 type PassphraseFile = Map<string, string>;
 

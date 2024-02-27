@@ -54,4 +54,4 @@ onBeforeUnmount(async () => {
 .card-snackbar {
   max-width: 100% !important;
 }
-</style>
+</style>~/shared/notifications

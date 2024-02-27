@@ -18,4 +18,4 @@ defineProps<{ container: Container, server: string, loading?: boolean }>()
 const emit = defineEmits(["startLoading", "stopLoading"])
 </script>
 
-<style></style>
+<style></style>~/shared/containers/yachtContainers

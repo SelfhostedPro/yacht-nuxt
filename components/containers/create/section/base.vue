@@ -31,4 +31,4 @@ const base: ComputedRef<Field[]> = computed(() => {
 })
 </script>
 
-<style></style>
+<style></style>~/shared/forms

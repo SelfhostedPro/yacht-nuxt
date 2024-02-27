@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid class="px-0">
+  <v-container fluid class="p-0">
     <v-tabs v-model="tab" bg-color="surface" color="primry" align-tabs="center">
       <v-tab v-for="server, i in Object.keys(resource)" :key="i" :value="i">
         {{ server }}
@@ -83,4 +83,4 @@ const props = defineProps<Props>()
 const tab = ref(0)
 const search = ref('')
 
-</script>
+</script>~/shared/servers~/shared/templates/yacht

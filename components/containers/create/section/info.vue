@@ -70,4 +70,4 @@ const fields: { [name: string]: Field } = {
 };
 </script>
 
-<style></style>
+<style></style>~/shared/forms

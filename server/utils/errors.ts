@@ -20,7 +20,7 @@ export const YachtError = (error: any, from?: string, internal?: boolean, servic
     }
 
     if (isDockerError) {
-        throw createError(error);
+        return
     } else if (internal) {
         YachtLog({ title: `${service || 'Internal'} Error`, level: 'error', message: error.reason || error.message, from: from });
         throw createError(error);

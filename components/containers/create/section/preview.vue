@@ -121,4 +121,4 @@ const form: ComputedRef<Partial<CreateContainerForm>> = useFormValues()
 const panel = ref([])
 </script>
 
-<style></style>
+<style></style>~/shared/containers/create

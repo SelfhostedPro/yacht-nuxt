@@ -72,4 +72,4 @@ interface Props {
 defineProps<Props>()
 </script>
 
-<style></style>
+<style></style>~/shared/templates/yacht

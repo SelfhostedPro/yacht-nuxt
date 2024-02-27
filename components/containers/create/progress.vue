@@ -70,4 +70,4 @@ watchEffect(() => {
 
 </script>
 
-<style></style>
+<style></style>~/shared/containers/create

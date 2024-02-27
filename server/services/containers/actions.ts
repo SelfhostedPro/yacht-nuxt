@@ -12,7 +12,6 @@ import { useServers } from '~/server/services/servers'
 
 
 export const createContainer = async (form: CreateContainerForm) => {
-    const containerLog = useLog(`container - ${form.name} - ${form.server}}`)
     const server: Dockerode | null = await useServers().then((servers: ServerDict) => servers[form.server])
     if (!server) {
         throw createError(`Server ${form.server} not found!`)

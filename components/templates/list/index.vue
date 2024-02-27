@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid class="px-0">
+  <v-container fluid class="p-0">
     <v-tabs v-model="tab" bg-color="surface" color="primry" align-tabs="center">
       <v-tab v-for="template, i in templates" :key="i" :value="i">
         {{ template.name }}
@@ -22,8 +22,10 @@
     <v-window v-model="tab" class="mt-5">
       <v-window-item v-if="templates && templates.length > 0" v-for="template, i in   templates  " :key="i" :value="i">
         <v-fade-transition>
-          <templates-list-carousel rounded="0" variant="flat" v-if="search.length < 1 && template.featured"
-            :template="template" @create-app="(app: YachtTemplate['templates'][0]) => createContainerFromTemplate(app)" />
+          <div v-if="search.length < 1 && template.featured">
+            <lazy-templates-list-carousel :template="template"
+              @create-app="(app: YachtTemplate['templates'][0]) => createContainerFromTemplate(app)" />
+          </div>
         </v-fade-transition>
         <templates-list-info color="foreground" variant="flat" rounded="0" class="text-center mx-auto"
           v-if="search.length < 1" :template="template" />
@@ -61,7 +63,7 @@
       </template>
     </v-dialog>
   </v-container>
-  <containers-create v-model:open="createDialog" :template="selectedApp" @close="createDialog = false" />
+  <containers-create v-if="createDialog" v-model:open="createDialog" :template="selectedApp" @close="createDialog = false" />
 </template>
 <script setup lang="ts">
 import type { YachtTemplate } from '~/types/templates/yacht';
@@ -70,7 +72,6 @@ const templatesStore = useTemplatesStore()
 const { loading, templates } = storeToRefs(templatesStore)
 const tab = ref(0)
 const search = ref('')
-const notifications = notificationsConnected()
 
 const createDialog = ref(false)
 const selectedApp = ref<YachtTemplate['templates'][0] | undefined>()
@@ -82,7 +83,7 @@ const createContainerFromTemplate = (app: YachtTemplate['templates'][0]) => {
   createDialog.value = true
 }
 
-const { refresh } = useAsyncData('templateList', () => templatesStore.fetchTemplates(), {})
+useAsyncData('templateList', () => templatesStore.fetchTemplates(), {})
 
 // const refresh = async () => {
 //   await until(notifications).toBe(true)
@@ -93,4 +94,4 @@ const { refresh } = useAsyncData('templateList', () => templatesStore.fetchTempl
 //   refresh()
 // })
 
-</script>
+</script>~/shared/templates/yacht

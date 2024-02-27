@@ -1,11 +1,6 @@
 import { yachtTemplateSchema, type PortainerV1Template, type PortainerV2Template, type YachtTemplate, type YachtV1Template, type YachtV2Template } from "~/types/templates/yacht";
 import { typeTemplate, getTemplateType } from "./formatter";
 
-
-// External Dependencies
-import { useConfig } from "../config";
-
-
 const configStorage = useStorage('base')
 const logger = useLog('templates')
 

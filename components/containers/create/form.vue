@@ -48,4 +48,4 @@ const sections = [
   ContainersCreateSectionAdvanced,
   ContainersCreateSectionPreview
 ]
-</script>
+</script>~/shared/containers/create

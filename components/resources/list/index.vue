@@ -1,20 +1,18 @@
 <template>
-  <v-container fluid class="px-0">
-    <common-list :resource="resource" :name="name" :loading="loading.includes(name)">
-      <template #buttons>
-        <v-btn icon :loading="loading.includes(name)" @click="refresh()">
-          <v-icon>mdi-refresh</v-icon>
-        </v-btn>
-      </template>
-      <template #card="{ server, resource }: { server: string, resource: DataIteratorItem<unknown> }">
-        <resources-list-network-card v-if="name === 'networks'" :server="server"
-          :resource="(resource.raw as NetworkInspectInfo)" />
-        <resources-list-image-card v-if="name === 'images'" :server="server" :resource="(resource.raw as ImageInfo)" />
-        <resources-list-volume-card v-if="name === 'volumes'" :server="server"
-          :resource="(resource.raw as FixedVolumeInspectInfo)" />
-      </template>
-    </common-list>
-  </v-container>
+  <common-list :resource="resource" :name="name" :loading="loading.includes(name)">
+    <template #buttons>
+      <v-btn icon :loading="loading.includes(name)" @click="refresh()">
+        <v-icon>mdi-refresh</v-icon>
+      </v-btn>
+    </template>
+    <template #card="{ server, resource }: { server: string, resource: DataIteratorItem<unknown> }">
+      <resources-list-network-card v-if="name === 'networks'" :server="server"
+        :resource="(resource.raw as NetworkInspectInfo)" />
+      <resources-list-image-card v-if="name === 'images'" :server="server" :resource="(resource.raw as ImageInfo)" />
+      <resources-list-volume-card v-if="name === 'volumes'" :server="server"
+        :resource="(resource.raw as FixedVolumeInspectInfo)" />
+    </template>
+  </common-list>
 </template>
 <script setup lang="ts">
 import { ResourcesListImageCard, ResourcesListNetworkCard, ResourcesListVolumeCard } from '#components'
@@ -37,4 +35,4 @@ onMounted(async () => {
   await refresh()
 })
 
-</script>
+</script>~/shared/containers/fixedDockerode~/shared/common/vuetify

@@ -78,4 +78,4 @@ interface Props {
 }
 defineProps<Props>()
 const tab = ref(0)
-</script>
+</script>~/shared/containers/yachtContainers

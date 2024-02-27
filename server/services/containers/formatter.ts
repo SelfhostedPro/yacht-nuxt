@@ -5,9 +5,6 @@ import { format, parseISO } from 'date-fns';
 import { type CreateContainerForm } from "~/types/containers/create";
 import type { ContainerCreateOptions, ContainerStats as DockerodeContainerStats } from "dockerode";
 
-// External Imports
-import { useConfig } from "../config";
-
 /**
  * Checks to see if the icon url is valid and loads.
  * (Used in order to grab the default LSIO icon if the app's icon returns a 404)
@@ -306,10 +303,10 @@ const transformInfo = async (data: CreateContainerForm) => {
 
 const transformVariables = async (data: CreateContainerForm): Promise<CreateContainerForm> => {
     const config = await useConfig();
-    if (!config.base['templateVariables']) {
+    if (!config['templateVariables']) {
         return data;
     }
-    const variables = config.base['templateVariables'];
+    const variables = config['templateVariables'];
     for (const variable of variables) {
         data = replaceVariables(data, variable.variable, variable.replacement) as CreateContainerForm;
     }

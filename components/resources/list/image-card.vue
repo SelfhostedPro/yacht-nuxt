@@ -4,7 +4,16 @@
     <v-row no-gutters>
       <v-col cols="12">
         <v-sheet max-height="110px">
-          <v-card-item :prepend-avatar="vendorIcon || placeHolder">
+          <v-card-item>
+            <template #prepend>
+              <v-avatar>
+                <v-img :src="vendorIcon">
+                  <template #error>
+                    <v-img :src="placeHolder" />
+                  </template>
+                </v-img>
+              </v-avatar>
+            </template>
             <v-card-title>
               {{ imageTitle }} <v-btn size="small" variant="plain" icon @click="reveal = !reveal">
                 <v-icon :icon="reveal ? 'mdi-chevron-up' : 'mdi-chevron-down'" />
@@ -31,7 +40,7 @@
 
     <v-card-actions v-if="labels && (labels.get('url') || labels.get('documentation') || labels.get('source'))"
       class="pa-0 align-end">
-      <v-btn size="small" target="_blank" variant="plain" icon :href="labels.get('url')" v-if="labels?.get('url')">
+      <v-btn v-if="labels?.get('url')" size="small" target="_blank" variant="plain" icon :href="labels.get('url')">
         <v-icon icon="mdi-open-in-new" />
       </v-btn>
       <v-btn size="small" target="_blank" variant="plain" icon :href="labels.get('documentation')"
@@ -49,6 +58,7 @@
     <v-expand-transition>
       <div v-show="reveal">
         <pre class="overflow-auto"> {{ resource }}</pre>
+        <pre class="overflow-auto"> {{ labels }}</pre>
       </div>
     </v-expand-transition>
   </v-card>
@@ -57,14 +67,13 @@
 <script lang="ts" setup>
 import type { ImageInfo } from 'dockerode';
 const reveal = ref(false)
-import placeHolder from '@/assets/docker-placeholder-logo.png'
+import placeHolder from '~/assets/docker-placeholder-logo.png'
 import { fromUnixTime } from 'date-fns';
 interface Props {
   server: string,
   resource: ImageInfo
 }
 const props = defineProps<Props>()
-const LabelList = ref(new Map())
 
 const keyMap: { [key: string]: string } = {
   'org.opencontainers.image.title': 'title',
@@ -84,32 +93,41 @@ const keyMap: { [key: string]: string } = {
   'com.docker.desktop.extension.icon': 'docker.icon'
 };
 
-const vendorIconMap: { [key: string]: string } = {
-  'linuxserver.io': 'https://raw.githubusercontent.com/linuxserver/docker-templates/master/linuxserver.io/img/linuxserver-ls-logo.png',
-  'portainer.io': 'docker.icon',
-};
-
 const labels = computed(() => {
-  const LabelList = new Map()
-  const labels = props.resource.Labels;
-  if (!labels) return;
-  for (const [key, value] of Object.entries(labels)) {
+  // Return early if labels are not defined
+  if (!props.resource.Labels) return;
+  const LabelList = new Map();
+  // Use Object.keys() for efficiency
+  for (const key of Object.keys(props.resource.Labels)) {
     const mappedKey = keyMap[key];
     if (mappedKey) {
-      LabelList.set(mappedKey, value);
+      LabelList.set(mappedKey, props.resource.Labels[key]);
     }
   }
-  return LabelList
-})
+  return LabelList;
+});
+
 
 const imageTitle = computed(() => {
-  if (labels.value?.get('title')) {
-    return <string>labels.value?.get('title')
-  } else if (props.resource.RepoTags && props.resource.RepoTags.length > 0 && props.resource.RepoTags[0] !== '<none>:<none>') {
-    return <string>props.resource.RepoTags[0]
+  // Assuming labels.value is a Map-like object that might have a 'title' key
+  const titleLabel = labels.value?.get('title');
+  if (titleLabel) {
+    return titleLabel;
   }
-  return <string>props.resource.Id?.slice(7, 19) || <string>props.resource.Id
-})
+  // Assuming props.resource.RepoTags is an array of strings
+  const repoTag = props.resource.RepoTags?.[0];
+  if (repoTag && repoTag !== '<none>:<none>') {
+    return repoTag;
+  }
+  // Fallback to slicing the Id if available, otherwise just use the full Id
+  return props.resource.Id?.slice(7, 19) ?? props.resource.Id;
+});
+
+
+const vendorIconMap: { [key: string]: string } = {
+  'linuxserver.io': `https://raw.githubusercontent.com/linuxserver/docker-templates/master/linuxserver.io/img/${imageTitle.value.toLowerCase()}-logo.png`,
+  'portainer.io': 'docker.icon',
+};
 
 const imageSize = computed(() => {
   return props.resource.Size / 1000 / 1000
@@ -118,8 +136,8 @@ const formatDates = (date: number) => {
   return fromUnixTime(date).toLocaleString()
 }
 const vendorIcon = computed(() => {
-  const vendor = String(LabelList.value.get('vendor')).toLowerCase();
-  return vendor ? vendorIconMap[vendor] || LabelList.value.get('yacht.icon') : placeHolder;
+  const vendor = String(labels.value?.get('vendor')).toLowerCase();
+  return vendor && vendor !== 'undefined' ? vendorIconMap[vendor] || labels.value?.get('yacht.icon') : placeHolder;
 });
 </script>
 

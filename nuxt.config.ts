@@ -14,7 +14,7 @@ export default defineNuxtConfig({
     "@formkit/auto-animate",
     "vuetify-nuxt-module",
     "@vee-validate/nuxt",
-    "nuxt-lodash"
+    "nuxt-lodash",
   ],
   lodash: {
     prefix: "_",
@@ -56,6 +56,9 @@ export default defineNuxtConfig({
         base: process.env.CONFIG_PATH || './config',
       }
     }
+  },
+  runtimeConfig: {
+    yacht: {}
   },
   typescript: {
     typeCheck: true

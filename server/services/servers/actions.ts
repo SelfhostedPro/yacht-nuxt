@@ -3,7 +3,6 @@ import type { ServerDict } from "~/types/servers"
 import Docker from 'dockerode';
 
 // Service Dependency Imports
-import { useConfig } from "../config"
 import { sshAdapter, localAdapter } from "./adapters";
 
 let _servers: ServerDict
@@ -22,7 +21,7 @@ export const getServer = async (name: string) => {
 
 const getServers = async () => {
     return useConfig().then(async (config) => {
-        const servers = config.base.servers
+        const servers = config.servers
         const returnServers = {} as ServerDict
         const serverPromises = servers.map(async (server) => {
             if (server.options) switch (server.options?.protocol) {

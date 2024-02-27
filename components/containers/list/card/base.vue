@@ -30,4 +30,4 @@ interface Props {
   stats?: ContainerStat;
 }
 defineProps<Props>();
-</script>
+</script>~/shared/containers/yachtContainers

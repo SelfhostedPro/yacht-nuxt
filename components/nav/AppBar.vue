@@ -5,7 +5,7 @@
   >
     <template #append>
       <v-app-bar-nav-icon
-        v-if="mdAndDown"
+        v-if="smAndDown"
         color="grey-lighten-5"
         variant="text"
         @click.stop="drawer = !drawer"
@@ -21,7 +21,6 @@
     </v-app-bar-title>
   </v-app-bar>
   <v-navigation-drawer
-    v-if="mdAndDown"
     v-model="drawer"
     app
     location="right"
@@ -77,7 +76,7 @@ import { useDisplay } from 'vuetify'
 
 defineProps(['links'])
 const drawer = ref(false)
-const { mdAndDown } = useDisplay()
+const { smAndDown } = useDisplay()
 </script>
 
 <style>

@@ -8,6 +8,7 @@ export default defineEventHandler(async (event) => {
   const server = event.context.params?.server
   const containerId = event.context.params?.id
 
+
   if (!server || !containerId) throw createError('Server or container not specified')
 
   if (event.method === 'GET') {

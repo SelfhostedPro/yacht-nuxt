@@ -65,4 +65,4 @@ const open = ref([] as string[])
 defineProps<{ container: Container }>()
 </script>
 
-<style></style>
+<style></style>~/shared/containers/yachtContainers

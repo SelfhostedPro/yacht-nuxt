@@ -10,7 +10,7 @@ export function useLog (tag?: string, options: Partial<ConsolaOptions> = {}) {
   }
 
 export const YachtLog = (event: Notification, error?: H3Error, quiet?: boolean,) => {
-    logger.withTag(event.from || event.title || 'unknown')[event.level](`${event.message} ${error ? `\nError: ${JSON.stringify(error)}` : ''}`)
+    logger.withTag(event['from'] || event.title || 'unknown')[event.level](`${event.message} ${error ? `\nError: ${JSON.stringify(error)}` : ''}`)
     if (!quiet) {
         sseHooks.callHook("sse:notification", event)
     }

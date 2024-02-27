@@ -1,1 +1,1 @@
-export { useConfig } from './actions'
+export { useConfig, useSyncConfig } from './actions'

@@ -23,7 +23,6 @@ export const getContainers = async () => {
     // Wait for containers to resolve
     await Promise.all(serverPromises)
     return serversReturn
-
 }
 
 export const getContainerInfo = async (server: string, id: string) => {

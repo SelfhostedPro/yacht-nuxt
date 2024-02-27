@@ -174,4 +174,4 @@ const notificationProgress = ({ id, title, item, progress }: Progress) => {
 
 </script>
 
-<style></style>
+<style></style>~/shared/notifications

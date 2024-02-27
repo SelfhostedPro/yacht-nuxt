@@ -155,4 +155,4 @@ onBeforeUnmount(() => {
   background-color: rgba(var(--v-theme-error), 0.8) !important;
   color: rgb(var(--v-theme-on-surface)) !important;
 }
-</style>
+</style>~/shared/templates/yacht~/shared/containers/create

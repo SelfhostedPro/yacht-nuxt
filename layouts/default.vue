@@ -3,10 +3,8 @@
     <nav-sidebar :links="links" />
     <nav-app-bar :links="links" />
     <v-main>
-      <v-container fluid>
         <NuxtLoadingIndicator />
         <slot />
-      </v-container>
     </v-main>
     <NotificationsSonner />
     <NotificationsProgress />

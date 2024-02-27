@@ -1,5 +1,4 @@
 import { z } from "zod";
-
 export const KeyObjectSchema = z.object({
   pem: z.union([z.string(), z.instanceof(Buffer)]).optional(),
   passphrase: z.string().optional()
@@ -55,19 +54,44 @@ export const TemplateVariablesSchema = z.object({
 export type TemplateVariables = z.infer<typeof TemplateVariablesSchema>
 
 export const YachtConfigSchema = z.object({
-  base: z.object({
+  name: z.string(),
+  auth: z.boolean(),
+  servers: z.array(ServerConfigSchema),
+  theme: ThemeSettingsSchema,
+  plugins: z.array(z.string()),
+  sessionTimeout: z.number(),
+  templates: z.array(z.object({
+    url: z.string(),
     name: z.string(),
-    auth: z.boolean(),
-    servers: z.array(ServerConfigSchema),
-    theme: ThemeSettingsSchema,
-    plugins: z.array(z.string()),
-    sessionTimeout: z.number(),
-    templates: z.array(z.object({
-      url: z.string(),
-      name: z.string(),
-      apps: z.array(z.any())
-    })).optional(),
-    templateVariables: z.array(TemplateVariablesSchema).optional()
-  })
+    apps: z.array(z.any())
+  })).optional(),
+  templateVariables: z.array(TemplateVariablesSchema).optional()
 })
 export type YachtConfig = z.infer<typeof YachtConfigSchema>
+
+// Interfaces
+export const YachtConfigFullSchema = YachtConfigSchema.extend({
+  secrets: z.object({
+    authSecret: z.string(),
+    accessSecret: z.string(),
+    refreshSecret: z.string(),
+    passphraseSecret: z.object({
+      key: z.string(),
+      iv: z.string()
+    }),
+  }),
+  static: z.object({
+    paths: z.object({
+      config: z.string(),
+      secrets: z.string(),
+      ssh: z.string(),
+      auth: z.string(),
+      templates: z.string(),
+      backups: z.object({
+        config: z.string(),
+        instance: z.string()
+      }),
+    })
+  })
+})
+export type YachtConfigFull = z.infer<typeof YachtConfigFullSchema>

@@ -162,4 +162,4 @@ const infoComponents = [
     height: 0;
   }
   </style>
-  -->
+  -->~/shared/containers/yachtContainers~/shared/common/vuetify
