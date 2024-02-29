@@ -4,8 +4,7 @@ import { type Notification } from '~/types/notifications'
 const notifications = ref([] as Notification[])
 const currentNotifications = ref([] as Notification[])
 
-
-export const useToast = ({ title, message, level, from, timeout, dedupe }: Notification) => {
+export const useToast = async ({ title, message, level, from, timeout, dedupe }: Notification) => {
   const previous = notifications.value.find(n => n.message === message)
   const existing = currentNotifications.value.findIndex(n => n.message === message)
 
@@ -23,6 +22,7 @@ export const useToast = ({ title, message, level, from, timeout, dedupe }: Notif
     // vertical: vertical || false,
     cardProps: {
       color: level === 'debug' ? 'info' : level,
+      style: `white-space: pre-wrap;`,
       maxWidth: '70vw',
     },
     action: {
@@ -45,18 +45,23 @@ export const useToast = ({ title, message, level, from, timeout, dedupe }: Notif
   currentNotifications.value.push({ title, message, level, from, timeout })
   switch (level) {
     case 'success':
+      //@ts-expect-error lib types it wrong
       toast.success(title || message, toastOptions)
       break;
     case 'info':
+      //@ts-expect-error lib types it wrong
       toast.info(title || message, toastOptions)
       break;
     case 'warn':
+      //@ts-expect-error lib types it wrong
       toast.warning(title || message, toastOptions)
       break;
     case 'error':
+      //@ts-expect-error lib types it wrong
       toast.error(title || message, toastOptions)
       break;
     default:
+      //@ts-expect-error lib types it wrong
       toast(title || message, toastOptions)
       break;
   }

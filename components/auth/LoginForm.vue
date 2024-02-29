@@ -1,70 +1,47 @@
 <template>
-  <v-card-title
-    v-if="setup"
-    class="text-center"
-  >
-    first time setup
-  </v-card-title>
   <v-card-text>
     <v-form fast-fail>
-      <v-text-field
-        v-model="username"
-        label="username"
-        append-inner-icon="mdi-account-circle"
-        @keyup.enter="submit"
-      />
-      <v-text-field
-        v-model="password"
-        label="password"
-        type="password"
-        append-inner-icon="mdi-shield-key"
-        @keyup.enter="submit"
-      />
-      <v-text-field
-        v-if="setup"
-        v-model="confirm"
-        label="confirm"
-        type="password"
-        append-inner-icon="mdi-shield-key"
-        @keyup.enter="submit"
-      />
+      <v-text-field v-model="username.value.value" label="username" append-inner-icon="mdi-account-circle"
+        @keyup.enter="submit" />
+      <v-text-field v-model="password.value.value" label="password" type="password" append-inner-icon="mdi-shield-key"
+        @keyup.enter="submit" />
     </v-form>
     <v-spacer />
-    <v-btn
-      v-if="setup"
-      block
-      color="primary"
-      elevation="4"
-      @keyup.enter="submit"
-      @click="submit"
-    >
-      setup
-    </v-btn>
-    <v-btn
-      v-else
-      block
-      color="primary"
-      elevation="4"
-      @click="submit"
-    >
+    <v-btn block color="primary" elevation="4" @click="submit">
       submit
     </v-btn>
+    <span>{{ error }}</span>
   </v-card-text>
 </template>
 
 <script setup lang="ts">
-const username = ref("")
-const password = ref("")
-const confirm = ref("")
+import { LoginUserFormSchema } from '~/types/auth';
 
-defineProps<{ setup: boolean }>()
+const { handleSubmit, handleReset } = useForm({
+  initialValues: {
+    username: "",
+    password: "",
+  },
+  validationSchema: toTypedSchema(LoginUserFormSchema),
+  keepValuesOnUnmount: true
+})
 
-const submit = async () => {
-    // if (props.registration){
-    //     authStore.userRegister({username: username.value, password: password.value, admin: true})
-    // } else {
-    //     authStore.userLogin({username: username.value, password: password.value})
-    // }
-}
+const username = useField('username')
+const password = useField('password')
+const error = ref<string | null>(null);
+
+
+
+const submit = handleSubmit(async (values) => {
+  try {
+    await $fetch("/api/auth/login", {
+      method: "POST",
+      body: values
+    });
+    await navigateTo('/')
+  } catch (err) {
+    error.value = JSON.stringify(err)
+  }
+})
 
 </script>

@@ -34,6 +34,7 @@
 
 <script lang="ts" setup>
 import type { Progress } from '~/types/notifications'
+const notifications = notificationsConnected()
 const connected = ref(false)
 const snackbar = ref(false)
 const expanded = ref<{ [key: string]: boolean }>({
@@ -86,6 +87,7 @@ const progressDict = ref<ProgressDict>({
 const { execute, data, pending } = useAsyncData(
   'progress-data',
   async () => {
+    await until(notifications).toBe(true)
     const abort = new AbortController()
     const sse = useSse('/api/progress', {
       async onopen(response) {

@@ -31,7 +31,7 @@ export class AttachAddon implements ITerminalAddon, IAttachApi {
 
   public activate(terminal: Terminal): void {
     let messageQueue: (string | ArrayBuffer)[] = [];
-    let messageQueueTimeout: NodeJS.Timeout | undefined;
+    let messageQueueTimeout: Timer | undefined;
 
     // Create function to write to terminal and clear queue
     const throttledFunc = () => {

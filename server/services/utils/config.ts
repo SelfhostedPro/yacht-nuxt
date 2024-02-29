@@ -23,7 +23,7 @@ export class ConfigService {
 
     constructor() {
         this.storage = useStorage('base')
-        this.logger = createConsola({ fancy: true, level: 3 }).withTag('service:config')
+        this.logger = createConsola({ level: 3 }).withTag('service:config')
     }
 
     public async build () {

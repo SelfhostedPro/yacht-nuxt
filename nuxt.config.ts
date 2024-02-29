@@ -1,4 +1,6 @@
 import basicSsl from '@vitejs/plugin-basic-ssl'
+import { resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: true }, // Temporary https://github.com/oven-sh/bun/issues/4743#issuecomment-1874052751
@@ -55,12 +57,12 @@ export default defineNuxtConfig({
         driver: 'fsLite',
         base: process.env.CONFIG_PATH || './config',
       }
-    }
+    },
   },
   runtimeConfig: {
-    yacht: {}
+    configPath: resolve(fileURLToPath(import.meta.url), '..', process.env.CONFIG_PATH || 'config')
   },
   typescript: {
-    typeCheck: true
+    typeCheck: true,
   }
 })

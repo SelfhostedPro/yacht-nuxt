@@ -5,7 +5,7 @@ const logDockerError = (title: string, message: string, from?: string) => {
 export const YachtError = (error: any, from?: string, internal?: boolean, service?: string) => {
     let isDockerError = false;
 
-    if (error instanceof H3Error) {
+    if (error instanceof H3Error && error.fatal === true) {
         YachtLog(error.data, error);
         throw createError(error);
     } else if (error.reason === "server error" && String(error.message).includes("failed: port is already allocated")) {

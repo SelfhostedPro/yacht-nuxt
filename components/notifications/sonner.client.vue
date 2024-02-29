@@ -9,7 +9,7 @@ import { VSonner } from 'vuetify-sonner';
 import 'vuetify-sonner/style.css'
 import type { Notification } from '~/types/notifications';
 const connected = notificationsConnected()
-
+const route = useRoute()
 
 const { execute, data, pending } = useAsyncData(
   'notification-data',
@@ -20,8 +20,13 @@ const { execute, data, pending } = useAsyncData(
         if (response.ok) {
           console.log('Connected to notifications SSE')
         } else {
+          if (route.path === '/login') return
           console.log('Failed to connect to notifications SSE')
-          useToast({ title: 'Error', level: 'error', message: `Failed to connect to notifications SSE: ${response.statusText}` })
+          if (response.status === 401) {
+            useToast({ title: 'Unauthorized', level: 'error', message: `Failed to connect!\nPlease check server logs for more detailed information.`})
+          } else {
+            useToast({ title: 'Error', level: 'error', message: `Failed to connect to notifications SSE: ${response.statusText}` })
+          }
           connected.value = false
         }
       },

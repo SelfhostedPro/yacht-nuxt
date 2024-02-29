@@ -20,8 +20,7 @@ export const useContainersStore = defineStore({
     async fetchContainers() {
       this.startLoading('containers')
       const { error, data } = await useFetch('/api/containers', { lazy: false })
-      data.value ? this.servers = data.value : console.log(data.value)
-      if (error.value) console.error(error.value)
+      data.value ? this.servers = data.value : null
       this.stopLoading('containers')
       return { error, data }
     },
