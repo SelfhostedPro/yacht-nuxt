@@ -53,6 +53,32 @@ export const TemplateVariablesSchema = z.object({
 })
 export type TemplateVariables = z.infer<typeof TemplateVariablesSchema>
 
+export const YachtSecretSchema = z.object({
+  authSecret: z.string(),
+  accessSecret: z.string(),
+  refreshSecret: z.string(),
+  passphraseSecret: z.object({
+    key: z.string(),
+    iv: z.string()
+  })
+})
+
+export type YachtSecrets = z.infer<typeof YachtSecretSchema>
+
+export const YachtPathSchema = z.object({
+  config: z.string(),
+  secrets: z.string(),
+  ssh: z.string(),
+  auth: z.string(),
+  templates: z.string(),
+  backups: z.object({
+    config: z.string(),
+    instance: z.string()
+  }),
+})
+export type YachtPaths = z.infer<typeof YachtPathSchema>
+
+
 export const YachtConfigSchema = z.object({
   name: z.string(),
   auth: z.boolean(),
@@ -65,33 +91,46 @@ export const YachtConfigSchema = z.object({
     name: z.string(),
     apps: z.array(z.any())
   })).optional(),
-  templateVariables: z.array(TemplateVariablesSchema).optional()
+  templateVariables: z.array(TemplateVariablesSchema).optional(),
+  extends: z.string().optional()
 })
 export type YachtConfig = z.infer<typeof YachtConfigSchema>
 
 // Interfaces
 export const YachtConfigFullSchema = YachtConfigSchema.extend({
-  secrets: z.object({
-    authSecret: z.string(),
-    accessSecret: z.string(),
-    refreshSecret: z.string(),
-    passphraseSecret: z.object({
-      key: z.string(),
-      iv: z.string()
-    }),
-  }),
-  static: z.object({
-    paths: z.object({
-      config: z.string(),
-      secrets: z.string(),
-      ssh: z.string(),
-      auth: z.string(),
-      templates: z.string(),
-      backups: z.object({
-        config: z.string(),
-        instance: z.string()
-      }),
-    })
-  })
+  secrets: YachtSecretSchema.optional(),
+  paths: YachtPathSchema
 })
 export type YachtConfigFull = z.infer<typeof YachtConfigFullSchema>
+
+export const configPaths: YachtPaths = {
+  config: process.env.CONFIG_FILE || 'config.yml',
+  secrets: process.env.SECRETS_FILE || '.secrets.json',
+  ssh: process.env.SSH_PATH || '.ssh/',
+  auth: process.env.AUTH_PATH || '.auth/',
+  backups: {
+    config: process.env.BACKUP_CONFIG_PATH || 'backups/config',
+    instance: process.env.BACKUP_INSTANCE_PATH || 'backups/instance'
+  },
+  templates: process.env.TEMPLATE_PATH || 'templates/'
+}
+
+export const DefaultConfig: YachtConfigFull = {
+  name: 'Yacht',
+  servers: [
+    {
+      name: 'local',
+      options: {
+        socketPath: process.env.DOCKER_HOST ?? '/var/run/docker.sock',
+      },
+    },
+  ],
+  auth: true,
+  theme: {
+    type: 'dark',
+  },
+  plugins: [],
+  sessionTimeout: 3600,
+  paths: configPaths,
+  extends: configPaths.secrets
+}

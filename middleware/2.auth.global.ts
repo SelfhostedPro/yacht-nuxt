@@ -1,6 +1,9 @@
 export default defineNuxtRouteMiddleware(async (from, to) => {
-    if (process.client) return
-    if (from.path === '/login') return
+    const config = useClientConfig()
+    if (
+        process.client
+        || from.path === '/login'
+    ) return
     else {
         if (from.path.startsWith('/login')) console.log("You should never see this")
         const user = useUser();
@@ -10,6 +13,7 @@ export default defineNuxtRouteMiddleware(async (from, to) => {
                 user.value = data;
             }
         } catch (e) {
+            if (config.value?.auth === false) return
             useToast({ title: 'Authentication Error', message: 'not able to fetch user information. Please login again.', level: 'error', dedupe: false })
             return await navigateTo({ path: '/login' }, { replace: true })
         }

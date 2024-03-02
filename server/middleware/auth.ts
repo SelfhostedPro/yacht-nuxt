@@ -1,6 +1,7 @@
 // Library provided middleware: https://lucia-auth.com/getting-started/nuxt
 import { verifyRequestOrigin } from "lucia";
 import type { Session, User } from "lucia";
+import { type YachtConfig } from "~/types/config";
 
 const publicRoutes = [
   "/api/auth/login",
@@ -11,8 +12,10 @@ const publicRoutes = [
 
 export default defineEventHandler(async (event) => {
   // Check to see if auth is enabled
-  const authEnabled = (await useConfig()).auth
-  // if (!authEnabled) return
+  const { auth, theme } = await useConfig()
+  event.context.details = { auth, theme }
+
+  if (event.context.details.auth === false) return
 
   if (event.method !== "GET") {
     const originHeader = getHeader(event, "Origin") ?? null;
@@ -56,6 +59,7 @@ export default defineEventHandler(async (event) => {
 
 declare module "h3" {
   interface H3EventContext {
+    details: Pick<YachtConfig, 'auth' | 'theme'>
     user: User | null;
     session: Session | null;
   }

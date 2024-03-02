@@ -23,6 +23,7 @@ const getServers = async () => {
     return useConfig().then(async (config) => {
         const servers = config.servers
         const returnServers = {} as ServerDict
+        if (!servers) throw createError('No servers defined in config')
         const serverPromises = servers.map(async (server) => {
             if (server.options) switch (server.options?.protocol) {
                 case 'ssh':

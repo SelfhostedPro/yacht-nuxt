@@ -3,7 +3,6 @@ import { BetterSqlite3Adapter } from "@lucia-auth/adapter-sqlite";
 
 import { rawDB } from "./db";
 import type { DBUser } from "~/types/auth";
-const config = useConfig()
 
 
 const adapter = new BetterSqlite3Adapter(rawDB, {

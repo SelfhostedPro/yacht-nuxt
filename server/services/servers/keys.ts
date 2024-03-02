@@ -193,7 +193,7 @@ export const getPrivateKey = async (keyName: string, passphrase?: string) => {
 
 const getSSHKeyInfo = async (keyName: string): Promise<SSHKeyInfo> => {
     const config = await useConfig();
-    const privateKeyPath = path.join(config.static.paths.ssh, keyName);
+    const privateKeyPath = path.join(config.paths.ssh, keyName);
     const publicKeyPath = `${privateKeyPath}.pub`;
 
     const [privateKey, publicKey] = await Promise.all([
@@ -211,7 +211,7 @@ const getSSHKeyInfo = async (keyName: string): Promise<SSHKeyInfo> => {
 
 const readPassphraseFile = async (): Promise<PassphraseFile> => {
     const config = await useConfig()
-    const passphraseFile = await useStorage('base').getItem<object>(path.join(config.static.paths.ssh, 'passphrases'))
+    const passphraseFile = await useStorage('base').getItem<object>(path.join(config.paths.ssh, 'passphrases'))
     if (!passphraseFile || typeof passphraseFile !== 'object') {
         return new Map();
     }
@@ -236,7 +236,7 @@ const removePassphrase = async (keyName: string): Promise<void> => {
     const currentPassphrase = passphrases.get(keyName);
     if (currentPassphrase) {
         passphrases.delete(keyName);
-        useStorage('base').setItem(path.join(config.static.paths.ssh, 'passphrases'), Object.fromEntries(passphrases))
+        useStorage('base').setItem(path.join(config.paths.ssh, 'passphrases'), Object.fromEntries(passphrases))
     } else {
         logger.error(`No passphrase found for ${keyName}`);
 
@@ -254,15 +254,19 @@ const writePassphraseToFile = async (
     encryptedPassphrase: string,
 ): Promise<void> => {
     const config = await useConfig()
-    const passphraseFile = await useStorage('base').getItem<PassphraseFile>(path.join(config.static.paths.ssh, 'passphrases'));
+    const passphraseFile = await useStorage('base').getItem<PassphraseFile>(path.join(config.paths.ssh, 'passphrases'));
     if (passphraseFile) {
         passphraseFile.set(keyName, encryptedPassphrase);
     }
-    useStorage('base').setItem(path.join(config.static.paths.ssh, 'passphrases'), passphraseFile)
+    useStorage('base').setItem(path.join(config.paths.ssh, 'passphrases'), passphraseFile)
 }
 
 const encryptPassphrase = async (passphrase: string): Promise<string> => {
     const config = await useConfig()
+    if (!config.secrets) {
+        checkConfig()
+        throw createError('Config secrets not created. Checking config.')
+    }
     const encrypt = createCipheriv(
         'aes-256-cbc',
         Buffer.from(config.secrets.passphraseSecret.key, 'base64'),
@@ -272,6 +276,10 @@ const encryptPassphrase = async (passphrase: string): Promise<string> => {
 }
 const decryptPassphrase = async (name: string): Promise<string> => {
     const config = await useConfig()
+    if (!config.secrets) {
+        checkConfig()
+        throw createError('Config secrets not created. Checking config.')
+    }
     const decrypt = createDecipheriv(
         'aes-256-cbc',
         Buffer.from(config.secrets.passphraseSecret.key, 'base64'),
