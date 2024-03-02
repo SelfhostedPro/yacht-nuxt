@@ -26,7 +26,6 @@
     "@vee-validate/nuxt": "latest",
     "@vitejs/plugin-basic-ssl": "^1.1.0",
     "@vueuse/nuxt": "^10.7.1",
-    "add": "^2.0.6",
     "bun-types": "^1.0.21",
     "nuxt-lodash": "latest",
     "sass": "^1.70.0",
@@ -37,8 +36,6 @@
     "vuetify-nuxt-module": "latest"
   },
   "dependencies": {
-    "@libsql/client": "^0.5.2",
-    "@lucia-auth/adapter-drizzle": "^1.0.2",
     "@lucia-auth/adapter-sqlite": "^3.0.0",
     "@microsoft/fetch-event-source": "^2.0.1",
     "@vee-validate/zod": "^4.12.4",

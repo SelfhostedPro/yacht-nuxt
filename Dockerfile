@@ -31,7 +31,8 @@ LABEL maintainer="SelfhostedPro"
 WORKDIR /app
 COPY root /
 RUN apk add --no-cache \
-    nodejs
+    nodejs \
+    sqlite
 COPY --from=prerelease /app/.output /app/
 COPY package.json /app/
 
