@@ -44,11 +44,10 @@ jobs:
           tags: |
             type=semver,pattern={{version}}
             type=ref,event=branch
-          annotations: |
-            org.opencontainers.image.description=A web interface for managing docker containers with an emphasis on making selfhosting easy
           labels: |
             org.opencontainers.image.title=Yacht
             org.opencontainers.image.url=https://github.com/SelfhostedPro/yacht-nuxt/pkgs/container/yacht-nuxt
+            org.opencontainers.image.description=A web interface for managing docker containers with an emphasis on making selfhosting easy
             org.opencontainers.image.documentation=https://yacht.sh/docs/
             org.opencontainers.image.licenses=MIT
             org.opencontainers.image.base.name=ghcr.io/selfhostedpro/yacht-nuxt:main

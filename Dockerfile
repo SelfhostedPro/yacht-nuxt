@@ -22,7 +22,7 @@ RUN npm run build
 
 # Copy production dependencies and built files into the final image
 # Start fresh from the base to reduce the final image size
-FROM ghcr.io/linuxserver/baseimage-alpine:3.17 as deploy
+FROM ghcr.io/linuxserver/baseimage-alpine:3.18 as deploy
 
 LABEL build_version="Yacht version:- ${VERSION} Build-date:- ${BUILD_DATE}"
 LABEL maintainer="SelfhostedPro"

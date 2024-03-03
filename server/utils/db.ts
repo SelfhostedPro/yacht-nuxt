@@ -13,7 +13,9 @@ export const dbPath = `${configPath}/.auth/db.sqlite`
 
 // Make sure DB exists
 if (!existsSync(dirname(dbPath))) mkdirSync(dirname(dbPath), { recursive: true })
-export const rawDB = new sqlite(dbPath);
+export const rawDB = new sqlite(dbPath, {
+    nativeBinding: 'node_modules/better-sqlite3/build/Release/better_sqlite3'
+});
 
 export const db = new Kysely<Database>({
     dialect: new SqliteDialect({
