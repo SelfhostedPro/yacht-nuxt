@@ -8,7 +8,7 @@ export default defineNuxtConfig({
     renderJsonPayloads: false
   },
   build: {
-    transpile: ['vuetify', 'vue-sonner'],
+    transpile: ['vuetify', 'vue-sonner', 'better-sqlite3'],
   },
   modules: [
     '@pinia/nuxt',
@@ -32,7 +32,12 @@ export default defineNuxtConfig({
     https: true,
   },
   vite: {
-    plugins: [basicSsl()]
+    plugins: [basicSsl()],
+    build: {
+      rollupOptions: {
+        external: ['better-sqlite3']
+      }
+    }
   },
   nitro: {
     experimental: {
