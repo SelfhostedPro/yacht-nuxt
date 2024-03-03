@@ -8,7 +8,7 @@ export default defineNuxtConfig({
     renderJsonPayloads: false
   },
   build: {
-    transpile: ['vuetify', 'vue-sonner', 'better-sqlite3'],
+    transpile: ['vuetify', 'vue-sonner'],
   },
   modules: [
     '@pinia/nuxt',
