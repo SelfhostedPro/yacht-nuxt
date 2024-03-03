@@ -13,7 +13,7 @@ RUN apk add --no-cache --force-overwrite --virtual=build-dependencies openssh py
 
 # Copy node_modules from the temp directory
 # Then copy all (non-ignored) project files into the image
-FROM node:18-alpine AS prerelease
+FROM node:20-alpine AS prerelease
 WORKDIR /app
 COPY --from=install /app/node_modules /app/node_modules
 COPY . .
