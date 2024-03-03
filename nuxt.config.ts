@@ -33,10 +33,8 @@ export default defineNuxtConfig({
   },
   vite: {
     plugins: [basicSsl()],
-    build: {
-      rollupOptions: {
-        external: ['better-sqlite3']
-      }
+    optimizeDeps: {
+      exclude: ['better-sqlite3']
     }
   },
   nitro: {
