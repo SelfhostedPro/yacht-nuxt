@@ -14,6 +14,7 @@
     "@nuxt/devtools": "^1.0.6",
     "@pinia/nuxt": "latest",
     "@types/better-sqlite3": "^7.6.9",
+    "@types/bun": "^1.0.8",
     "@types/docker-modem": "^3.0.6",
     "@types/dockerode": "^3.3.23",
     "@types/eventsource": "^1.1.15",
