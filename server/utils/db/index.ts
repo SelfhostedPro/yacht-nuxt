@@ -1,6 +1,6 @@
 import { existsSync, mkdirSync } from 'node:fs'
 import { dirname } from 'node:path'
-import { BunSqliteDialect } from 'kysely-bun-sqlite'
+import { BetterSqlite3Adapter } from "@lucia-auth/adapter-sqlite";
 import { Kysely, sql, SqliteDialect } from "kysely";
 import sqlite from 'better-sqlite3';
 import type { DBUser } from '~/types/auth';
@@ -14,6 +14,7 @@ export const dbPath = `${configPath}/.auth/db.sqlite`
 
 // Make sure DB exists
 if (!existsSync(dirname(dbPath))) mkdirSync(dirname(dbPath), { recursive: true })
+
 export const rawDB = new sqlite(dbPath);
 
 export const db = new Kysely<Database>({
@@ -69,6 +70,11 @@ db.schema
 //     expires_at INTEGER NOT NULL,
 //     FOREIGN KEY (user_id) REFERENCES user(id)
 // )`);
+
+export const adapter = new BetterSqlite3Adapter(rawDB, {
+    user: 'user',
+    session: 'session'
+});
 
 logger.info('database initialized')
 

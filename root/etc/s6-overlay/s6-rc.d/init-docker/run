@@ -1,0 +1,19 @@
+#!/usr/bin/with-contenv bash
+# shellcheck shell=bash
+
+# non-root docker
+if [ -S /var/run/docker.sock ]; then
+  DOCKER_GID=$(stat -c '%g' "/var/run/docker.sock")
+  if id -G abc | grep -qw "$DOCKER_GID"; then
+    exit 0
+  else
+    DOCKER_NAME=$(getent group "${DOCKER_GID}" | awk -F: '{print $1}')
+    if [ -z "${DOCKER_NAME}" ]; then
+      DOCKER_NAME="dockergroup"
+      groupadd -g "${DOCKER_GID}" "${DOCKER_NAME}"
+    fi
+    usermod -aG "${DOCKER_NAME}" abc
+  fi
+else
+  echo "**** Please map /var/run/docker.sock or docker won't work inside this container ****"
+fi
