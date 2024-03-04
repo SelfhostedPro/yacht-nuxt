@@ -34,7 +34,7 @@ export default defineNuxtConfig({
   vite: {
     plugins: [basicSsl()],
     optimizeDeps: {
-      exclude: ['better-sqlite3']
+      include: ['better-sqlite3']
     }
   },
   nitro: {

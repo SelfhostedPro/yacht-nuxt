@@ -8,14 +8,14 @@ WORKDIR /app
 FROM base AS install
 COPY package.json bun.lockb ./
 RUN apk add --no-cache --force-overwrite --virtual=build-dependencies python3-dev sqlite-dev make g++ && \
-    bun install --frozen-lockfile --ignore-scripts  && \
+    bun install --frozen-lockfile  && \
     apk del build-dependencies
 
-FROM base AS deps
-COPY package.json bun.lockb ./
-RUN apk add --no-cache --force-overwrite --virtual=build-dependencies python3-dev sqlite-dev make g++ && \
-    bun install --frozen-lockfile --production --ignore-scripts && \
-    apk del build-dependencies
+# FROM base AS deps
+# COPY package.json bun.lockb ./
+# RUN apk add --no-cache --force-overwrite --virtual=build-dependencies python3-dev sqlite-dev make g++ && \
+#     bun install --frozen-lockfile --production --ignore-scripts && \
+#     apk del build-dependencies
 
 # Copy node_modules from the temp directory
 # Then copy all (non-ignored) project files into the image
@@ -38,7 +38,6 @@ COPY root /
 RUN apk add --no-cache \
     nodejs
 COPY --from=prerelease /app/.output /app/
-COPY --from=deps /app/node_modules /app/server/node_modules
 COPY package.json /app/
 
 # Get Host from environment variable
