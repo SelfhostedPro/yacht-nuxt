@@ -3,7 +3,7 @@
     :items-per-page="12">
     <template #default="{ items }">
       <v-row>
-        <v-col v-for="(container, i) in items" :key="container.raw.id" cols="12" sm="6" md="4" lg="4" xl="3">
+        <v-col v-for="(container, i) in items" :key="i" cols="12" sm="6" md="4" lg="4" xl="3">
           <v-card class="overflow-auto" min-height="200" max-height="200">
             <v-card-item :prepend-avatar="container.raw.logo">
               <v-card-title class="d-flex align-center">
