@@ -1,7 +1,8 @@
 import { existsSync, mkdirSync } from 'node:fs'
 import { dirname } from 'node:path'
-import sqlite from "better-sqlite3";
-import { Kysely, SqliteDialect, sql } from "kysely";
+import { BunSqliteDialect } from 'kysely-bun-sqlite'
+import { Kysely, sql } from "kysely";
+import { Database as sqlite } from 'bun:sqlite'
 import type { DBUser } from '~/types/auth';
 
 const logger = useLog('db')
@@ -13,12 +14,10 @@ export const dbPath = `${configPath}/.auth/db.sqlite`
 
 // Make sure DB exists
 if (!existsSync(dirname(dbPath))) mkdirSync(dirname(dbPath), { recursive: true })
-export const rawDB = new sqlite(dbPath, {
-    nativeBinding: 'node_modules/better-sqlite3/build/Release/better_sqlite3'
-});
+export const rawDB = new sqlite(dbPath);
 
 export const db = new Kysely<Database>({
-    dialect: new SqliteDialect({
+    dialect: new BunSqliteDialect({
         database: rawDB
     })
 });
@@ -36,7 +35,7 @@ interface Database {
 }
 
 // Ensure DB is using WAL mode
-rawDB.pragma('journal_mode = WAL');
+rawDB.exec("PRAGMA journal_mode = WAL;");
 
 // Create db tables if they don't exist already
 

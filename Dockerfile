@@ -7,13 +7,19 @@ WORKDIR /app
 # This will cache them and speed up future builds
 FROM base AS install
 COPY package.json bun.lockb ./
-RUN apk add --no-cache --force-overwrite --virtual=build-dependencies openssh python3-dev sqlite make g++ git && \
-    bun install --frozen-lockfile --ignore-scripts && \
+RUN apk add --no-cache --force-overwrite --virtual=build-dependencies python3-dev sqlite-dev make g++ && \
+    bun install --frozen-lockfile --ignore-scripts  && \
+    apk del build-dependencies
+
+FROM base AS deps
+COPY package.json bun.lockb ./
+RUN apk add --no-cache --force-overwrite --virtual=build-dependencies python3-dev sqlite-dev make g++ && \
+    bun install --frozen-lockfile --production --ignore-scripts && \
     apk del build-dependencies
 
 # Copy node_modules from the temp directory
 # Then copy all (non-ignored) project files into the image
-FROM node:20-alpine AS prerelease
+FROM node:18-alpine AS prerelease
 WORKDIR /app
 COPY --from=install /app/node_modules /app/node_modules
 COPY . .
@@ -22,7 +28,7 @@ RUN npm run build
 
 # Copy production dependencies and built files into the final image
 # Start fresh from the base to reduce the final image size
-FROM ghcr.io/linuxserver/baseimage-alpine:3.18 as deploy
+FROM ghcr.io/linuxserver/baseimage-alpine:3.17 as deploy
 
 LABEL build_version="Yacht version:- ${VERSION} Build-date:- ${BUILD_DATE}"
 LABEL maintainer="SelfhostedPro"
@@ -30,9 +36,9 @@ LABEL maintainer="SelfhostedPro"
 WORKDIR /app
 COPY root /
 RUN apk add --no-cache \
-    nodejs \
-    sqlite
+    nodejs
 COPY --from=prerelease /app/.output /app/
+COPY --from=deps /app/node_modules /app/node_modules
 COPY package.json /app/
 
 # Get Host from environment variable
