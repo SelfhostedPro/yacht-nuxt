@@ -38,7 +38,7 @@ COPY root /
 RUN apk add --no-cache \
     nodejs
 COPY --from=prerelease /app/.output /app/
-COPY --from=deps /app/node_modules /app/node_modules
+COPY --from=deps /app/node_modules /app/server/node_modules
 COPY package.json /app/
 
 # Get Host from environment variable
