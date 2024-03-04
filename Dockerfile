@@ -1,6 +1,6 @@
 # Use the official Bun image for the initial stages
 # See all versions at https://hub.docker.com/r/oven/bun/tags
-FROM oven/bun:1-alpine as base
+FROM node:18-alpine AS prerelease
 WORKDIR /app
 
 # Install dependencies into a temp directory
@@ -8,7 +8,7 @@ WORKDIR /app
 FROM base AS install
 COPY package.json bun.lockb ./
 RUN apk add --no-cache --force-overwrite --virtual=build-dependencies python3-dev sqlite-dev make g++ && \
-    bun install --frozen-lockfile  && \
+    npm ci && \
     apk del build-dependencies
 
 # FROM base AS deps

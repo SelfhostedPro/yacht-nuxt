@@ -32,10 +32,7 @@ export default defineNuxtConfig({
     https: true,
   },
   vite: {
-    plugins: [basicSsl()],
-    optimizeDeps: {
-      include: ['better-sqlite3']
-    }
+    plugins: [basicSsl()]
   },
   nitro: {
     experimental: {
