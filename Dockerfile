@@ -1,6 +1,6 @@
 # Use the official Bun image for the initial stages
 # See all versions at https://hub.docker.com/r/oven/bun/tags
-FROM node:18-alpine AS prerelease
+FROM node:18-alpine AS base
 WORKDIR /app
 
 # Install dependencies into a temp directory
