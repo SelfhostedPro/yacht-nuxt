@@ -3,7 +3,9 @@
 
 # non-root docker
 if [ -S /var/run/docker.sock ]; then
+  echo Checking docker groups
   DOCKER_GID=$(stat -c '%g' "/var/run/docker.sock")
+  echo $DOCKER_GID
   if id -G abc | grep -qw "$DOCKER_GID"; then
     exit 0
   else
