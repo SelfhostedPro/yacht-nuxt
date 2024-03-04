@@ -1,6 +1,6 @@
 # Use the official Bun image for the initial stages
 # See all versions at https://hub.docker.com/r/oven/bun/tags
-FROM node:18-alpine AS base
+FROM node:20-alpine AS base
 WORKDIR /app
 
 # Install dependencies into a temp directory
@@ -19,7 +19,7 @@ RUN apk add --no-cache --force-overwrite --virtual=build-dependencies python3-de
 
 # Copy node_modules from the temp directory
 # Then copy all (non-ignored) project files into the image
-FROM node:18-alpine AS prerelease
+FROM node:20-alpine AS prerelease
 WORKDIR /app
 COPY --from=install /app/node_modules /app/node_modules
 COPY . .
