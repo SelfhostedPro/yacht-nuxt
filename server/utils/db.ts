@@ -1,8 +1,8 @@
 import { existsSync, mkdirSync } from 'node:fs'
 import { dirname } from 'node:path'
 import { BunSqliteDialect } from 'kysely-bun-sqlite'
-import { Kysely, sql } from "kysely";
-import { Database as sqlite } from 'bun:sqlite'
+import { Kysely, sql, SqliteDialect } from "kysely";
+import sqlite from 'better-sqlite3';
 import type { DBUser } from '~/types/auth';
 
 const logger = useLog('db')
@@ -17,7 +17,7 @@ if (!existsSync(dirname(dbPath))) mkdirSync(dirname(dbPath), { recursive: true }
 export const rawDB = new sqlite(dbPath);
 
 export const db = new Kysely<Database>({
-    dialect: new BunSqliteDialect({
+    dialect: new SqliteDialect({
         database: rawDB
     })
 });
