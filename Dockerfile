@@ -11,12 +11,6 @@ RUN apk add --no-cache --force-overwrite --virtual=build-dependencies python3-de
     npm ci && \
     apk del build-dependencies
 
-# FROM base AS deps
-# COPY package.json bun.lockb ./
-# RUN apk add --no-cache --force-overwrite --virtual=build-dependencies python3-dev sqlite-dev make g++ && \
-#     bun install --frozen-lockfile --production --ignore-scripts && \
-#     apk del build-dependencies
-
 # Copy node_modules from the temp directory
 # Then copy all (non-ignored) project files into the image
 FROM node:20-alpine AS prerelease
@@ -28,7 +22,7 @@ RUN npm run build
 
 # Copy production dependencies and built files into the final image
 # Start fresh from the base to reduce the final image size
-FROM ghcr.io/linuxserver/baseimage-alpine:3.17 as deploy
+FROM ghcr.io/linuxserver/baseimage-alpine:3.18 as deploy
 
 LABEL build_version="Yacht version:- ${VERSION} Build-date:- ${BUILD_DATE}"
 LABEL maintainer="SelfhostedPro"
@@ -36,7 +30,7 @@ LABEL maintainer="SelfhostedPro"
 WORKDIR /app
 COPY root /
 RUN apk add --no-cache \
-    nodejs
+    nodejs-current
 COPY --from=prerelease /app/.output /app/
 COPY package.json /app/
 
