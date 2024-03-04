@@ -42,6 +42,7 @@ const onSubmit = handleSubmit(async (values) => {
       method: "POST",
       body: values
     });
+    navigateTo('/')
   } catch (err) {
     error.value = JSON.stringify(err)
   }

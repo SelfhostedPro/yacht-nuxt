@@ -1,21 +1,28 @@
 <template>
   <v-card-text>
     <v-form fast-fail>
-      <v-text-field v-model="username.value.value" label="username" append-inner-icon="mdi-account-circle"
-        @keyup.enter="submit" />
-      <v-text-field v-model="password.value.value" label="password" type="password" append-inner-icon="mdi-shield-key"
-        @keyup.enter="submit" />
+      <v-text-field
+        v-model="username.value.value"
+        label="username"
+        append-inner-icon="mdi-account-circle"
+        @keyup.enter="submit"
+      />
+      <v-text-field
+        v-model="password.value.value"
+        label="password"
+        type="password"
+        append-inner-icon="mdi-shield-key"
+        @keyup.enter="submit"
+      />
     </v-form>
     <v-spacer />
-    <v-btn block color="primary" elevation="4" @click="submit">
-      submit
-    </v-btn>
+    <v-btn block color="primary" elevation="4" @click="submit"> submit </v-btn>
     <span>{{ error }}</span>
   </v-card-text>
 </template>
 
 <script setup lang="ts">
-import { LoginUserFormSchema } from '~/types/auth';
+import { LoginUserFormSchema } from "~/types/auth";
 
 const { handleSubmit, handleReset } = useForm({
   initialValues: {
@@ -23,25 +30,41 @@ const { handleSubmit, handleReset } = useForm({
     password: "",
   },
   validationSchema: toTypedSchema(LoginUserFormSchema),
-  keepValuesOnUnmount: true
-})
+  keepValuesOnUnmount: true,
+});
 
-const username = useField('username')
-const password = useField('password')
+const username = useField("username");
+const password = useField("password");
 const error = ref<string | null>(null);
-
-
+const user = useUser();
 
 const submit = handleSubmit(async (values) => {
   try {
     await $fetch("/api/auth/login", {
       method: "POST",
-      body: values
+      body: values,
     });
-    await navigateTo('/')
+    const data = await useRequestFetch()("/api/auth/me");
+    if (data) {
+      user.value = data;
+    }
+    await navigateTo("/");
   } catch (err) {
-    error.value = JSON.stringify(err)
+    error.value = JSON.stringify(err);
   }
-})
+});
 
+onMounted(async () => {
+  const config = useClientConfig();
+  if (config.value?.auth === false) await navigateTo("/");
+  try {
+    const data = await useRequestFetch()("/api/auth/me");
+    if (data) {
+      user.value = data;
+      await navigateTo("/");
+    }
+  } catch (e) {
+    /* Don't do anything here, just surpress duplicate 401 error notification */
+  }
+});
 </script>

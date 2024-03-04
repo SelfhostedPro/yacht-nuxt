@@ -6,7 +6,7 @@ import debounce from "lodash/debounce"
 import { useServers } from '../servers'
 import type { ServerDict } from "~/types/servers"
 
-export const getContainerStats = async (close: () => void) => {
+export const getContainerStats = async (close: () => void, send: (callback: (id: number) => any) => void) => {
     const servers = Object.entries(await useServers())
     // Get all servers
     servers.map(
@@ -49,6 +49,7 @@ export const getContainerStats = async (close: () => void) => {
                                                 containerStats.memory_stats.usage !== cachedStats.memory_stats.usage
                                             ) {
                                                 cachedStats = containerStats;
+                                                send(() => formatStats(containerStats))
                                                 sseHooks.callHook("sse:containerStats", formatStats(containerStats));
                                             }
                                         });
@@ -63,8 +64,7 @@ export const getContainerStats = async (close: () => void) => {
     )
 }
 
-
-export const getContainerLogs = async (server: string, id: string, close: () => void) => {
+export const getContainerLogs = async (server: string, id: string, close: () => void, send: (callback: (id: number) => any) => void) => {
     const _server = await useServers().then((servers: ServerDict) => servers[server])
     if (!_server) throw YachtError(new Error(`Server ${server} not found!`), '/services/containers/streams - getContainerLogs')
     const container = _server.getContainer(id)
@@ -73,7 +73,8 @@ export const getContainerLogs = async (server: string, id: string, close: () => 
         // Placeholder string to assemble chunks of data
         const logStream = new StreamPassThrough()
         logStream.on('data', (chunk) => {
-            sseHooks.callHook("sse:containerLogs", chunk.toString('utf8'));
+            send(() => chunk.toString('utf8'))
+            // sseHooks.callHook("sse:containerLogs", chunk.toString('utf8'));
         });
         // Start streaming logs
         container.logs({

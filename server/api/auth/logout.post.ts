@@ -1,3 +1,4 @@
+import { authHooks } from "~/server/utils/auth";
 
 export default eventHandler(async (event) => {
 	if (!event.context.session) {
@@ -7,5 +8,6 @@ export default eventHandler(async (event) => {
 	}
 	await lucia.invalidateSession(event.context.session.id);
 	appendHeader(event, "Set-Cookie", lucia.createBlankSessionCookie().serialize());
+	await authHooks.callHook('logout', event.context.session.id)
 	return { status: 'success', message: 'logged out' }
 });

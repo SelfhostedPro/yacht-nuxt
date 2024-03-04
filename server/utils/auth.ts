@@ -4,11 +4,23 @@ import { BetterSqlite3Adapter } from "@lucia-auth/adapter-sqlite";
 import { rawDB } from "./db";
 import type { DBUser } from "~/types/auth";
 
+import { createHooks } from 'hookable'
 
 const adapter = new BetterSqlite3Adapter(rawDB, {
     user: 'user',
     session: 'session'
 });
+
+// export interface AuthHooks {
+//     [hook: string]: <T, R>(data: T) => R | void
+// }
+
+interface AuthHooks {
+    login: (session: string) => void,
+    logout: (session: string) => void,
+}
+
+export const authHooks = createHooks<AuthHooks>()
 
 export const lucia = new Lucia(adapter, {
     sessionCookie: {

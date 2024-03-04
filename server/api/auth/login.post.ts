@@ -3,6 +3,7 @@ import { db } from "~/server/utils/db";
 import { generateId } from "lucia";
 import { LoginUserFormSchema } from "~/types/auth";
 import type { DBUser, LoginUserForm } from "~/types/auth";
+import { authHooks } from "~/server/utils/auth";
 
 export default eventHandler(async (event) => {
     const { username, password }: LoginUserForm = await readValidatedBody(event, body => LoginUserFormSchema.parse(body))
@@ -23,7 +24,6 @@ export default eventHandler(async (event) => {
             statusCode: 400
         });
     }
-    // db.select().from(userTable).where(eq(userTable.username, username)).get() 
     const existingUser = await db.selectFrom('user').selectAll().where('username', '==', username).executeTakeFirst() as
         | DBUser
         | undefined;
@@ -45,5 +45,6 @@ export default eventHandler(async (event) => {
 
     const session = await lucia.createSession(existingUser.id, {});
     appendHeader(event, "Set-Cookie", lucia.createSessionCookie(session.id).serialize());
+    authHooks.callHook('login', session.id)
     return { status: 'success', message: 'logged in' }
 });
