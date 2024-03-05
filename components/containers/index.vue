@@ -92,10 +92,13 @@
 </template>
 
 <script lang="ts" setup>
-import type { DataIteratorItem } from "~/types/common/vuetify";
-import type { Container } from "~/types/containers/yachtContainers";
+import type {
+  Container,
+  ContainerStat,
+  ContainerStats,
+} from "~/types/containers/yachtContainers";
 const containersStore = useContainersStore();
-const { servers, loading, stats } = storeToRefs(containersStore);
+const { servers, loading } = storeToRefs(containersStore);
 const notifications = notificationsConnected();
 const createDialog = ref(false);
 const removeDialog = ref(false);
@@ -103,12 +106,46 @@ const removeDialog = ref(false);
 const { refresh: refreshList } = useAsyncData("containerList", () =>
   containersStore.fetchContainers()
 );
-const { refresh: refreshStats } = useAsyncData("containerStats", () =>
-  containersStore.fetchContainerStats()
+const stats = ref<ContainerStats>({});
+const statsLoading = ref(false);
+const statController = ref(new AbortController());
+
+const { pending, refresh: refreshStats } = useAsyncData(
+  "containerStats",
+  async () =>
+    useSse("/api/containers/stats", {
+      async onopen(response) {
+        if (response.ok) {
+          statsLoading.value = false;
+          console.log("connected to stats SSE");
+        } else {
+          statsLoading.value = false;
+          console.log("error connecting to stats SSE", response.statusText);
+        }
+      },
+      onmessage(ev) {
+        const stat = JSON.parse(JSON.parse(ev.data)) as ContainerStat;
+        stats.value[stat.name] = stat;
+      },
+      onclose() {
+        console.log("Closed stats SSE");
+        statsLoading.value = false;
+      },
+      onerror(err) {
+        console.log("Error connecting to stats SSE");
+        console.log(err);
+        statsLoading.value = false;
+      },
+      signal: statController.value.signal,
+      openWhenHidden: true,
+    }),
+  { server: false }
 );
 
 const refresh = async () => {
   await until(notifications).toBe(true);
+  statController.value.abort();
+  stats.value = {};
   await refreshList();
   await refreshStats();
 };
@@ -131,6 +168,10 @@ const handleBulkAction = async (
     refresh();
   }
 };
+
+onBeforeRouteLeave(async () => {
+  statController.value.abort();
+});
 
 const actions = [
   {

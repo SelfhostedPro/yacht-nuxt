@@ -2,13 +2,29 @@
   <div>
     <v-tooltip location="bottom">
       <template #default>
-        {{ stats.memoryPercentage ? `memory: ${stats.memoryPercentage}%` : undefined }} <br>
+        {{
+          stats.memoryPercentage
+            ? `memory: ${stats.memoryPercentage}%`
+            : undefined
+        }}
+        <br />
         {{ stats.memoryPercentage ? `cpu: ${stats.cpuUsage}%` : undefined }}
       </template>
       <template #activator="{ props }">
-        <v-progress-circular v-bind="props" :indeterminate="loading.includes('stats')"
-          :model-value="stats.memoryPercentage || 0" :size="60" color="primary"> <v-progress-circular v-bind="props"
-            :indeterminate="loading.includes('stats')" :model-value="stats.cpuUsage || 0" :size="50" color="blue">
+        <v-progress-circular
+          v-bind="props"
+          :indeterminate="loading.includes('containers')"
+          :model-value="stats.memoryPercentage || 0"
+          :size="60"
+          color="primary"
+        >
+          <v-progress-circular
+            v-bind="props"
+            :indeterminate="loading.includes('containers')"
+            :model-value="stats.cpuUsage || 0"
+            :size="50"
+            color="blue"
+          >
             <template #default>
               <slot name="default" />
             </template>
@@ -20,12 +36,12 @@
 </template>
 
 <script lang="ts" setup>
-import type { ContainerStat } from '~/types/containers/yachtContainers';
-const { loading } = useContainersStore()
+import type { ContainerStat } from "~/types/containers/yachtContainers";
+const { loading } = useContainersStore();
 interface Props {
   stats: ContainerStat;
 }
 defineProps<Props>();
 </script>
 
-<style></style>~/shared/containers/yachtContainers
+<style></style>

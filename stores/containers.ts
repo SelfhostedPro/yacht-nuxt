@@ -1,5 +1,5 @@
 import type { ServerContainers } from '~/types/servers'
-import type { Container, ContainerStats } from '~/types/containers/yachtContainers'
+import type { Container, ContainerStat, ContainerStats } from '~/types/containers/yachtContainers'
 import { defineStore } from 'pinia'
 import type { CreateContainerForm } from '~/types/containers/create'
 
@@ -8,7 +8,7 @@ export const useContainersStore = defineStore({
   state: () => ({
     servers: {} as ServerContainers,
     container: {} as Container,
-    stats: {} as ContainerStats,
+    // stats: {} as ContainerStats,
     loading: [] as string[],
   }),
   getters: {
@@ -19,22 +19,32 @@ export const useContainersStore = defineStore({
     async stopLoading(name: string) { this.loading = this.loading.filter((item) => item !== name) },
     async fetchContainers() {
       this.startLoading('containers')
-      const { error, data } = await useFetch('/api/containers', { lazy: false })
-      data.value ? this.servers = data.value : null
-      this.stopLoading('containers')
-      return { error, data }
+      try {
+        const data = await $fetch<ServerContainers>('/api/containers')
+        this.stopLoading('containers')
+        data ? this.servers = data : null
+        return data
+      } catch (e) {
+        this.stopLoading('containers')
+        return e
+      }
     },
     async fetchContainerDetails(server: string, id: string) {
       this.startLoading(id)
-      const { error, data } = await useFetch(`/api/containers/${server}/${id}`)
-      data.value ? this.container = data.value : console.log(data.value)
-      if (error.value) console.error(error.value.statusMessage)
-      this.stopLoading(id)
-      return { error, data }
+      try {
+        const data = await $fetch<Container>(`/api/containers/${server}/${id}`)
+        this.stopLoading(id)
+        if (data) this.container = data
+        return data
+      } catch (e) {
+        this.stopLoading(id)
+        console.error('error getting container details', e)
+        return e
+      }
     },
     async fetchCreateContainer(form: CreateContainerForm) {
       this.startLoading('create')
-      const { error, data } = await useFetch(`/api/containers/`, {
+      const { error, data } = await useFetch<Container>(`/api/containers/`, {
         method: 'POST',
         body: form,
       })
@@ -45,44 +55,15 @@ export const useContainersStore = defineStore({
     },
     async fetchContainerAction(server: string, id: string, action: string) {
       this.startLoading(id)
-      const { error, data } = await useFetch(`/api/containers/${server}/${id}/actions/${action}`)
-      // @ts-ignore
-      data.value ? this.servers = data.value : console.log(data.value)
-      if (error.value) console.error(error.value.statusMessage)
-      this.stopLoading(id)
-      return { error, data }
-    },
-    async fetchContainerStats() {
-      this.startLoading('stats')
-      const abort = new AbortController()
-      const self = this
-      await useSse('/api/containers/stats', {
-        async onopen(response) {
-          if (response.ok) {
-            console.log('Connected to stats SSE')
-            self.stopLoading('stats')
-          } else {
-            console.log('Failed to connect to stats SSE')
-            self.stopLoading('stats')
-          }
-        },
-        async onmessage(event) {
-          const stat = JSON.parse(JSON.parse(event.data))
-          self.stats[stat.name] = stat
-        },
-        onclose() {
-          console.log('Closed stats SSE')
-          self.stopLoading('stats')
-        },
-        onerror(error) {
-          console.log('Error connecting to stats SSE')
-          console.log(error)
-          self.stopLoading('stats')
-        },
-        signal: abort.signal,
-        openWhenHidden: true,
-      })
-      return true
+      try {
+        const data = await $fetch<ServerContainers>(`/api/containers/${server}/${id}/actions/${action}`, { method: 'POST' })
+        this.stopLoading(id)
+        if (data) this.servers = data
+        return { data }
+      } catch (e) {
+        this.stopLoading(id)
+        console.error(`error calling server action`, e)
+      }
     },
   }
 })

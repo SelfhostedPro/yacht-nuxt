@@ -62,7 +62,7 @@ const handleAction = async (action: string) => {
     return
   } else {
     emit("startLoading")
-    await containers.fetchContainerAction(props.server, props.container.id, action)
+    await containers.fetchContainerAction(props.server, props.container.name, action)
     emit("stopLoading")
     return
   }
