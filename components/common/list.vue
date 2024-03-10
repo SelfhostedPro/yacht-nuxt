@@ -33,7 +33,7 @@
         </v-col>
       </v-row>
     </v-toolbar>
-    <v-window v-model="tab" class="mt-5">
+    <v-window v-model="tab" class="mt-5 overflow-visible">
       <v-window-item
         v-for="(server, i) in Object.keys(resource)"
         :key="i"

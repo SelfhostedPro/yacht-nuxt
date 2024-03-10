@@ -110,7 +110,11 @@ const stats = ref<ContainerStats>({});
 const statsLoading = ref(false);
 const statController = ref(new AbortController());
 
-const { pending, refresh: refreshStats } = useAsyncData(
+const {
+  pending,
+  refresh: refreshStats,
+  execute: getContainerStats,
+} = useAsyncData(
   "containerStats",
   async () =>
     useSse("/api/containers/stats", {
@@ -139,7 +143,7 @@ const { pending, refresh: refreshStats } = useAsyncData(
       signal: statController.value.signal,
       openWhenHidden: true,
     }),
-  { server: false }
+  { server: false, immediate: false }
 );
 
 const refresh = async () => {
@@ -168,6 +172,12 @@ const handleBulkAction = async (
     refresh();
   }
 };
+
+onMounted(async () => {
+  await nextTick();
+  await getContainerStats();
+  statsLoading.value = false;
+});
 
 onBeforeRouteLeave(async () => {
   statController.value.abort();

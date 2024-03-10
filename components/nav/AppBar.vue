@@ -1,5 +1,5 @@
 <template>
-  <v-app-bar class="app-bar" elevation="8">
+  <v-app-bar class="app-bar" height="60" elevation="8">
     <template #prepend>
       <v-app-bar-nav-icon
         v-if="smAndDown"
@@ -20,9 +20,9 @@
     </template>
     <v-app-bar-title>
       <v-img
-        max-height="30"
-        class="d-flex align-center mx-auto text-logo"
-        src="~/assets/icons/yacht/text.svg"
+        max-height="50"
+        class="d-flex align-center mx-auto"
+        src="~/assets/icons/yacht/mini.svg"
         style="filter: brightness(5)"
       />
     </v-app-bar-title>
