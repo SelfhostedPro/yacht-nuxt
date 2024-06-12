@@ -28,7 +28,7 @@ export default eventHandler(async (event) => {
             statusCode: 400
         });
     }
-    if (existingUsers.length > 0) {
+    if (existingUsers.length >= 0) {
         return
     }
     const user = await createUser(username, password)
