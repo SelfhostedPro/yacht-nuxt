@@ -9,7 +9,9 @@ export default defineNuxtConfig({
   experimental: {
     clientNodeCompat: true
   },
-
+  future: {
+    compatibilityVersion: 4,
+  },
   typescript: {
     typeCheck: true,
     strict: true
