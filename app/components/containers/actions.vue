@@ -61,7 +61,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { Container } from "~/types/containers/yachtContainers";
+import type { Container } from "~~/types/containers/yachtContainers";
 const containers = useContainersStore();
 interface Props {
   container: Container;

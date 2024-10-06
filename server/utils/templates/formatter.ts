@@ -1,4 +1,4 @@
-import { yachtV1TemplateSchema, yachtV2TemplateSchema, portainerV1TemplateSchema, portainerV2TemplateSchema, type PortainerV1Template, type YachtV1Template, type YachtV2Template, type PortainerV2Template, type YachtTemplate, yachtTemplateSchema } from "~/types/templates/yacht";
+import { yachtV1TemplateSchema, yachtV2TemplateSchema, portainerV1TemplateSchema, portainerV2TemplateSchema, type PortainerV1Template, type YachtV1Template, type YachtV2Template, type PortainerV2Template, type YachtTemplate, yachtTemplateSchema } from "~~/types/templates/yacht";
 
 interface TemplateInfo {
     name: string;

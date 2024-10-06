@@ -70,7 +70,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { YachtTemplate } from "~/types/templates/yacht";
+import type { YachtTemplate } from "~~/types/templates/yacht";
 const carousel = ref(0);
 const currentApp = ref<YachtTemplate["templates"][0]>();
 interface Emits {

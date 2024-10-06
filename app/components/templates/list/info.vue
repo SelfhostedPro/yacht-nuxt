@@ -49,7 +49,7 @@
 
 <script lang="ts" setup>
 import { parseISO } from 'date-fns';
-import type { YachtTemplate } from '~/types/templates/yacht';
+import type { YachtTemplate } from '~~/types/templates/yacht';
 const expandedInfo = ref(false)
 const deleteMenu = ref(false)
 const formatDate = (date: string | undefined) => {

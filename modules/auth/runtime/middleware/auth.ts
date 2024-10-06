@@ -1,5 +1,5 @@
 import type { User } from "../../types/user";
-import { useClientConfig } from "~/modules/config/runtime/composables/client-config";
+import { useClientConfig } from "~~/modules/config/runtime/composables/client-config";
 import { useUser } from "../composables/user";
 
 export default defineNuxtRouteMiddleware(async (from, to) => {

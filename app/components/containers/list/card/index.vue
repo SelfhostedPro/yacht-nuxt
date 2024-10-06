@@ -62,8 +62,8 @@
 import type {
   Container,
   ContainerStat,
-} from "~/types/containers/yachtContainers";
-// import type { SelectableItem } from "~/types/common/vuetify";
+} from "~~/types/containers/yachtContainers";
+// import type { SelectableItem } from "~~/types/common/vuetify";
 
 // Loading State
 const { loading } = storeToRefs(useContainersStore());
@@ -168,7 +168,7 @@ const props = defineProps<Props>();
   <script lang="ts" setup>
   import { ref, onMounted } from 'vue';
   import { ContainersCardMounts, ContainersCardPorts } from '#components';
-  import type { Container } from '~/types/containers/yachtContainers';
+  import type { Container } from '~~/types/containers/yachtContainers';
   
   const props = defineProps<{ container: Container }>();
   const reveal = ref([] as Array<typeof ContainersCardMounts | typeof ContainersCardPorts>);

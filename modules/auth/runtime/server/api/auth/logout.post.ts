@@ -1,4 +1,4 @@
-// import { authHooks } from "~/server/utils/auth";
+// import { authHooks } from "~~/server/utils/auth";
 import { useLucia } from "../../utils/auth";
 export default eventHandler(async (event) => {
 	const lucia = useLucia()

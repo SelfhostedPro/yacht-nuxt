@@ -1,9 +1,9 @@
-// import { RefisterUserFormSchema } from "~/types/auth";
-// import type { DBUser, RegisterUserForm } from "~/types/auth";
-import type { DBUser } from "~/modules/db/types/user";
-import type { RegisterUserForm } from "~/modules/auth/types/auth";
-import { RegisterUserFormSchema } from "~/modules/auth/types/auth";
-import { Logger } from "~/modules/logging/runtime/server/composables/logger";
+// import { RefisterUserFormSchema } from "~~/types/auth";
+// import type { DBUser, RegisterUserForm } from "~~/types/auth";
+import type { DBUser } from "~~/modules/db/types/user";
+import type { RegisterUserForm } from "~~/modules/auth/types/auth";
+import { RegisterUserFormSchema } from "~~/modules/auth/types/auth";
+import { Logger } from "~~/modules/logging/runtime/server/composables/logger";
 import { useLucia } from "../../utils/auth";
 import { getUsers, createUser } from '../../utils/users'
 // import { getUsers} from 

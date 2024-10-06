@@ -18,8 +18,8 @@
 </template>
 
 <script setup lang="ts">
-import LoginForm from "~/components/auth/LoginForm.vue";
-import RegisterForm from "~/components/auth/RegisterForm.vue";
+import LoginForm from "~~/components/auth/LoginForm.vue";
+import RegisterForm from "~~/components/auth/RegisterForm.vue";
 const settingStore = useSettingsStore();
 const {
   loading,

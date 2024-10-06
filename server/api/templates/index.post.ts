@@ -1,4 +1,4 @@
-import { addTemplateSchema } from '~/types/templates/yacht'
+import { addTemplateSchema } from '~~/types/templates/yacht'
 
 export default defineEventHandler(async (event) => {
   const { url, name, title } = await readValidatedBody(event, addTemplateSchema.parse)

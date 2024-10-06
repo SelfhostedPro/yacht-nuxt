@@ -44,7 +44,7 @@
 
 <script lang="ts" setup>
 import { VSelect, VTextField, VTextarea, VBtn } from "vuetify/components";
-import { type Field } from "~/types/forms";
+import { type Field } from "~~/types/forms";
 const model = defineModel<Field>("field", { required: true });
 
 const getComponent = (type: Field["type"]) => {

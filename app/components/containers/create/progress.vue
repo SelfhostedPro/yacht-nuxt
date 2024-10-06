@@ -24,7 +24,7 @@
 
 <script lang="ts" setup>
 import { useDisplay } from 'vuetify';
-import type { CreateContainerForm } from '~/types/containers/create';
+import type { CreateContainerForm } from '~~/types/containers/create';
 const { smAndDown } = useDisplay()
 const errors = useFormErrors()
 const form = useFormValues<CreateContainerForm>()
@@ -70,4 +70,4 @@ watchEffect(() => {
 
 </script>
 
-<style></style>~/shared/containers/create
+<style></style>

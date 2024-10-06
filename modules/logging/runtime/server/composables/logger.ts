@@ -1,6 +1,6 @@
 import { type LogType, createConsola, type ConsolaOptions } from 'consola'
 import { defu } from 'defu'
-import type { Notification } from '~/modules/notifications/types/notifications'
+import type { Notification } from '~~/modules/notifications/types/notifications'
 
 const logFunction = (message: any, tag?: string, notification?: Notification, options?: ConsolaOptions) => {
   createConsola(defu({ defaults: { tag: tag }, ...options }, { defaults: { tag: 'core' } })).log(message)

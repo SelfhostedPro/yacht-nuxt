@@ -5,7 +5,7 @@ import * as path from 'path';
 import { Client } from 'ssh2';
 import fs from 'fs-extra'
 
-import { checkConfig, configPaths, useConfig } from '~/modules/config/runtime/server/utils/config';
+import { checkConfig, configPaths, useConfig } from '~~/modules/config/runtime/server/utils/config';
 
 
 type PassphraseFile = Map<string, string>;

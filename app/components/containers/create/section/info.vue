@@ -40,7 +40,7 @@
 </template>
 
 <script lang="ts" setup>
-import { type Field} from '~/types/forms'
+import { type Field} from '~~/types/forms'
 // const { xs } = useDisplay()
 const preview = ref(false)
 const form = useFormValues()

@@ -43,13 +43,13 @@ import {
   ResourcesListNetworkCard,
   ResourcesListVolumeCard,
 } from "#components";
-import type { FixedVolumeInspectInfo } from "~/types/containers/fixedDockerode";
+import type { FixedVolumeInspectInfo } from "~~/types/containers/fixedDockerode";
 import type {
   NetworkInspectInfo,
   ImageInfo,
   VolumeInspectInfo,
 } from "dockerode";
-import type { DataIteratorItem } from "~/types/common/vuetify";
+import type { DataIteratorItem } from "~~/types/common/vuetify";
 interface Props {
   name: "networks" | "volumes" | "images";
 }

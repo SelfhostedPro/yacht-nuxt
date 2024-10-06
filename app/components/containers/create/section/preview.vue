@@ -115,7 +115,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { CreateContainerForm } from '~/types/containers/create';
+import type { CreateContainerForm } from '~~/types/containers/create';
 
 const form: ComputedRef<Partial<CreateContainerForm>> = useFormValues()
 const panel = ref([])

@@ -1,4 +1,4 @@
-import type { ServerSettings } from "~/modules/config/types/server";
+import type { ServerSettings } from "~~/modules/config/types/server";
 import { getPrivateKey } from "./keys";
 import Docker from 'dockerode';
 

@@ -1,7 +1,7 @@
 import { Lucia } from "lucia";
 import { createHooks } from 'hookable'
-import type { DBUser } from "~/modules/db/types/user";
-import { useDBAdapter } from '~/modules/db/runtime/server/utils/db'
+import type { DBUser } from "~~/modules/db/types/user";
+import { useDBAdapter } from '~~/modules/db/runtime/server/utils/db'
 // export interface AuthHooks {
 //     [hook: string]: <T, R>(data: T) => R | void
 // }
