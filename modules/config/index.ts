@@ -40,6 +40,10 @@ export default defineNuxtModule({
 
         addImports([
             {
+                name: "useClientConfig",
+                from: resolver.resolve("runtime/composables/client-config.ts")
+            },
+            {
                 name: 'useConfig',
                 from: resolver.resolve('runtime/server/utils/config.ts'),
             },

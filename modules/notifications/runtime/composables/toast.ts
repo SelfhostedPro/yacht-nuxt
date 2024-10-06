@@ -4,10 +4,10 @@ import type { Pinia } from 'pinia'
 import LVToast from '../components/toast.vue'
 
 // Main function for toasting
-export const useLVToast = (pinia: Pinia, { message, dedupe, timeout, level, title }: Notification, options?: any,) => {
-    const { $toast } = useNuxtApp()
+export const useLVToast = ({ message, dedupe, timeout, level, title }: Notification, options?: any,) => {
+    const { $toast, $pinia } = useNuxtApp()
     // Get notification store with active instance
-    const notificationStore = useNotificationsStore(pinia)
+    const notificationStore = useNotificationsStore($pinia)
     const notifications = storeToRefs(notificationStore)
     // Check recent and active notifications
     const isRecent = notifications.recentNotifications.value.find(n => n.message === message)

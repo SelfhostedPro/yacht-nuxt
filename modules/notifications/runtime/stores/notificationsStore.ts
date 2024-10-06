@@ -13,7 +13,7 @@ export const useNotificationsStore = defineStore('lv-notificationsStore', {
         },
         async pushToast(notification: Notification) {
             // useLVToast imported from @labvue/ui/composables/toast.ts
-            const id = useLVToast(usePinia(), notification)
+            const id = useLVToast(notification)
 
             if (id === undefined) return
 

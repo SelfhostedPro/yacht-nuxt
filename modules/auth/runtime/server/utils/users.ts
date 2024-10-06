@@ -10,7 +10,7 @@ import { createError } from '#imports'
 export const getUsers = async () => {
     const db = useDB()
     try {
-        return (await db.selectFrom('user').selectAll().execute()) as DBUser[]
+        return (await db.selectFrom('user').select(["id", "role", "username"]).execute()) as DBUser[]
     } catch (e) {
         throw createError({
             message: "An unknown error occurred",

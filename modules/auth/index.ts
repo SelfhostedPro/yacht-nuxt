@@ -1,14 +1,21 @@
-import { defineNuxtModule, addImportsDir, addServerHandler, createResolver, addRouteMiddleware, installModule } from '@nuxt/kit'
+import { defineNuxtModule, addImportsDir, addServerHandler, createResolver, addRouteMiddleware, installModule, addImports } from '@nuxt/kit'
 import db from '../db'
 import config from '../config'
+import type { Nuxt } from '@nuxt/schema'
 
 export default defineNuxtModule({
     meta: { name: 'auth' },
-    async setup(options, nuxt) {
+    async setup(_options: any, nuxt: Nuxt | undefined) {
         await installModule(config, null, nuxt)
         await installModule(db, null, nuxt)
         const resolver = createResolver(import.meta.url)
         addImportsDir(resolver.resolve('types'))
+        addImports([
+            {
+                name: "useUser",
+                from: resolver.resolve("runtime/composables/user.ts")
+            }
+        ])
         addRouteMiddleware({
             name: 'auth',
             path: resolver.resolve('runtime/middleware/auth.ts'),

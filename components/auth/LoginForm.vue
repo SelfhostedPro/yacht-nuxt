@@ -37,7 +37,7 @@ const { handleSubmit, handleReset } = useForm({
 const username = useField("username");
 const password = useField("password");
 const error = ref<string | null>(null);
-// const user = useUser();
+const user = useUser();
 
 const submit = handleSubmit(async (values) => {
   try {
@@ -56,16 +56,16 @@ const submit = handleSubmit(async (values) => {
 });
 
 onMounted(async () => {
-  // const config = useClientConfig();
-  // if (config.value?.auth === false) await navigateTo("/");
-  // try {
-  //   const data = await useRequestFetch()<User | null>("/api/auth/me");
-  //   if (data) {
-  //     user.value = data;
-  //     await navigateTo("/");
-  //   }
-  // } catch (e) {
-  //   /* Don't do anything here, just surpress duplicate 401 error notification */
-  // }
+  const config = useClientConfig();
+  if (config.value?.auth === false) await navigateTo("/");
+  try {
+    const data = await useRequestFetch()<User | null>("/api/auth/me");
+    if (data) {
+      user.value = data;
+      await navigateTo("/");
+    }
+  } catch (e) {
+    /* Don't do anything here, just surpress duplicate 401 error notification */
+  }
 });
 </script>

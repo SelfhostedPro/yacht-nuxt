@@ -3,7 +3,7 @@ import { Argon2id } from "oslo/password";
 import { generateId } from "lucia";
 import { LoginUserFormSchema } from "../../../../types/auth";
 import { useLucia } from '../../utils/auth'
-import type { DBUser } from "~/modules/db/types/user";
+import type { DBUserPrivate } from "~/modules/db/types/user";
 import type { LoginUserForm } from "../../../../types/auth";
 
 export default eventHandler(async (event) => {
@@ -28,7 +28,7 @@ export default eventHandler(async (event) => {
         });
     }
     const existingUser = await db.selectFrom('user').selectAll().where('username', '==', username).executeTakeFirst() as
-        | DBUser
+        | DBUserPrivate
         | undefined;
     if (!existingUser) {
         await new Argon2id().verify(generateId(password.length), password);

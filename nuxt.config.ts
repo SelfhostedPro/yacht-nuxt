@@ -1,15 +1,20 @@
-import { nodePolyfills } from 'vite-plugin-node-polyfills'
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: ['vuetify-nuxt-module', '@pinia/nuxt', '@vueuse/nuxt', '@vee-validate/nuxt', 'nuxt-monaco-editor', "@formkit/auto-animate"],
+
   build: {
     transpile: ['vue-sonner', 'vuetify'],
   },
+  experimental: {
+    clientNodeCompat: true
+  },
+
   typescript: {
     typeCheck: true,
     strict: true
   },
+
   vuetify: {
     moduleOptions: {
       ssrClientHints: {
@@ -17,6 +22,9 @@ export default defineNuxtConfig({
         viewportSize: true
       }
     },
+  },
+  monacoEditor: {
+
   },
   nitro: {
     experimental: {
@@ -31,7 +39,10 @@ export default defineNuxtConfig({
       },
     },
   },
+
   vite: {
-    plugins: [nodePolyfills({ include: ['path'] })]
-  }
+    plugins: []
+  },
+
+  compatibilityDate: '2024-10-03'
 })

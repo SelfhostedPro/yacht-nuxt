@@ -56,6 +56,6 @@ const { id, testProgress, testTitle } = defineProps<Props>();
 const { title, items, bytes } = progress.value[id] || {
   title: testTitle,
   items: testProgress,
-  bytes: progress.value[id].bytes || false,
+  bytes: false,
 };
 </script>

@@ -1,12 +1,13 @@
 import type { Pinia } from 'pinia'
 import Progress from '../components/progress.vue'
+import { useProgressStore } from '#imports'
 
 
 // Main function for Progress. Copy and export it
-export const useProgress = async (pinia: Pinia, response: ProgressTitleUpdate, component: Component = Progress, options?: any,) => {
-    const { $toast } = useNuxtApp()
+export const useProgress = async (response: ProgressTitleUpdate, component: Component = Progress, options?: any,) => {
+    const { $toast, $pinia } = useNuxtApp()
     // Get progress store with active instance
-    const progressStore = useProgressStore(pinia)
+    const progressStore = useProgressStore($pinia)
     const { progress, connected } = storeToRefs(progressStore)
     console.log('from progressts', response.id)
 

@@ -6,7 +6,7 @@ export default defineNuxtRouteMiddleware(async (from, to) => {
     // console.log(`${from.path} => ${to.path}`)
     const config = useClientConfig()
     if (
-        process.client
+        import.meta.client
         || config.value?.auth === false
         || from.path === '/login'
     ) return

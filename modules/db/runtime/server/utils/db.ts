@@ -4,7 +4,7 @@ import { BetterSqlite3Adapter } from "@lucia-auth/adapter-sqlite";
 import { Kysely, sql, SqliteDialect } from "kysely";
 import sqlite from 'better-sqlite3';
 import { configPaths } from '~/modules/config/runtime/server/utils/config'
-import type { DBUser } from '../../../types/user';
+import type { DBUser, DBUserPrivate } from '../../../types/user';
 // import type { DBUser } from '~/types/auth';
 // import { useConfigDir } from './config';
 
@@ -16,7 +16,7 @@ interface SessionTable {
 }
 
 interface Database {
-    user: DBUser;
+    user: DBUserPrivate;
     session: SessionTable;
 }
 
@@ -39,7 +39,7 @@ const init = (dbPath: string) => {
             id TEXT NOT NULL PRIMARY KEY,
             username TEXT NOT NULL UNIQUE,
             role TEXT CHECK(role in ('admin', 'user')) NOT NULL DEFAULT 'user',
-            passwordHash TEXT NOT NULL
+            hashedPassword TEXT NOT NULL
         )`);
         console.log('User table created')
 

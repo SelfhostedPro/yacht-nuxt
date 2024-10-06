@@ -343,8 +343,8 @@ export function formatStats(stats: FixedContainerStats): string {
         name: stats.name?.slice(1) ?? '',
         memoryPercentage: stats.memory_stats
             ? formatMemPercent(stats.memory_stats)
-            : '0' ?? '0',
-        cpuUsage: stats.cpu_stats ? formatCpuPercent(stats) : '0' ?? '0',
+            : '0',
+        cpuUsage: stats.cpu_stats ? formatCpuPercent(stats) : '0',
     };
     return JSON.stringify(formattedStats);
 }

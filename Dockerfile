@@ -1,6 +1,6 @@
 # Use the official Bun image for the initial stages
 # See all versions at https://hub.docker.com/r/oven/bun/tags
-FROM node:20-alpine AS base
+FROM node:20-alpine as base
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
@@ -8,7 +8,7 @@ WORKDIR /app
 
 # Install dependencies into a temp directory
 # This will cache them and speed up future builds
-FROM base AS install
+FROM base as install
 COPY package.json pnpm-lock.yaml ./
 RUN apk add --no-cache --force-overwrite --virtual=build-dependencies python3-dev sqlite-dev make g++ && \
     pnpm install --frozen-lockfile && \
@@ -16,7 +16,7 @@ RUN apk add --no-cache --force-overwrite --virtual=build-dependencies python3-de
 
 # Copy node_modules from the temp directory
 # Then copy all (non-ignored) project files into the image
-FROM base AS prerelease
+FROM base as prerelease
 WORKDIR /app
 COPY --from=install /app/node_modules /app/node_modules
 COPY . .

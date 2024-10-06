@@ -52,7 +52,7 @@ export const useProgressStore = defineStore('lv-progressStore', {
             } else {
                 // If no item, update the title
                 this.progress[progress.id].title = progress.title
-                await useProgress(usePinia(), progress, NotificationsProgress)
+                await useProgress(progress, NotificationsProgress)
             }
             // const formattedCurrent = formatBytes(progressDetail.current);
             // const formattedTotal = formatBytes(progressDetail.total);

@@ -3,6 +3,7 @@
 import type { DBUser } from "~/modules/db/types/user";
 import type { RegisterUserForm } from "~/modules/auth/types/auth";
 import { RegisterUserFormSchema } from "~/modules/auth/types/auth";
+import { Logger } from "~/modules/logging/runtime/server/composables/logger";
 import { useLucia } from "../../utils/auth";
 import { getUsers, createUser } from '../../utils/users'
 // import { getUsers} from 
@@ -10,7 +11,7 @@ export default eventHandler(async (event) => {
     const lucia = useLucia()
     const { username, password }: RegisterUserForm = await readValidatedBody(event, body => RegisterUserFormSchema.parse(body))
     const existingUsers = await getUsers()
-    // if (existingUsers.length > 0) throw createError({ message: "Internal Server Error: unable to create user", statusCode: 500 })
+    if (existingUsers.length > 0) throw createError({ message: "Internal Server Error: unable to create user", statusCode: 500 })
     if (
         typeof username !== "string" ||
         username.length < 3 ||
@@ -28,11 +29,11 @@ export default eventHandler(async (event) => {
             statusCode: 400
         });
     }
-    if (existingUsers.length >= 0) {
-        return
-    }
+    // if (existingUsers.length > 0) {
+    //     return
+    // }
+    Logger.info(`Creating new user ${username}`)
     const user = await createUser(username, password)
-
     const session = await lucia.createSession(user.id, {});
     appendHeader(event, "Set-Cookie", lucia.createSessionCookie(session.id).serialize());
     return user
