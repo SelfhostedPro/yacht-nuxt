@@ -21,7 +21,7 @@ export default defineEventHandler(async (event) => {
     // Send initial connection notification
     send(() => ({ id: reqId, data: '' }))
     event.node.req.on("close", () => {
-      terminalSessions[`terminal:${containerId}-${reqId}`].stream.destroy()
+      terminalSessions[`terminal:${containerId}-${reqId}`]?.stream.destroy()
       delete terminalSessions[`terminal:${containerId}-${reqId}`]
       close()
     })
@@ -29,7 +29,7 @@ export default defineEventHandler(async (event) => {
   if (event.method === 'POST') {
     const { data, id } = await readBody<{ id: String, data: ArrayBuffer | Uint8Array | string }>(event)
     if (!data || !id) throw createError('Data or id not specified')
-    terminalSessions[`terminal:${containerId}-${id}`].stream.write(data)
+    terminalSessions[`terminal:${containerId}-${id}`]?.stream.write(data)
   }
   return 'Hello Nitro'
 })

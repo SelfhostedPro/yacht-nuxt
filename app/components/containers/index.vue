@@ -19,7 +19,7 @@
               class="my-1"
               :disabled="loading.includes('containers')"
               @click.prevent="
-                handleBulkAction(server, selectedItems, action.name)
+                handleBulkAction(server!, selectedItems, action.name)
               "
             >
               <v-icon :icon="action.icon" />
@@ -59,7 +59,7 @@
               <v-btn
                 color="error"
                 @click.prevent="
-                  handleBulkAction(server, selectedItems, 'remove');
+                  handleBulkAction(server!, selectedItems, 'remove');
                   removeDialog = false;
                 "
               >

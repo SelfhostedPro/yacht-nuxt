@@ -95,7 +95,7 @@ const formatInfoPorts = (data: Port[]): ContainerPort[] => {
  */
 const splitPort = (port: string) => {
     const [portNumber, type] = port.split('/');
-    return { containerPort: parseInt(portNumber), type };
+    return { containerPort: parseInt(portNumber!), type };
 }
 /**
  * Transform ports data from info to ContainerPort type.
@@ -107,8 +107,8 @@ const formatInspectPorts = (data: ContainerInspectInfo): ContainerPort[] => {
     Object.entries(NetworkSettings.Ports).forEach(([port, forwarded]) => {
         const formattedPort: ContainerPort = { ...splitPort(port) };
         if (forwarded) {
-            formattedPort.hostPort = parseInt(forwarded[0].HostPort);
-            formattedPort.hostIP = forwarded[0].HostIp;
+            formattedPort.hostPort = parseInt(forwarded[0]!.HostPort!);
+            formattedPort.hostIP = forwarded[0]!.HostIp!;
         }
         portList.add(formattedPort);
     });
@@ -135,7 +135,7 @@ export const normalizeContainers = async (
 
 export const normalizeContainerInfo = async (data: FixedContainerInfo): Promise<Container> => {
     return {
-        name: data.Names[0].slice(1),
+        name: data?.Names[0]!.slice(1),
         id: data.Id,
         shortId: data['Id'].substring(0, 10),
         image: data['Image'],

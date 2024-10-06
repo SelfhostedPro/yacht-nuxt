@@ -48,9 +48,9 @@ watch(fullscreen, (isFullscreen) => {
 
 watch(activeFile, (activeFile) => {
   language.value = activeFile?.extension
-    ? extensionMap[activeFile.extension]
+    ? extensionMap[activeFile.extension] || "plaintext"
     : activeFile?.name
-    ? fileMap[activeFile.name]
+    ? fileMap[activeFile.name] || "plaintext"
     : "plaintext";
   editableFile.value = Object.assign(activeFile);
 });

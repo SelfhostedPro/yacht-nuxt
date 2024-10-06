@@ -116,7 +116,7 @@ const populateFromTemplate = async (template: YachtTemplate['templates'][0]): Pr
       }
     }) || [],
     command: template?.command ? [template.command] : [],
-    sysctls: template?.sysctls?.filter((sysctl) => sysctl.name !== undefined && sysctl.value !== undefined ).map(({ name, value }) => ({ name, value })) || [],
+    sysctls: template?.sysctls?.filter((sysctl) => sysctl.name! && sysctl.value! ).map((sysctl) => ({ name: sysctl.name!, value: sysctl.value! })) || [],
     devices: template?.devices || [],
     capabilities: {
       add: template?.cap_add || [],

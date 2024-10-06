@@ -9,16 +9,16 @@
     <v-card-text v-show="!preview" class="mt-2">
       <v-row align="center" justify="space-around">
         <!-- <v-col :cols="xs ? '3' : '2'"> -->
-          <v-avatar size="60" :image="form.info?.icon || fields['icon'].placeholder" />
+          <v-avatar size="60" :image="form.info?.icon || fields?.icon?.placeholder" />
         <!-- </v-col> -->
         <v-col>
-          <common-form-dynamic-string :field="fields['icon']" />
+          <common-form-dynamic-string :field="fields['icon']!" />
         </v-col>
         <v-col cols="12">
-          <common-form-dynamic-string :field="fields['title']" />
+          <common-form-dynamic-string :field="fields['title']!" />
         </v-col>
         <v-col cols="12">
-          <common-form-dynamic-string :field="fields['notes']" />
+          <common-form-dynamic-string :field="fields['notes']!" />
           <v-card-text class="font-weight-black">DO NOT STORE SENSITIVE INFO HERE OR R/SELFHOSTED WILL JUDGE YOU
           😤</v-card-text>
         </v-col>
@@ -27,10 +27,10 @@
     <v-card v-show="preview" class="mx-5">
       <v-card-text>
         <v-card-title class="text-h3">
-          <v-avatar size="60" :image="form.info?.icon || fields['icon'].placeholder" />
-          {{ form.info?.title || fields['title'].placeholder }}
+          <v-avatar size="60" :image="form.info?.icon || fields['icon']!.placeholder" />
+          {{ form.info?.title || fields['title']!.placeholder }}
         </v-card-title>
-        <v-card-text v-html="$mdRenderer.render(form.info?.notes || fields['notes'].placeholder || '')">
+        <v-card-text v-html="$mdRenderer.render(form.info?.notes || fields['notes']!.placeholder || '')">
         </v-card-text>
         <v-card-text class="font-weight-black">DO NOT STORE SENSITIVE INFO HERE OR R/SELFHOSTED WILL JUDGE YOU
           😤</v-card-text>

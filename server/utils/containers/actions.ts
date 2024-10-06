@@ -11,7 +11,7 @@ import { processImageProgress } from "../resources/info"
 
 
 export const createContainer = async (form: CreateContainerForm) => {
-    const server: Dockerode | null = await useServers().then((servers: ServerDict) => servers[form.server])
+    const server: Dockerode | null | undefined = await useServers().then((servers: ServerDict) => servers[form.server])
     if (!server) {
         throw createError(`Server ${form.server} not found!`)
     }
@@ -47,7 +47,7 @@ export const createContainer = async (form: CreateContainerForm) => {
 
 
 export const getContainerAction = async (server: string, id: string, action: string) => {
-    const _server: Dockerode | null = await useServers().then((servers: ServerDict) => servers[server])
+    const _server: Dockerode | null | undefined = await useServers().then((servers: ServerDict) => servers[server])
 
     if (_server) {
         const container = _server.getContainer(id)
@@ -62,7 +62,7 @@ export const getContainerAction = async (server: string, id: string, action: str
         }
         if (action in actions) {
             try {
-                await actions[action]()
+                await actions[action]!()
                 if (action !== 'remove') {
                     const _container = await normalizeContainerInspectInfo(await container.inspect())
                     Logger(`${action} performed on ${_container.info.title || _container.name}: ${_container.shortId}`, 'container - action', { title: 'ContainerAction', level: 'info', message: `${action} performed on ${_container.info.title || _container.name}: ${_container.shortId}`, timeout: 2000 })

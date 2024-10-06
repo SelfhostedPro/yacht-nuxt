@@ -16,7 +16,7 @@
     >
       <v-slide-group-item
         v-for="featuredApp in template.featured"
-        :key="template.templates[featuredApp].title"
+        :key="template.templates[featuredApp]?.title"
         v-slot="{ isSelected, toggle, selectedClass }"
       >
         <v-img
@@ -29,15 +29,15 @@
           height="50vh"
           :aspect-ratio="isSelected ? 16 / 9 : 4 / 3"
           :src="
-            template.templates[featuredApp].featured_image ||
-            template.templates[featuredApp].logo
+            template.templates[featuredApp]?.featured_image ||
+            template.templates[featuredApp]?.logo
           "
         >
           <v-card rounded="0" class="featured-card">
             <div class="d-flex align-center mt-3 justify-center">
               <v-btn
                 class="mr-auto"
-                @click="$emit('createApp', template.templates[featuredApp])"
+                @click="template.templates[featuredApp] && $emit('createApp', template.templates[featuredApp])"
                 icon
                 variant="plain"
               >
@@ -51,13 +51,13 @@
                 "
                 class="text-high-emphasis"
                 >{{
-                  template.templates[featuredApp].title ||
-                  template.templates[featuredApp].name
+                  template.templates[featuredApp]?.title ||
+                  template.templates[featuredApp]?.name
                 }}</v-card-title
               >
             </div>
             <v-card-text
-              v-if="isSelected && template.templates[featuredApp].description"
+              v-if="isSelected && template.templates[featuredApp]?.description"
               style="height: 60px"
               class="text-high-emphasis overflow-auto mb-2"
               >{{ template.templates[featuredApp].description }}</v-card-text

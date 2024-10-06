@@ -17,8 +17,8 @@
     </v-timeline-item>
   </v-timeline>
   <div v-else>
-    <v-card-title>{{ steps[currentStep].title }}</v-card-title>
-    <v-card-text>{{ steps[currentStep].description }}</v-card-text>
+    <v-card-title>{{ steps[currentStep]!.title }}</v-card-title>
+    <v-card-text>{{ steps[currentStep]!.description }}</v-card-text>
   </div>
 </template>
 

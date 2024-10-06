@@ -47,11 +47,11 @@ export const useProgressStore = defineStore('lv-progressStore', {
             }
             if (("item" in progress)) {
                 // If item, just update the item value.
-                this.progress[progress.id].items[progress.item.id] = progress.item
-                if (progress.item.status === 'done') delete this.progress[progress.id].items[progress.item.id]
+                this.progress[progress.id]!.items[progress.item.id] = progress.item
+                if (progress.item.status === 'done') delete this.progress[progress.id]!.items[progress.item.id]
             } else {
                 // If no item, update the title
-                this.progress[progress.id].title = progress.title
+                this.progress[progress.id]!.title = progress.title
                 await useProgress(progress, NotificationsProgress)
             }
             // const formattedCurrent = formatBytes(progressDetail.current);
