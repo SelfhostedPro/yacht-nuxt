@@ -135,10 +135,10 @@ const links = [
       },
     ],
   },
-  // {
-  //   to: "/settings/general",
-  //   icon: "mdi-cog",
-  //   text: "Settings"
-  // }
+  {
+    to: "/settings",
+    icon: "mdi-cog",
+    text: "Settings"
+  }
 ];
 </script>

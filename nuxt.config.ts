@@ -1,6 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  devtools: { enabled: false },
+  devtools: { enabled: true },
   modules: ['vuetify-nuxt-module', '@pinia/nuxt', '@vueuse/nuxt', '@vee-validate/nuxt', 'nuxt-monaco-editor', "@formkit/auto-animate"],
 
   build: {

@@ -5,9 +5,12 @@
     </template>
     <template #append>
       <slot name="append" />
-      <v-btn v-if="user && !smAndDown" variant="elevated" color="surface" @click.stop="logout">
-        logout
-      </v-btn>
+      <v-btn-group v-if="!smAndDown">
+        <v-btn variant="elevated" color="surface" @click="settingsDialog = !settingsDialog">settings</v-btn>
+        <v-btn v-if="user" variant="elevated" color="surface" @click.stop="logout">
+          logout
+        </v-btn>
+      </v-btn-group>
       <v-app-bar-nav-icon v-if="smAndDown" color="grey-lighten-5" variant="text" @click.stop="drawer = !drawer" />
     </template>
     <v-app-bar-title>
@@ -30,12 +33,23 @@
       </div>
     </v-list>
   </v-navigation-drawer>
+  <v-dialog v-model="settingsDialog" transition="dialog-bottom-transition" min-width="70%" min-height="60%" width="auto" :scrim="false">
+    <v-card>
+      <v-toolbar color="primary" title="Settings" class="text-capitalize">
+        <template #append>
+          <v-btn icon="mdi-close" @click="settingsDialog = !settingsDialog"/>
+        </template>
+      </v-toolbar>
+        <settings />
+    </v-card>
+  </v-dialog>
 </template>
 
 <script lang="ts" setup>
 import { useDisplay } from "vuetify";
 import { useUser } from "~~/modules/auth/runtime/composables/user";
 import { useClientConfig } from "~~/modules/config/runtime/composables/client-config";
+const settingsDialog = ref(false)
 const clientConfig = useClientConfig()
 const user = useUser();
 defineProps(["links"]);
