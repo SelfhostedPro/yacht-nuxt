@@ -6,6 +6,8 @@
 .cache
 dist
 
+*repopack*
+
 # Node dependencies
 node_modules
 

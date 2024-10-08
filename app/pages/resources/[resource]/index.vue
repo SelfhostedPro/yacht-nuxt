@@ -8,9 +8,10 @@ const resource =
   route.params.resource === "networks"
     ? "networks"
     : route.params.resource === "volumes"
-    ? "volumes"
-    : "images";
+      ? "volumes"
+      : "images";
 definePageMeta({
+  name: `Resources`,
   validate: (route) => {
     return (
       route.params.resource === "networks" ||

@@ -1,6 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  devtools: { enabled: true },
+  devtools: { enabled: false },
   modules: ['vuetify-nuxt-module', '@pinia/nuxt', '@vueuse/nuxt', '@vee-validate/nuxt', 'nuxt-monaco-editor', "@formkit/auto-animate"],
 
   build: {
@@ -30,7 +30,8 @@ export default defineNuxtConfig({
   },
   nitro: {
     experimental: {
-      openAPI: true
+      openAPI: true,
+      websocket: true,
     },
     //@ts-expect-error
     openAPI: {

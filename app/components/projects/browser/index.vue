@@ -6,7 +6,7 @@
           <v-app-bar-nav-icon @click="sidebarOpen = !sidebarOpen" />
         </template>
         <v-toolbar-title class="d-flex">
-          Project Browser - {{ activeFile.name }}
+          {{ activeFile.name }}
         </v-toolbar-title>
         <template #append>
           <projects-browser-nav-actions-add
@@ -28,8 +28,6 @@
 </template>
 <script setup lang="ts">
 import { join } from "path";
-// import { useNotificationsStore } from "@labvue/core/stores/notificationsStore";
-// import type { Dree } from "dree";
 const projectsStore = useProjectsStore();
 const { dir, dirTree, currentPath, activeFile, pathquery, showHidden } =
   storeToRefs(projectsStore);

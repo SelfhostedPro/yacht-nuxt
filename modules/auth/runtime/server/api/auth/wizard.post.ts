@@ -29,10 +29,6 @@ export default eventHandler(async (event) => {
             statusCode: 400
         });
     }
-    // if (existingUsers.length > 0) {
-    //     return
-    // }
-    Logger.info(`Creating new user ${username}`)
     const user = await createUser(username, password)
     const session = await lucia.createSession(user.id, {});
     appendHeader(event, "Set-Cookie", lucia.createSessionCookie(session.id).serialize());

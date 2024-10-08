@@ -80,6 +80,9 @@ importers:
       hookable:
         specifier: ^5.5.3
         version: 5.5.3
+      httpxy:
+        specifier: ^0.1.5
+        version: 0.1.5
       js-yaml:
         specifier: ^4.1.0
         version: 4.1.0

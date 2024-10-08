@@ -46,7 +46,7 @@ const changeFolder = async (item: Dree) => {
       currentPath.value
     }`
   );
-  projectsStore.changeDirectory(join(path, item.relativePath));
+  await projectsStore.changeDirectory(join(path, item.relativePath));
   emit("closeMenu");
   // return await navigateTo({
   //   path: "/projects",
