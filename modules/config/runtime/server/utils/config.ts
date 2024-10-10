@@ -19,7 +19,7 @@ const dataStorage = useStorage('data')
 const DefaultWatchOptions: WatchConfigOptions<YachtConfig> = {
     cwd: nuxtConfig.yacht.configOptions.configPath,
     // configFile: 'config.yml',
-    name: 'config',
+    name: 'config.yml',
     rcFile: false,
     dotenv: false,
     defaults: {

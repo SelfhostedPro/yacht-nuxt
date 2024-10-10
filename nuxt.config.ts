@@ -44,7 +44,7 @@ export default defineNuxtConfig({
   },
 
   vite: {
-    plugins: []
+    plugins: [],
   },
 
   compatibilityDate: '2024-10-03'
