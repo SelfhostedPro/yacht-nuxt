@@ -14,7 +14,7 @@ const ServerConnectionSchema = z.object({
     ca: z.union([z.string(), z.array(z.string()), z.instanceof(Buffer), z.array(z.instanceof(Buffer))]).optional(),
     cert: z.union([z.string(), z.array(z.string()), z.instanceof(Buffer), z.array(z.instanceof(Buffer))]).optional(),
     key: z.union([z.string(), z.array(z.string()), z.instanceof(Buffer), z.array(z.instanceof(Buffer)), z.array(ServerSSHKeySchema)]).optional(),
-    protocol: z.union([z.literal('https'), z.literal('http'), z.literal('ssh')]).optional(),
+    protocol: z.union([z.literal('https'), z.literal('http'), z.literal('ssh'), z.literal('local')]).optional(),
     timeout: z.number().optional(),
     version: z.string().optional(),
     sshAuthAgent: z.string().optional(),

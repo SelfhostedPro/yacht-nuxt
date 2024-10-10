@@ -23,7 +23,7 @@
                     <v-card-text class="text-center"> <v-icon icon="mdi-plus" />
                     </v-card-text>
                     <v-dialog v-model="serverAddModal" :width="500">
-                        <addServer @close="serverAddModal = false" />
+                        <SettingsServersAdd @close="serverAddModal = false" />
                     </v-dialog>
                 </v-card>
             </v-col>

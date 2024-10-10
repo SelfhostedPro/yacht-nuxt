@@ -48,7 +48,7 @@
     </v-card>
 </template>
 <script setup lang="ts">
-
+import type { NewServer } from '~~/types/servers';
 
 const emit = defineEmits(['close'])
 const settingStore = useSettingsStore()

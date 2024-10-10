@@ -41,7 +41,7 @@ export const newServerOptionsSchema = z.object({
     timeout: z.number().optional(),
     version: z.string().optional(),
     sshAuthAgent: z.string().optional(),
-    Promise: z.function().optional()
+    Promise: z.instanceof(Promise).optional()
 })
 
 export const newServerSchema = z.object({

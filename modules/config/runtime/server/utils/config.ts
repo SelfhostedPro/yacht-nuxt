@@ -85,6 +85,7 @@ export const updateConfig = async (config: Omit<YachtConfig, 'secrets'>, path: s
         // LVConfigSchema.parse(config) as LVConfigType
         YachtConfigSchema.parse(config)
         fs.outputFile(resolve(path, 'config.yaml'), stringifyYAML(config, { indent: 2 }), { encoding: 'utf8' })
+        return config
     } catch (e) {
         // configHooks.callHook('update-config:error', config, e)
         if (e instanceof ZodError) {
