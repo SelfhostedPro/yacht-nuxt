@@ -33,6 +33,7 @@
     "dockerode": "^4.0.2",
     "dree": "^4.7.0",
     "fs-extra": "^11.2.0",
+    "h3": "^1.13.0",
     "hookable": "^5.5.3",
     "httpxy": "^0.1.5",
     "js-yaml": "^4.1.0",
@@ -69,6 +70,7 @@
     "rollup": "^4.14.3",
     "type-fest": "^4.15.0",
     "typescript": "^5.4.4",
+    "unenv": "^1.10.0",
     "vite-plugin-node-polyfills": "^0.21.0",
     "vue-tsc": "^2",
     "vuetify-nuxt-module": "^0.13.2"

@@ -1,7 +1,9 @@
 import { defineStore } from 'pinia'
 // import { ThemeSettingsSchema, type RegisterUserForm, type ThemeSettings  } from '#imports'
-import { RegisterUserFormSchema, ThemeSettingsSchema } from '#imports'
+import { RegisterUserFormSchema, ThemeSettingsSchema, type YachtConfig } from '#imports'
 import { z } from 'zod'
+import type { DBUser } from '~~/modules/db/types/user'
+import type { NewServer } from '~~/types/servers'
 type ThemeSettings = z.infer<typeof ThemeSettingsSchema>
 type RegisterUserForm = z.infer<typeof RegisterUserFormSchema>
 
@@ -15,7 +17,10 @@ export const useSettingsStore = defineStore({
   id: 'settingsStore',
   state: () => ({
     details: {} as DetailsReturn,
-    loading: [] as string[]
+    loading: [] as string[],
+    settings: {} as YachtConfig,
+    users: [] as DBUser[],
+    keys: [] as YachtConfig['servers'][0]["key"][]
   }),
   actions: {
     async startLoading(name: string) { this.loading.push(name) },
@@ -35,6 +40,45 @@ export const useSettingsStore = defineStore({
         console.log(e)
       }
       this.stopLoading('create')
+    },
+    async fetchSettings() {
+      this.startLoading('settings')
+      const { error, data } = await useFetch<YachtConfig>('/api/settings')
+      if (!error.value && data.value) {
+        this.settings = data.value
+        this.stopLoading('settings')
+      } else {
+        this.stopLoading('settings')
+        throw Error('Unable to get settings!!!')
+      }
+    },
+    async fetchKeys() {
+      this.startLoading('keys')
+      const { error, data } = await useFetch(`/api/settings/keys`)
+      if (!error.value && data.value) {
+        this.keys = data.value
+        this.stopLoading('keys')
+      }
+      this.stopLoading('keys')
+    },
+    async addServer(form: NewServer) {
+      this.startLoading('servers')
+      const { error, data } = await useFetch(`/api/servers/`, { method: "POST", body: form })
+      if (!error.value && data.value) {
+        this.settings.servers = data.value
+        this.stopLoading('servers')
+      }
+      this.stopLoading('servers')
+    },
+    async removeServer(name: string, removeRemoteKey: boolean, removeLocalKey: boolean) {
+      this.startLoading('servers')
+      const { error, data } = await useFetch<YachtConfig['servers']>(`/api/settings/servers/`, { method: "DELETE", body: { name, removeRemoteKey, removeLocalKey } })
+      if (!error.value && data.value) {
+        this.settings.servers = data.value
+        this.stopLoading('servers')
+      } else {
+        this.stopLoading('servers')
+      }
     }
   }
 })

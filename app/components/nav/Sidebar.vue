@@ -26,7 +26,7 @@
 
     <template #append>
       <div class="d-flex flex-column mx-auto">
-        <v-slot name="buttons" />
+        <!-- <slot name="buttons" /> -->
         <v-btn v-if="smAndDown" size="large" variant="text" :icon="modeIcons[mode]"
           @click.stop="mode === 'auto' ? (mode = 'mini') : (mode = 'auto')" />
         <v-btn size="large" variant="text" :icon="isDark ? 'mdi-weather-night' : 'mdi-weather-sunny'"

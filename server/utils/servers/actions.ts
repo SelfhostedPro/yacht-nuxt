@@ -6,6 +6,8 @@ import { sshAdapter, localAdapter } from "./adapters";
 import { useConfig } from "~~/modules/config/runtime/server/utils/config";
 
 let _servers: ServerDict
+const nuxtConfig = useRuntimeConfig()
+
 
 export const useServers = async () => {
     // Disable caching for now.
@@ -45,5 +47,34 @@ const getServers = async () => {
         await Promise.all(serverPromises);
         return returnServers
     })
+}
+
+export const removeServer = async (name: string, removeRemoteKey: boolean, removeLocalKey: boolean) => {
+    const config = await useConfig()
+
+    const serverIndex = config.servers.findIndex((server) => server.name == name)
+    const serverToRemove = config.servers[serverIndex]
+
+    if (serverToRemove) {
+        Logger.warn(`Removing server ${name} (${serverToRemove.options?.host && serverToRemove.options.port
+            ? `${serverToRemove.options.host}:${serverToRemove.options.port}`
+            : serverToRemove.options?.socketPath})`);
+
+        const { name: ServerName, key, options } = serverToRemove
+        if (removeRemoteKey && options && key) {
+            if (!options.host || !options.port || !options.username) {
+                throw Error(`Missing required options for server ${ServerName}`);
+            }
+            removePublicKeyFromRemoteServer(key, options?.host, options?.port, options?.username);
+        }
+        if (removeLocalKey && options && key) {
+            removeSSHKey(key);
+        }
+        delete config.servers[serverIndex];
+        updateConfig(config, nuxtConfig.yacht.configOptions.configPath)
+    } else {
+        throw createError(`Server ${name} not found in config`);
+    }
+    return config.servers
 }
 

@@ -1,5 +1,5 @@
-import { watchConfig, type ConfigLayerMeta, type ConfigWatcher, type ResolvedConfig } from "c12"
-import { defaultYachtConfig } from "./defaults"
+import { loadDotenv, watchConfig, type ConfigLayerMeta, type ConfigWatcher, type ResolvedConfig, type WatchConfigOptions } from "c12"
+import { baseYachtConfig, defaultYachtConfig } from "./defaults"
 import fs from 'fs-extra'
 import { stringifyYAML } from 'confbox'
 import { resolve } from 'path'
@@ -8,6 +8,7 @@ import { ZodError } from "zod"
 import type { ConfigSecrets } from "../../../types/secrets"
 import { join } from 'path'
 import * as crypto from 'crypto';
+import defu from "defu"
 
 
 const nuxtConfig = useRuntimeConfig()
@@ -15,22 +16,35 @@ const nuxtConfig = useRuntimeConfig()
 const configStorage = useStorage('config')
 const dataStorage = useStorage('data')
 
-const DefaultWatchOptions = {
+const DefaultWatchOptions: WatchConfigOptions<YachtConfig> = {
     cwd: nuxtConfig.yacht.configOptions.configPath,
-    configFile: 'config.yaml',
-    chokidarOptions: { ignoreInitial: false },
-    defaults: defaultYachtConfig
+    // configFile: 'config.yml',
+    name: 'config',
+    rcFile: false,
+    dotenv: false,
+    defaults: {
+        servers: [], // Omit servers so there's no duplicate local value.
+        ...baseYachtConfig
+    }
 }
 
+if (!fs.existsSync(nuxtConfig.yacht.configOptions.configPath)) {
+    fs.mkdirpSync(nuxtConfig.yacht.configOptions.configPath)
+}
 
 const _config = watchConfig({
     ...DefaultWatchOptions,
-    onWatch(event) {
-
+    async onWatch({ type, path }) {
+        Logger.info(`config file ${path} - ${type}`, 'config - watcher')
+        await checkConfig()
     },
-    onUpdate(event) {
-
-    }
+    async onUpdate({ getDiff }) {
+        const diff = getDiff()
+        diff.map((change, i) => {
+            Logger.info(`config file change ${i + 1} of ${diff.length}: ${change}`, 'config - watcher')
+        })
+        // await checkConfig()
+    },
 })
 
 export const configPaths = {
@@ -91,12 +105,12 @@ export const checkConfig = async () => {
     const configExists = await fs.exists(resolve(config.cwd, 'config.yaml'))
     if (!configExists) {
         Logger.warn(`No config exists at ${config.cwd}, creating default config.`, 'config - check')
-        updateConfig(defaultYachtConfig, config.cwd)
+        await updateConfig(defaultYachtConfig, config.cwd)
+        await getSecrets()
     } else {
         try {
             // await configHooks.callHook('check-config:validate', config)
             // If the config exists, validate it.
-            // LVConfigSchema.parse(config.config) as LVConfigType
             YachtConfigSchema.parse(config.config)
             Logger.sucess(`Valid config exists at ${config.cwd}.`, 'config - check')
         } catch (e) {
@@ -118,6 +132,9 @@ export const checkConfig = async () => {
 
 
 export const getSecrets = async () => {
+    if (!await fs.exists(configPaths.secrets)) {
+        return await generateSecretTokens()
+    }
     const secrets = await fs.readJSON(configPaths.secrets) as ConfigSecrets
     if (secrets && typeof secrets === 'object') {
         try {

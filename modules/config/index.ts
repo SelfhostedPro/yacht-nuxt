@@ -1,4 +1,4 @@
-import { defineNuxtModule, addImportsDir, createResolver, addRouteMiddleware, addServerPlugin, installModule, addImports } from '@nuxt/kit'
+import { defineNuxtModule, addImportsDir, createResolver, addRouteMiddleware, addServerPlugin, installModule, addImports, addServerHandler, addServerImportsDir } from '@nuxt/kit'
 import { defu } from 'defu'
 import { join } from 'path'
 import logging from '../logging'
@@ -64,7 +64,7 @@ export default defineNuxtModule({
             path: resolver.resolve('runtime/middleware/config.ts'),
             global: true
         })
-        addImportsDir(resolver.resolve('runtime/server/utils'))
+        addServerImportsDir(resolver.resolve('runtime/server/utils'))
         addImportsDir(resolver.resolve('types'))
         addServerPlugin(resolver.resolve('plugin/01-server-config.ts'))
     }

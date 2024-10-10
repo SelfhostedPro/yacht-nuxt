@@ -1,5 +1,5 @@
 import { z } from 'zod'
-
+import { Buffer } from 'node:buffer'
 const ServerSSHKeySchema = z.object({
     pem: z.union([z.string(), z.instanceof(Buffer)]).optional(),
     passphrase: z.string().optional()
