@@ -2,7 +2,7 @@ name: Build Images for all supported platforms
 
 on:
   push:
-    branches: ["main"]
+    branches: ["main", "nuxt4"]
     tags: ["v*.*.*"]
   release:
     types: ["prereleased"]
@@ -55,6 +55,11 @@ jobs:
         with:
           images: |
             ${{ env.REGISTRY }}/${{ env.REPO_LC }}
+          tags: |
+            ${{ github.ref_name == 'main' && 'latest' || github.ref_name }}
+            type=ref,event=branch
+            type=ref,event=pr
+            type=sha
           labels: |
             org.opencontainers.image.title=Yacht
             org.opencontainers.image.url=https://github.com/SelfhostedPro/yacht-nuxt/pkgs/container/yacht-nuxt
@@ -82,7 +87,6 @@ jobs:
           # cache-to: type=registry,ref=${{ env.REPO_LC }}:buildcache,mode=max
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          
 
       - name: Export digest
         run: |
