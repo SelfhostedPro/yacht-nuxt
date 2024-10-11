@@ -5,7 +5,10 @@ import Docker from 'dockerode';
 export const sshAdapter = async (server: ServerSettings) => {
     if (!server.key) throw new Error(`SSH key not found in ${server.name} config!`);
     const privateKey = await getPrivateKey(server.key);
-    const options = { ...server.options, sshOptions: { privateKey } }
+    if (!privateKey) throw new Error(`SSH key not found in ${server.name} config!`);
+    const { key, passphrase } = privateKey;
+
+    const options = { ...server.options, sshOptions: { privateKey: key, passphrase } }
     //@ts-expect-error - Dockerode type missing the fact you can pass decrypted key as string
     const newServer = new Docker(options)
     const serverWorks = await newServer.info().catch((e) => {

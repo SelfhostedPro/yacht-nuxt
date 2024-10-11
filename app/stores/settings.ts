@@ -63,9 +63,9 @@ export const useSettingsStore = defineStore({
     },
     async addServer(form: NewServer) {
       this.startLoading('servers')
-      const { error, data } = await useFetch<YachtConfig>(`/api/settings/servers/`, { method: "POST", body: form })
-      if (!error.value && data.value) {
-        this.settings.servers = data.value.servers
+      const data = await $fetch<YachtConfig>(`/api/settings/servers/`, { method: "POST", body: form })
+      if (data) {
+        this.settings.servers = data.servers
         this.stopLoading('servers')
       }
       this.stopLoading('servers')

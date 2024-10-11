@@ -1,14 +1,22 @@
-import { generateKeyPairSync } from 'crypto';
 import { createCipheriv, createDecipheriv } from 'crypto';
-import * as sshpk from 'sshpk';
 import * as path from 'path';
 import { Client } from 'ssh2';
+import SSH2 from 'ssh2';
 import fs from 'fs-extra'
 
 import { checkConfig, configPaths, useConfig } from '~~/modules/config/runtime/server/utils/config';
 
-
 type PassphraseFile = Map<string, string>;
+
+interface SSHCommandOptions {
+    remoteHost: string;
+    command: string;
+    port: number;
+    username: string;
+    privateKey?: string;
+    passphrase?: string;
+    password?: string;
+}
 
 interface SSHKeyInfo {
     privateKey: {
@@ -21,40 +29,42 @@ interface SSHKeyInfo {
     }
 }
 
+const initPassphraseFile = async () => {
+    fs.ensureDirSync(`${configPaths.ssh}`)
+    fs.writeFileSync(`${configPaths.ssh}/passphrases`, '')
+    return
+}
+
 // Generate an SSH key
-export const createSSHKey = async (keyName: string, passphrase: string) => {
-    // Check if key already exists
-    const { privateKey, publicKey } = await getSSHKeyInfo(keyName)
-    if (privateKey.value && publicKey.value) {
-        createError('SSH key already exists')
-        return;
-    }
+export const createSSHKey = async (keyName: string, passphrase: string): Promise<void> => {
+    try {
+        const { privateKey, publicKey } = await getSSHKeyInfo(keyName);
+        if (privateKey.value && publicKey.value) {
+            throw createError({
+                statusCode: 400,
+                statusMessage: 'SSH key already exists'
+            });
+        }
+        const newKeys = SSH2.utils.generateKeyPairSync('rsa', { bits: 4096, passphrase, cipher: 'aes256-cbc' })
 
-    // If not, generate a new key pair
-    const newKeys = generateKeyPairSync('rsa', {
-        modulusLength: 4096,
-        publicKeyEncoding: {
-            type: 'spki',
-            format: 'pem',
-        },
-        privateKeyEncoding: {
-            type: 'pkcs8',
-            format: 'pem',
-            cipher: 'aes-256-cbc',
-            passphrase: passphrase,
-        },
-    });
+        const parsedKey = SSH2.utils.parseKey(newKeys.private, passphrase)
+        if (parsedKey instanceof Error) throw createError(parsedKey)
 
-    // Save the keys to the filesystem
-    await useStorage('base').setItem(privateKey.path, newKeys.privateKey);
-    await useStorage('base').setItem(publicKey.path, newKeys.publicKey);
-    Logger.info(`SSH key ${keyName} created`);
+        await Promise.all([
+            fs.writeFile(privateKey.path, newKeys.private),
+            fs.writeFile(publicKey.path, newKeys.public)
+        ]);
 
-    // Save the passphrase to a file if requested
-    if (!(await checkSavedPassphrases(keyName))) {
-        Logger.info(`Saving passphrase for ${keyName}`);
-        const encryptedPassphrase = await encryptPassphrase(passphrase);
-        await writePassphraseToFile(keyName, encryptedPassphrase);
+        Logger.info(`SSH key ${keyName} created and saved`);
+
+        if (!(await checkSavedPassphrases(keyName))) {
+            const encryptedPassphrase = await encryptPassphrase(passphrase);
+            await writePassphraseToFile(keyName, encryptedPassphrase);
+            Logger.info(`Passphrase saved for ${keyName}`);
+        }
+    } catch (error) {
+        Logger.error(`Error creating SSH key: ${error}`);
+        throw error;
     }
 }
 
@@ -67,7 +77,7 @@ export const removeSSHKey = async (keyName: string): Promise<void> => {
             removePassphrase(keyName),
         ]);
     } else {
-        Logger.error('SSH key does not exist');
+        Logger.error(`SSH key ${keyName} does not exist`);
     }
 }
 
@@ -79,47 +89,21 @@ export const removePublicKeyFromRemoteServer = async (
 ): Promise<void> => {
     const { publicKey, privateKey } = await getSSHKeyInfo(keyName);
     if (!publicKey.value || privateKey.value) {
-        Logger.warn('SSH key does not exist');
+        Logger.error(`SSH key ${keyName} does not exist`);
         return;
     }
     const decryptedPrivateKey = await getPrivateKey(keyName);
-    const conn = new Client();
     // Remove public key from remote server
     Logger.info(`Removing SSH key from ${remoteHost}`);
-    await new Promise<void>((resolve, reject) => {
-        conn
-            .on('ready', async () => {
-                Logger.info(`Connected to ${remoteHost}`);
-                conn.exec(
-                    `sed -i '/${publicKey}/d' ~/.ssh/authorized_keys`,
-                    (err, stream) => {
-                        if (err) reject(err);
-                        stream
-                            .on('close', () => {
-                                Logger.info('SSH key removed');
-                                conn.end();
-                                resolve();
-                            })
-                            .on('data', (data: string) => {
-                                Logger.info('STDOUT: ' + data);
-                            })
-                            .stderr.on('data', (data: string) => {
-                                Logger.error('STDERR: ' + data);
-                            });
-                    },
-                );
-            })
-            .on('error', (err) => {
-                Logger.error(`Connection error: \${err}`);
-                reject(err);
-            })
-            .connect({
-                host: remoteHost,
-                port: Number(port),
-                username: username,
-                privateKey: decryptedPrivateKey,
-            });
-    });
+    await executeSSHCommand({
+        remoteHost,
+        command: `sed -i '/${publicKey.value}/d' ~/.ssh/authorized_keys`,
+        port: Number(port),
+        username,
+        privateKey: decryptedPrivateKey?.key,
+        passphrase: decryptedPrivateKey?.passphrase
+    }
+    );
 }
 
 export const copyPublicKeyToRemoteServer = async (
@@ -130,49 +114,22 @@ export const copyPublicKeyToRemoteServer = async (
     password: string,
 ): Promise<void> => {
     // Get ssh public key
-    const { publicKey } = await getSSHKeyInfo(keyName);
-    if (!publicKey.value) {
+    const { privateKey, publicKey } = await getSSHKeyInfo(keyName);
+    if (!privateKey.value) {
         createError('SSH key does not exist')
         return;
     }
-    const convertedPublicKey = sshpk.parseKey(publicKey.value, 'pem').toString('ssh');
-    const conn = new Client();
     // Copy the public key to the remote server
     Logger.info(`Copying SSH key to ${remoteHost}`);
-    await new Promise<void>((resolve, reject) => {
-        conn
-            .on('ready', async () => {
-                Logger.info(`Connected to ${remoteHost}`);
-                conn.exec(
-                    `mkdir -p ~/.ssh/ && echo "${convertedPublicKey}" >> ~/.ssh/authorized_keys`,
-                    (err, stream) => {
-                        if (err) reject(err);
-                        stream
-                            .on('close', () => {
-                                Logger.info('SSH key copied');
-                                conn.end();
-                                resolve();
-                            })
-                            .on('data', (data: string) => {
-                                Logger.info('STDOUT: ' + data);
-                            })
-                            .stderr.on('data', (data) => {
-                                Logger.error('STDERR: ' + data);
-                            });
-                    },
-                );
-            })
-            .on('error', (err) => {
-                Logger.error(`Connection error: \${err}`);
-                reject(err);
-            })
-            .connect({
-                host: remoteHost,
-                port: Number(port),
-                username: username,
-                password: password,
-            })
-    });
+    await executeSSHCommand(
+        {
+            remoteHost,
+            command: `mkdir -p ~/.ssh/ && echo "${publicKey.value}" >> ~/.ssh/authorized_keys`,
+            port: Number(port),
+            username,
+            password
+        }
+    );
 }
 
 export const getAllKeys = async (): Promise<string[]> => {
@@ -182,36 +139,44 @@ export const getAllKeys = async (): Promise<string[]> => {
 
 export const getPrivateKey = async (keyName: string, passphrase?: string) => {
     passphrase = passphrase || (await getSavedPassphrase(keyName));
-    const { privateKey } = await getSSHKeyInfo(keyName);
+    const { privateKey, publicKey } = await getSSHKeyInfo(keyName);
     if (!privateKey.value) {
         createError('SSH key does not exist')
         return;
     }
+    const parsedKey = SSH2.utils.parseKey(privateKey.value, passphrase)
+    if (parsedKey instanceof Error) {
+        throw createError(parsedKey)
+    }
+    const privateKeyPEM = parsedKey.getPrivatePEM()
+
     // Decrypt and return the private key
-    return sshpk.parsePrivateKey(privateKey.value, 'pem', {
-        passphrase: passphrase,
-    }).toString('ssh-private');
+    return { key: privateKeyPEM, passphrase: passphrase };
 }
 
 const getSSHKeyInfo = async (keyName: string): Promise<SSHKeyInfo> => {
     const privateKeyPath = path.join(configPaths.ssh, keyName);
     const publicKeyPath = `${privateKeyPath}.pub`;
 
-    const [privateKey, publicKey] = await Promise.all([
-        useStorage('base').getItem<string>(privateKeyPath).then(
-            (value) => ({ path: privateKeyPath, value }),
-            () => ({ path: privateKeyPath, value: null }),
-        ),
-        useStorage('base').getItem<string>(publicKeyPath).then(
-            (value) => ({ path: privateKeyPath, value }),
-            () => ({ path: privateKeyPath, value: null }),
-        )
-    ]);
+    const privateKey = { path: privateKeyPath, value: await fs.readFile(privateKeyPath, { encoding: 'utf8' }).catch(() => null) }
+    const publicKey = { path: publicKeyPath, value: await fs.readFile(publicKeyPath, { encoding: 'utf8' }).catch(() => null) }
+
+    // const [privateKey, publicKey] = await Promise.all([
+    //     fs.readFile(privateKeyPath, { encoding: 'utf8' }).then(
+    //         (value) => ({ path: privateKeyPath, value }),
+    //         () => ({ path: privateKeyPath, value: null }),
+    //     ),
+    //     fs.readFile(publicKeyPath, { encoding: 'utf8' }).then(
+    //         (value) => ({ path: publicKeyPath, value }),
+    //         () => ({ path: publicKeyPath, value: null }),
+    //     )
+    // ]);
     return { privateKey, publicKey };
 }
 
 const readPassphraseFile = async (): Promise<PassphraseFile> => {
-    const passphraseFile = await fs.readJSON(`${configPaths.ssh}/passphrases`) as PassphraseFile
+    await fs.ensureFile(`${configPaths.ssh}/passphrases`)
+    const passphraseFile = await fs.readJSON(`${configPaths.ssh}/passphrases`, { throws: false }) as PassphraseFile | undefined
     if (!passphraseFile || typeof passphraseFile !== 'object') {
         return new Map();
     }
@@ -252,36 +217,93 @@ const writePassphraseToFile = async (
     keyName: string,
     encryptedPassphrase: string,
 ): Promise<void> => {
-    const passphraseFile = await fs.readJSON(`${configPaths.ssh}/passphrases`) as PassphraseFile
+    const passphraseFile = await readPassphraseFile();
     if (passphraseFile) {
         passphraseFile.set(keyName, encryptedPassphrase);
     }
-    fs.outputJSON(`${configPaths.ssh}/passphrases`, passphraseFile)
+    fs.outputJSON(`${configPaths.ssh}/passphrases`, Object.fromEntries(passphraseFile))
+    Logger.info(`Passphrase saved for ${keyName} in ${configPaths.ssh}/passphrases`);
 }
 
 const encryptPassphrase = async (passphrase: string): Promise<string> => {
-    const config = await useConfig()
-    if (!config.secrets) {
-        checkConfig()
-        throw createError('Config secrets not created. Checking config.')
-    }
+    const { key, iv } = await getCipherKeyAndIV()
     const encrypt = createCipheriv(
         'aes-256-cbc',
-        Buffer.from(config.secrets.passphraseSecret.key, 'base64'),
-        Buffer.from(config.secrets.passphraseSecret.iv, 'base64'),
+        key,
+        iv
     );
     return encrypt.update(passphrase, 'utf8', 'hex') + encrypt.final('hex');
 }
 const decryptPassphrase = async (name: string): Promise<string> => {
-    const config = await useConfig()
-    if (!config.secrets) {
-        checkConfig()
-        throw createError('Config secrets not created. Checking config.')
-    }
+    const { key, iv } = await getCipherKeyAndIV()
     const decrypt = createDecipheriv(
         'aes-256-cbc',
-        Buffer.from(config.secrets.passphraseSecret.key, 'base64'),
-        Buffer.from(config.secrets.passphraseSecret.iv, 'base64'),
+        key,
+        iv,
     );
     return decrypt.update(name, 'hex', 'utf8') + decrypt.final('utf8');
+}
+
+
+
+const executeSSHCommand = async (
+    {
+        remoteHost,
+        command,
+        port,
+        username,
+        privateKey,
+        passphrase,
+        password
+    }: SSHCommandOptions
+): Promise<void> => {
+    const conn = new Client();
+    return new Promise<void>((resolve, reject) => {
+        conn.on('ready', () => {
+            Logger.info(`Connected to ${remoteHost}`);
+            conn.exec(command, (err, stream) => {
+                if (err) reject(err);
+                stream
+                    .on('close', () => {
+                        Logger.info('SSH command executed');
+                        conn.end();
+                        resolve();
+                    })
+                    .on('data', (data: string) => Logger.info('STDOUT: ' + data))
+                    .stderr.on('data', (data: string) => Logger.error('STDERR: ' + data));
+            });
+        })
+            .on('error', (err) => {
+                Logger.error(`Connection error: ${err}`);
+                reject(err);
+            })
+            .connect(
+                privateKey !== undefined ? {
+                    host: remoteHost,
+                    port: port || 22,
+                    username,
+                    privateKey: privateKey || undefined,
+                    passphrase: passphrase || undefined,
+                } : {
+                    host: remoteHost,
+                    port: port || 22,
+                    username,
+                    password: password
+                });
+    });
+}
+
+const getCipherKeyAndIV = async (): Promise<{ key: Buffer, iv: Buffer }> => {
+    const secrets = await getSecrets();
+    if (!secrets) {
+        await checkConfig();
+        throw createError({
+            statusCode: 500,
+            statusMessage: 'Config secrets not created. Checking config.'
+        });
+    }
+    return {
+        key: Buffer.from(secrets.passphraseSecret.key, 'base64'),
+        iv: Buffer.from(secrets.passphraseSecret.iv, 'base64')
+    };
 }

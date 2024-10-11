@@ -18,12 +18,13 @@ const dataStorage = useStorage('data')
 
 const DefaultWatchOptions: WatchConfigOptions<YachtConfig> = {
     cwd: nuxtConfig.yacht.configOptions.configPath,
-    // configFile: 'config.yml',
-    name: 'config.yml',
+    debounce: 1000,
+    configFile: 'config',
+    name: 'config',
     rcFile: false,
     dotenv: false,
-    defaults: {
-        servers: [], // Omit servers so there's no duplicate local value.
+    defaultConfig: {
+        servers: [],
         ...baseYachtConfig
     }
 }
@@ -49,7 +50,7 @@ const _config = watchConfig({
 
 export const configPaths = {
     secrets: join(nuxtConfig.yacht.configOptions.configPath, '.secrets.json'),
-    ssh: join(nuxtConfig.yacht.configOptions.configPath, '.ssh/'),
+    ssh: join(nuxtConfig.yacht.configOptions.configPath, '.ssh'),
     auth: join(nuxtConfig.yacht.configOptions.configPath, '.auth/'),
     backups: {
         config: join(nuxtConfig.yacht.configOptions.configPath, 'backups/config/'),
@@ -68,6 +69,9 @@ const useRawConfig = async () => {
 
 export const useConfig = async (): Promise<YachtConfig> => {
     const config = await useRawConfig()
+    // console.log(config.layers)
+    // console.log(config.meta)
+    // console.log(config.config)
     if (!config.config) {
         throw createError('no config found, creating a fresh config')
     }
@@ -107,7 +111,7 @@ export const checkConfig = async () => {
     if (!configExists) {
         Logger.warn(`No config exists at ${config.cwd}, creating default config.`, 'config - check')
         await updateConfig(defaultYachtConfig, config.cwd)
-        await getSecrets()
+        return config.config
     } else {
         try {
             // await configHooks.callHook('check-config:validate', config)

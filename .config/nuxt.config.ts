@@ -18,6 +18,7 @@ export default defineNuxtConfig({
   },
 
   vuetify: {
+    vuetifyOptions: '.config/vuetify.config.ts',
     moduleOptions: {
       ssrClientHints: {
         reloadOnFirstRequest: true,
@@ -33,6 +34,9 @@ export default defineNuxtConfig({
       openAPI: true,
       websocket: true,
     },
+    externals: {
+
+    },
     //@ts-expect-error
     openAPI: {
       meta: {
@@ -44,7 +48,7 @@ export default defineNuxtConfig({
   },
 
   vite: {
-    plugins: [],
+
   },
 
   compatibilityDate: '2024-10-03'

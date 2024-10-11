@@ -1,5 +1,5 @@
 <template>
-  <v-app-bar class="app-bar" height="60" elevation="8" scroll-behavior="hide" scroll-threshold="1" color="primary">
+  <v-app-bar class="app-bar" height="60" elevation="8" color="primary">
     <template #prepend>
       <!-- <v-app-bar-title>{{ clientConfig?.name || 'Yacht' }}</v-app-bar-title> -->
     </template>

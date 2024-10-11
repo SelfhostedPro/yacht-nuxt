@@ -186,6 +186,9 @@ importers:
       unenv:
         specifier: ^1.10.0
         version: 1.10.0
+      vite-plugin-commonjs:
+        specifier: ^0.10.3
+        version: 0.10.3
       vite-plugin-node-polyfills:
         specifier: ^0.21.0
         version: 0.21.0(rollup@4.24.0)(vite@5.4.8(@types/node@22.7.4)(terser@5.34.1))
@@ -2268,6 +2271,9 @@ packages:
     resolution: {integrity: sha512-Zf5H2Kxt2xjTvbJvP2ZWLEICxA6j+hAmMzIlypy4xcBg1vKVnx89Wy0GbS+kf5cwCVFFzdCFh2XSCFNULS6csw==}
     engines: {node: '>= 0.4'}
 
+  es-module-lexer@1.5.4:
+    resolution: {integrity: sha512-MVNK56NiMrOwitFB7cqDwq0CQutbw+0BvLshJSse0MUNU+y1FC3bUS/AQg7oUng+/wKrrki7JfmwtVHkVfPLlw==}
+
   esbuild@0.20.2:
     resolution: {integrity: sha512-WdOOppmUNU+IbZ0PaDiTst80zjnrOkyJNHoKupIcVyU8Lvla3Ugx94VzkQ32Ijqd7UhHJy75gNWDMUekcrSJ6g==}
     engines: {node: '>=12'}
@@ -4085,6 +4091,12 @@ packages:
         optional: true
       vue-tsc:
         optional: true
+
+  vite-plugin-commonjs@0.10.3:
+    resolution: {integrity: sha512-trtH4dfAqrbqwiUhSKcqrfjnlXnqLHdIbYuUy943y34JnDjIX8qlpExP0nFN+kE2s6/BS6r9d1cAHS0KtiF4yQ==}
+
+  vite-plugin-dynamic-import@1.6.0:
+    resolution: {integrity: sha512-TM0sz70wfzTIo9YCxVFwS8OA9lNREsh+0vMHGSkWDTZ7bgd1Yjs5RV8EgB634l/91IsXJReg0xtmuQqP0mf+rg==}
 
   vite-plugin-inspect@0.8.7:
     resolution: {integrity: sha512-/XXou3MVc13A5O9/2Nd6xczjrUwt7ZyI9h8pTnUMkr5SshLcb0PJUOVq2V+XVkdeU4njsqAtmK87THZuO2coGA==}
@@ -6505,6 +6517,8 @@ snapshots:
 
   es-errors@1.3.0: {}
 
+  es-module-lexer@1.5.4: {}
+
   esbuild@0.20.2:
     optionalDependencies:
       '@esbuild/aix-ppc64': 0.20.2
@@ -8661,6 +8675,19 @@ snapshots:
     optionalDependencies:
       typescript: 5.6.2
       vue-tsc: 2.1.6(typescript@5.6.2)
+
+  vite-plugin-commonjs@0.10.3:
+    dependencies:
+      acorn: 8.12.1
+      magic-string: 0.30.11
+      vite-plugin-dynamic-import: 1.6.0
+
+  vite-plugin-dynamic-import@1.6.0:
+    dependencies:
+      acorn: 8.12.1
+      es-module-lexer: 1.5.4
+      fast-glob: 3.3.2
+      magic-string: 0.30.11
 
   vite-plugin-inspect@0.8.7(@nuxt/kit@3.13.2(magicast@0.3.5)(rollup@4.24.0))(rollup@4.24.0)(vite@5.4.8(@types/node@22.7.4)(terser@5.34.1)):
     dependencies:
