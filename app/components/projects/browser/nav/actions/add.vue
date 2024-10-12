@@ -50,7 +50,7 @@
 </template>
 <script setup lang="ts">
 import { string, z } from "zod";
-import type { Field } from "~/types/forms";
+import type { Field } from "~~/types/forms";
 const loading = ref(false);
 const menuOpen = ref(false);
 const emit = defineEmits(["added"]);

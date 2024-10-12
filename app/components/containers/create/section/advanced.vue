@@ -83,8 +83,8 @@
 
 <script lang="ts" setup>
 
-import type { CreateContainerForm } from '~/types/containers/create';
-import { type Field } from '~/types/forms'
+import type { CreateContainerForm } from '~~/types/containers/create';
+import { type Field } from '~~/types/forms'
 const panelsOpen = ref([])
 // const { xs } = useDisplay()
 
@@ -198,4 +198,4 @@ const memoryLimitsField: Field = {
 }
 </script>
 
-<style></style>~/shared/containers/create~/shared/forms
+<style></style>

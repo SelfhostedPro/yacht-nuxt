@@ -1,8 +1,8 @@
-import { type CreateContainerForm } from "~/types/containers/create"
-import { type ServerDict } from "~/types/servers"
+import { type CreateContainerForm } from "~~/types/containers/create"
+import { type ServerDict } from "~~/types/servers"
 import { normalizeContainerInspectInfo, normalizeCreate } from "./formatter"
 import type Dockerode from "dockerode"
-import type { ImagePullProgress } from "~/types/images"
+import type { ImagePullProgress } from "~~/types/images"
 
 // Service Dependency Imports
 import { getContainers } from './info'
@@ -11,7 +11,7 @@ import { processImageProgress } from "../resources/info"
 
 
 export const createContainer = async (form: CreateContainerForm) => {
-    const server: Dockerode | null = await useServers().then((servers: ServerDict) => servers[form.server])
+    const server: Dockerode | null | undefined = await useServers().then((servers: ServerDict) => servers[form.server])
     if (!server) {
         throw createError(`Server ${form.server} not found!`)
     }
@@ -47,40 +47,43 @@ export const createContainer = async (form: CreateContainerForm) => {
 
 
 export const getContainerAction = async (server: string, id: string, action: string) => {
-    const _server: Dockerode | null = await useServers().then((servers: ServerDict) => servers[server])
+    const _server: Dockerode | null | undefined = await useServers().then((servers: ServerDict) => servers[server])
 
-    if (_server) {
-        const container = _server.getContainer(id)
-        const actions: { [action: string]: () => void } = {
-            start: async () => container.start(),
-            stop: async () => container.stop(),
-            pause: async () => container.pause(),
-            unpause: async () => container.unpause(),
-            kill: async () => container.kill(),
-            remove: async () => container.remove({ force: true }),
-            restart: async () => container.restart(),
-        }
-        if (action in actions) {
-            try {
-                await actions[action]()
-                if (action !== 'remove') {
-                    const _container = await normalizeContainerInspectInfo(await container.inspect())
-                    Logger(`${action} performed on ${_container.info.title || _container.name}: ${_container.shortId}`, 'container - action', { title: 'ContainerAction', level: 'info', message: `${action} performed on ${_container.info.title || _container.name}: ${_container.shortId}`, timeout: 2000 })
+    if (!_server) {
+        throw createError(new Error(`Server ${server} not found`))
+    }
 
-                } else Logger(`${action} performed on ${id}: ${container.id}`, 'services-containers', { title: 'ContainerAction', level: 'info', message: `${action} performed on ${id}: ${container.id}`, timeout: 2000 })
-                return await getContainers()
-            } catch (e: Error | any) {
-                if (e.statusCode && e.statusCode === 304) {
-                    Logger(`Container ${id} is already ${action}ed!`, 'containers - action', { message: `Container ${id} is already ${action}ed!`, level: 'info' })
-                } else {
-                    createError(e)
-                }
-                return await getContainers()
-            }
+    const container = _server.getContainer(id)
+    const actions = new Map([
+        ['start', () => container.start()],
+        ['stop', () => container.stop()],
+        ['pause', () => container.pause()],
+        ['unpause', () => container.unpause()],
+        ['kill', () => container.kill()],
+        ['remove', () => container.remove({ force: true })],
+        ['restart', () => container.restart()],
+    ])
+
+    const actionFn = actions.get(action)
+    if (!actionFn) {
+        throw createError(new Error(`Action ${action} not valid`))
+    }
+
+    try {
+        await actionFn()
+        const logMessage = action === 'remove'
+            ? `${action} performed on ${id}: ${container.id}`
+            : `${action} performed on ${(await container.inspect()).Name}: ${container.id.substring(0, 10)}`
+
+        Logger(logMessage, 'container - action', { title: 'ContainerAction', level: 'info', message: logMessage, timeout: 2000 })
+        return await getContainers()
+    } catch (e: any) {
+        if (e.statusCode === 304) {
+            Logger(`Container ${id} is already ${action}ed!`, 'containers - action', { message: `Container ${id} is already ${action}ed!`, level: 'info' })
         } else {
-            Logger(`Action ${action} not valid!`, 'ContainerActionError', { title: 'ContainerActionError', level: 'error', message: `Action ${action} not valid!` })
-            throw createError(`Action ${action} not valid!`)
+            throw createError(e)
         }
+        return await getContainers()
     }
 }
 

@@ -2,28 +2,21 @@
   <LazyLayoutsDefault :links="links">
     <template #appbar-logo>
       <ClientOnly>
-        <v-img
-          max-height="50"
-          aspect-ratio="4/3"
-          class="d-flex align-center mx-auto"
-          src="/icons/yacht/mini.svg"
-          style="filter: brightness(5)"
-        />
+        <!-- <v-img aspect-ratio="16/9" max-height="100" height="40" class="block w-full my-3 px-1"
+          src="/icons/yacht/text.svg" style="filter: brightness(5)" /> -->
+        <v-app-bar-title class="text-center">{{ name }}</v-app-bar-title>
       </ClientOnly>
     </template>
     <template #sidebar-logo>
       <ClientOnly>
-        <v-img
-          aspect-ratio="16/9"
-          max-height="100"
-          height="40"
-          class="block w-full my-3 px-1"
-          src="/icons/yacht/text.svg"
-        />
+        <v-img max-height="100" aspect-ratio="4/3" class="d-flex align-center mx-auto my-3" src="/icons/yacht/mini.svg"
+          style="filter: brightness(5)" />
+        <!-- <v-img aspect-ratio="16/9" max-height="100" height="40" class="block w-full my-3 px-1"
+          src="/icons/yacht/text.svg" style="filter: brightness(5)" /> -->
       </ClientOnly>
     </template>
     <template #appbar-append>
-      <v-btn
+      <!-- <v-btn
         variant="elevated"
         color="surface"
         @click.stop="
@@ -37,7 +30,7 @@
         "
       >
         notify
-      </v-btn>
+      </v-btn> -->
     </template>
     <slot />
     <SonnerClient />
@@ -46,7 +39,11 @@
 
 <script lang="ts" setup>
 import { ClientOnly } from "#components";
-import SonnerClient from "~/modules/notifications/runtime/components/sonner.client.vue";
+import SonnerClient from "~~/modules/notifications/runtime/components/sonner.client.vue";
+const name = computed(() => {
+  return useRoute().meta.name || "Yacht";
+})
+
 // const RawProgress = markRaw(NotificationsLVProgress);
 // const testProgressNotification: ProgressItems = {
 //   c2964e85ea54: {
@@ -138,10 +135,10 @@ const links = [
       },
     ],
   },
-  // {
-  //   to: "/settings/general",
-  //   icon: "mdi-cog",
-  //   text: "Settings"
-  // }
+  {
+    to: "/settings",
+    icon: "mdi-cog",
+    text: "Settings"
+  }
 ];
 </script>

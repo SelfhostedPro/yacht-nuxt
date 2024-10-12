@@ -1,7 +1,7 @@
 // Import necessary modules and types
 import { defineStore } from 'pinia';
 import type { Dree } from 'dree';
-import type { FileInfo } from '~/types/files';
+import type { FileInfo } from '~~/types/files';
 import { join } from 'path';
 
 // Define the store for managing projects

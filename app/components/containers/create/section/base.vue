@@ -14,7 +14,7 @@
 </template>
 
 <script lang="ts" setup>
-import { type Field } from '~/types/forms'
+import { type Field } from '~~/types/forms'
 
 const containerStore = useContainersStore()
 const { servers } = storeToRefs(containerStore)

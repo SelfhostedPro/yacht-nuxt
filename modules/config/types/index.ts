@@ -3,7 +3,7 @@ import { ServerSettingsSchema } from './server'
 import { ThemeSettingsSchema } from './theme'
 import { TemplateVariablesSchema } from './templates'
 import { SecretsSchema } from './secrets'
-
+import { ProxySchema } from './proxy'
 export const YachtConfigSchema = z.object({
     name: z.string().optional(),
     servers: z.array(ServerSettingsSchema),
@@ -14,6 +14,7 @@ export const YachtConfigSchema = z.object({
     sessionTimeout: z.number().optional(),
     secrets: z.optional(SecretsSchema),
     extends: z.string().optional(),
+    proxy: ProxySchema.optional(),
 })
 
 export type YachtConfig = z.infer<typeof YachtConfigSchema>

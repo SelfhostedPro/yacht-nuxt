@@ -42,7 +42,7 @@
         <slot name="heading" :selectedItems="selectedItems" :server="server" />
         <v-data-iterator
           v-model:model-value="selectedItems"
-          v-if="resource[server].length > 0"
+          v-if="resource[server] && resource[server].length > 0"
           :items="resource[server] as readonly any[]"
           :search="search"
           :item-value="
@@ -131,7 +131,7 @@ import type {
   ServerImages,
   ServerNetworks,
   ServerVolumes,
-} from "~/types/servers";
+} from "~~/types/servers";
 const selectedItems = ref<string[]>([]);
 
 interface Props {

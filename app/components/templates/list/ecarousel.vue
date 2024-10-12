@@ -4,7 +4,7 @@
       <div class="embla__container">
         <div
           v-for="featuredApp in template.featured"
-          :key="template.templates[featuredApp].title"
+          :key="template.templates[featuredApp]?.title"
           class="embla__slide embla__class-names rounded pa-0 my-0 mx-5"
         >
           <!-- @click="toggle"
@@ -17,15 +17,15 @@
             color="surface"
             height="50vh"
             :src="
-              template.templates[featuredApp].featured_image ||
-              template.templates[featuredApp].logo
+              template.templates[featuredApp]?.featured_image ||
+              template.templates[featuredApp]?.logo
             "
           >
             <div class="featured-card mx-n1">
               <div class="d-flex align-center mt-3 justify-center">
                 <v-btn
                   class="mr-auto"
-                  @click="$emit('createApp', template.templates[featuredApp])"
+                  @click="$emit('createApp', template.templates[featuredApp]!)"
                   icon
                   variant="plain"
                 >
@@ -39,14 +39,14 @@
                   "
                   class="text-high-emphasis"
                   >{{
-                    template.templates[featuredApp].title ||
-                    template.templates[featuredApp].name
+                    template.templates[featuredApp]?.title ||
+                    template.templates[featuredApp]?.name
                   }}</v-card-title
                 >
               </div>
               <!-- isSelected &&  -->
               <v-card-text
-                v-if="template.templates[featuredApp].description"
+                v-if="template.templates[featuredApp]?.description"
                 style="height: 60px"
                 class="text-high-emphasis overflow-auto pb-2"
                 >{{ template.templates[featuredApp].description }}</v-card-text
@@ -64,7 +64,7 @@
 <script setup lang="ts">
 // import emblaCarouselVue from "embla-carousel-vue";
 // import Autoplay from "embla-carousel-autoplay";
-import type { YachtTemplate } from "~/types/templates/yacht";
+import type { YachtTemplate } from "~~/types/templates/yacht";
 
 const currentApp = ref<YachtTemplate["templates"][0]>();
 interface Emits {

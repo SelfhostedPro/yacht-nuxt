@@ -1,6 +1,6 @@
 import { FetchError } from 'ofetch'
-import type { CreateContainerForm } from '~/types/containers/create'
-import type { Container } from '~/types/containers/yachtContainers'
+import type { CreateContainerForm } from '~~/types/containers/create'
+import type { Container } from '~~/types/containers/yachtContainers'
 import type { Notification } from '#imports'
 interface ErrorContext {
     container?: Container,
@@ -32,14 +32,14 @@ const errorPatterns: { [key: number]: { patterns: Pattern[] } } = {
 
 export const handleDockerErrors = (e: FetchError, context?: ErrorContext): Notification => {
     if (e.statusCode && errorPatterns.hasOwnProperty(e.statusCode)) {
-        for (const _pattern of errorPatterns[e.statusCode].patterns) {
+        for (const _pattern of errorPatterns[e.statusCode]!.patterns) {
             if (!e.message.match(_pattern.pattern)) continue
             else {
                 const { pattern, key, message, title, } = _pattern
                 const insert = e.message.match(pattern)
                 console.log('matches', insert)
                 if (insert !== null) {
-                    const returnMessage = message(insert[key])
+                    const returnMessage = message(insert[key]!)
                     return { title, message: returnMessage, level: 'error' }
                 } else return { title, message: e.message, level: 'error' }
             }

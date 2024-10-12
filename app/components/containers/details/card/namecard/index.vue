@@ -93,7 +93,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { Container } from "~/types/containers/yachtContainers";
+import type { Container } from "~~/types/containers/yachtContainers";
 const { smAndDown } = useDisplay();
 const logsOpen = ref(false);
 const terminalOpen = ref(false);

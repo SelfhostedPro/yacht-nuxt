@@ -3,7 +3,7 @@
     v-if="activeFile && Object.keys(specialFileTypes).includes(activeFile.name)"
   >
     <v-btn
-      v-for="action in specialFiles[specialFileTypes[activeFile.name]].actions"
+      v-for="action in specialFiles[specialFileTypes[activeFile.name]!]!.actions"
       :key="action.title"
       @click="performAction(action.title)"
       :color="action.color"

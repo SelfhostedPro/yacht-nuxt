@@ -20,9 +20,9 @@
   </v-slide-y-transition>
 </template>
 <script lang="ts" setup>
-import { type Field } from '~/types/forms'
+import { type Field } from '~~/types/forms'
 import { useDisplay } from "vuetify";
-import type { CreateContainerForm } from '~/types/containers/create';
+import type { CreateContainerForm } from '~~/types/containers/create';
 import type { VNodeRef } from 'vue';
 const { xs } = useDisplay();
 const arrayFields = defineModel<Field[][]>("arrayFields", { required: true });
@@ -43,4 +43,4 @@ const delRow = (i: number) => {
 
 </script>
 
-<style></style>~/shared/forms~/shared/containers/create
+<style></style>

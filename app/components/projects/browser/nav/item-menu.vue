@@ -15,7 +15,7 @@
 </template>
 <script setup lang="ts">
 import type { Dree } from "dree";
-import type { FileInfo } from "~/types/files";
+import type { FileInfo } from "~~/types/files";
 import { join } from "path";
 interface Props {
   item: Dree;
@@ -46,7 +46,7 @@ const changeFolder = async (item: Dree) => {
       currentPath.value
     }`
   );
-  projectsStore.changeDirectory(join(path, item.relativePath));
+  await projectsStore.changeDirectory(join(path, item.relativePath));
   emit("closeMenu");
   // return await navigateTo({
   //   path: "/projects",

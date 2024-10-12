@@ -32,6 +32,11 @@ export const useProgressStore = defineStore('lv-progressStore', {
                     await this.notificationProgress(JSON.parse(ev.data) as ProgressUpdate | ProgressTitleUpdate);
                     console.log(JSON.parse(ev.data))
                 }
+                eventSource.value.onerror = (ev) => {
+                    console.log('error', ev)
+                    this.progress = {}
+                    close()
+                }
             }
 
             return { close, data, error, eventSource, open, status, event }
@@ -47,11 +52,11 @@ export const useProgressStore = defineStore('lv-progressStore', {
             }
             if (("item" in progress)) {
                 // If item, just update the item value.
-                this.progress[progress.id].items[progress.item.id] = progress.item
-                if (progress.item.status === 'done') delete this.progress[progress.id].items[progress.item.id]
+                this.progress[progress.id]!.items[progress.item.id] = progress.item
+                if (progress.item.status === 'done') delete this.progress[progress.id]!.items[progress.item.id]
             } else {
                 // If no item, update the title
-                this.progress[progress.id].title = progress.title
+                this.progress[progress.id]!.title = progress.title
                 await useProgress(progress, NotificationsProgress)
             }
             // const formattedCurrent = formatBytes(progressDetail.current);

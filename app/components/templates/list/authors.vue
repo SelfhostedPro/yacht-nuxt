@@ -15,7 +15,7 @@
 
 <script lang="ts" setup>
 import { mergeProps } from 'vue';
-import type { YachtTemplate } from '~/types/templates/yacht';
+import type { YachtTemplate } from '~~/types/templates/yacht';
 
 interface Props {
   authors: YachtTemplate['authors']

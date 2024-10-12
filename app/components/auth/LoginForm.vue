@@ -22,8 +22,8 @@
 </template>
 
 <script setup lang="ts">
-// import { LoginUserFormSchema } from "~/types/auth";
-// import type { User } from "~/types/users";
+// import { LoginUserFormSchema } from "~~/types/auth";
+// import type { User } from "~~/types/users";
 
 const { handleSubmit, handleReset } = useForm({
   initialValues: {

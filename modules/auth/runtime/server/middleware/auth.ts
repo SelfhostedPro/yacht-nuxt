@@ -1,9 +1,9 @@
 // Library provided middleware: https://lucia-auth.com/getting-started/nuxt
 import { verifyRequestOrigin } from "lucia";
 import type { Session, User } from "lucia";
-import type { YachtConfig } from "~/modules/config/types"
+import type { YachtConfig } from "~~/modules/config/types"
 import { useLucia } from '../utils/auth';
-import { useConfig } from '~/modules/config/runtime/server/utils/config';
+import { useConfig } from '~~/modules/config/runtime/server/utils/config';
 import { getHeader, getCookie, createError, appendResponseHeader } from 'h3'
 
 const publicRoutes = [

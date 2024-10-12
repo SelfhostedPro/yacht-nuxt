@@ -26,7 +26,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Container } from '~/types/containers/yachtContainers';
+import type { Container } from '~~/types/containers/yachtContainers';
 
 interface Props {
 	container: Container

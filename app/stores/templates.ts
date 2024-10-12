@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import type { YachtTemplate } from '~/types/templates/yacht'
+import type { YachtTemplate } from '~~/types/templates/yacht'
 
 export const useTemplatesStore = defineStore({
   id: 'templatesStore',
