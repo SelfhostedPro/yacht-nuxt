@@ -28,6 +28,7 @@
     "better-sqlite3": "^9.5.0",
     "c12": "^1.10.0",
     "confbox": "^0.1.7",
+    "consola": "^3.2.3",
     "date-fns": "^3.6.0",
     "defu": "^6.1.4",
     "dockerode": "^4.0.2",
@@ -57,6 +58,7 @@
   "devDependencies": {
     "@pinia/nuxt": "^0.5.1",
     "@types/better-sqlite3": "^7.6.9",
+    "@types/docker-modem": "^3.0.6",
     "@types/dockerode": "^3.3.28",
     "@types/fs-extra": "^11.0.4",
     "@types/js-yaml": "^4.0.9",

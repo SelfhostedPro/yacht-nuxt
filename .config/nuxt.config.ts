@@ -34,9 +34,6 @@ export default defineNuxtConfig({
       openAPI: true,
       websocket: true,
     },
-    externals: {
-
-    },
     //@ts-expect-error
     openAPI: {
       meta: {

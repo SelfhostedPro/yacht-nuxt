@@ -32,6 +32,11 @@ export const useProgressStore = defineStore('lv-progressStore', {
                     await this.notificationProgress(JSON.parse(ev.data) as ProgressUpdate | ProgressTitleUpdate);
                     console.log(JSON.parse(ev.data))
                 }
+                eventSource.value.onerror = (ev) => {
+                    console.log('error', ev)
+                    this.progress = {}
+                    close()
+                }
             }
 
             return { close, data, error, eventSource, open, status, event }

@@ -1,26 +1,32 @@
-import { type LogType, createConsola, type ConsolaOptions } from 'consola'
+import { type LogType, createConsola, type ConsolaInstance, type ConsolaOptions } from 'consola'
+// import {   } from 'consola'
 import { defu } from 'defu'
 import type { Notification } from '~~/modules/notifications/types/notifications'
 
+// Create a single Consola instance
+const consola = createConsola({ defaults: { tag: 'core' }, formatOptions: { colors: true, compact: false } })
+
 const logFunction = (message: any, tag?: string, notification?: Notification, options?: ConsolaOptions) => {
-  createConsola(defu({ defaults: { tag: tag }, ...options }, { defaults: { tag: 'core' } })).log(message)
-  if (notification) sseHooks.callHook("sse:notification", notification as Notification)
+  const logger = tag ? consola.withTag(tag) : consola
+  logger.log(message)
+  if (notification) sseHooks.callHook("sse:notification", notification)
 }
 
-const createLogFunciton = (level: LogType) => {
-  return (message: any, tag?: string, notification?: Notification, options?: ConsolaOptions) => {
-    createConsola(defu({ defaults: { tag: tag }, ...options }, { defaults: { tag: 'core' } }))[level](message)
-    if (notification) sseHooks.callHook("sse:notification", notification as Notification)
+const createLogFunction = (level: LogType) => {
+  return (message: any, tag?: string, notification?: Notification) => {
+    const logger = tag ? consola.withTag(tag) : consola
+    logger[level](message)
+    if (notification) sseHooks.callHook("sse:notification", notification)
   }
 }
 
 export const Logger = Object.assign(logFunction, {
-  info: createLogFunciton('info'),
-  debug: createLogFunciton('debug'),
-  error: createLogFunciton('error'),
-  warn: createLogFunciton('warn'),
-  fatal: createLogFunciton('fatal'),
-  sucess: createLogFunciton('success'),
-  fail: createLogFunciton('success'),
-  ready: createLogFunciton('ready'),
+  info: createLogFunction('info'),
+  debug: createLogFunction('debug'),
+  error: createLogFunction('error'),
+  warn: createLogFunction('warn'),
+  fatal: createLogFunction('fatal'),
+  success: createLogFunction('success'),
+  fail: createLogFunction('fail'), // Fixed typo: 'success' to 'fail'
+  ready: createLogFunction('ready'),
 })

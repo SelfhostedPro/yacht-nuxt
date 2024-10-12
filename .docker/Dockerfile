@@ -36,7 +36,7 @@ LABEL build_version="Yacht version:- ${VERSION} Build-date:- ${BUILD_DATE}"
 LABEL maintainer="SelfhostedPro"
 
 WORKDIR /app
-COPY ./docker/root /
+COPY ./.docker/root /
 RUN apk add --no-cache \
     nodejs 
 COPY --from=prerelease /app/.output /app/
