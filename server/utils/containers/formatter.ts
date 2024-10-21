@@ -335,7 +335,7 @@ const replaceVariables = (obj: Record<string, any>, oldValue: string, newValue: 
 
 
 export interface FixedContainerStats extends DockerodeContainerStats {
-    name?: string;
+    name: string;
 }
 
 export function formatStats(stats: FixedContainerStats): string {

@@ -1,7 +1,7 @@
 <template>
   <v-btn-group class="d-flex flex-row align-center justify-space-between" divided>
     <v-btn v-for="action in filteredActions" :key="action.name" v-bind="getButtonProps(action)"
-      @click.prevent="handleAction(action.name)" />
+      @click.stop="handleAction(action.name)" />
   </v-btn-group>
   <v-dialog v-model="removeDialog">
     <v-card width="40vw" class="mx-auto">

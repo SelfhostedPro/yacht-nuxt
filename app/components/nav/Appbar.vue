@@ -33,15 +33,11 @@
       </div>
     </v-list>
   </v-navigation-drawer>
-  <v-dialog v-model="settingsDialog" transition="dialog-bottom-transition" min-width="70%" min-height="60%" width="auto" :scrim="false">
-    <v-card>
-      <v-toolbar color="primary" title="Settings" class="text-capitalize">
-        <template #append>
-          <v-btn icon="mdi-close" @click="settingsDialog = !settingsDialog"/>
-        </template>
-      </v-toolbar>
-        <settings />
-    </v-card>
+  <v-dialog v-model="settingsDialog" transition="dialog-bottom-transition" class="w-80 h-80" min-width="80%"
+    min-height="80%" :scrim="false">
+    <!-- <v-card min-width="80vw" min-height="80vh" class="pa-0"> -->
+    <settings @close="settingsDialog = !settingsDialog" />
+    <!-- </v-card> -->
   </v-dialog>
 </template>
 

@@ -1,5 +1,6 @@
 // Import necessary types and dependencies
-import type { NewServerOptions, ServerDict } from "~~/types/servers"
+import type { NewServerOptions } from "~~/types/forms/server"
+import type { ServerDict } from "~~/types/servers"
 import Docker from 'dockerode';
 import { randomBytes } from 'crypto';
 

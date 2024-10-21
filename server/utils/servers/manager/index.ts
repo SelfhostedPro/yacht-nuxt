@@ -21,18 +21,18 @@ export const removePublicKeyFromRemoteServer = async (
     Logger.error(`SSH key ${keyName} does not exist`);
     return;
   }
-  
+
   // Get the decrypted private key
   const decryptedPrivateKey = await KeyManager.getPrivateKey(keyName);
   if (!decryptedPrivateKey) {
     throw new Error('Failed to decrypt private key');
   }
-  
+
   // Execute command to remove the public key from the remote server
   Logger.info(`Removing SSH key from ${remoteHost}`);
   await SSHOperations.executeCommand({
     remoteHost,
-    command: `sed -i '/${publicKey.value}/d' ~/.ssh/authorized_keys`,
+    command: `sed -i '/${encodeURIComponent(publicKey.value)}/d' ~/.ssh/authorized_keys`,
     port: Number(port),
     username,
     privateKey: decryptedPrivateKey.key,
@@ -53,7 +53,7 @@ export const copyPublicKeyToRemoteServer = async (
   if (!publicKey.value) {
     throw new Error('SSH key does not exist');
   }
-  
+
   // Execute command to copy the public key to the remote server
   Logger.info(`Copying SSH key to ${remoteHost}`);
   await SSHOperations.executeCommand({

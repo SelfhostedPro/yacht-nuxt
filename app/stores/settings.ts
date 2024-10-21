@@ -3,7 +3,7 @@ import { defineStore } from 'pinia'
 import { RegisterUserFormSchema, ThemeSettingsSchema, type YachtConfig } from '#imports'
 import { z } from 'zod'
 import type { DBUser } from '~~/modules/db/types/user'
-import type { NewServer } from '~~/types/servers'
+import type { NewServer } from '~~/types/forms/server'
 type ThemeSettings = z.infer<typeof ThemeSettingsSchema>
 type RegisterUserForm = z.infer<typeof RegisterUserFormSchema>
 

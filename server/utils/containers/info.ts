@@ -18,7 +18,11 @@ export const getContainers = async () => {
     )
     // Wait for containers to resolve
     await Promise.all(serverPromises)
-    return serversReturn
+    
+    // Sort servers alphabetically
+    return Object.fromEntries(
+        Object.entries(serversReturn).sort(([a], [b]) => a.localeCompare(b))
+    ) as ServerContainers
 }
 
 export const getContainerInfo = async (server: string, id: string) => {
@@ -26,3 +30,4 @@ export const getContainerInfo = async (server: string, id: string) => {
     if (!_server) throw createError(new Error(`Server ${server} not found!`))
     return normalizeContainerInspectInfo(await _server.getContainer(id).inspect())
 }
+
