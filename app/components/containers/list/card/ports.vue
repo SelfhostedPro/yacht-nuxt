@@ -55,7 +55,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { ContainerPort, Container } from '~/types/containers/yachtContainers';
+import type { ContainerPort, Container } from '~~/types/containers/yachtContainers';
 defineProps<{ ports: ContainerPort[], labels: Container['labels'] }>()
 
 const disableIpv6 = (ports: ContainerPort[]) => {

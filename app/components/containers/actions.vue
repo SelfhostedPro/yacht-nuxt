@@ -1,58 +1,34 @@
 <template>
-  <v-btn-group
-    class="d-flex flex-row align-center justify-space-between"
-    divided
-  >
-    <v-btn
-      v-for="action in actions.filter(
-        (_action) =>
-          _action.depends.includes(container.status) ||
-          _action.depends.includes('all')
-      )"
-      class="flex-grow-1 py-2"
-      :key="action.name"
-      :disabled="loading || false"
-      :color="action.color"
-      @click.prevent="handleAction(action.name)"
-      :icon="action.icon"
-    />
+  <v-btn-group class="d-flex flex-row align-center justify-space-between" divided>
+    <v-btn v-for="action in filteredActions" :key="action.name" v-bind="getButtonProps(action)"
+      @click.stop="handleAction(action.name)" />
   </v-btn-group>
   <v-dialog v-model="removeDialog">
     <v-card width="40vw" class="mx-auto">
       <v-row no-gutters>
         <v-col>
           <v-card-title class="text-no-wrap mt-3 ml-5">
-            remove <b class="text-error">{{ container.name }}</b
-            >?
+            remove <b class="text-error">{{ container.name }}</b>?
           </v-card-title>
         </v-col>
         <v-col cols="1">
-          <v-btn
-            :rounded="0"
-            variant="plain"
-            icon
-            @click="removeDialog = false"
-          >
+          <v-btn :rounded="0" variant="plain" icon @click="removeDialog = false">
             <v-icon icon="mdi-window-close" />
           </v-btn>
         </v-col>
       </v-row>
       <v-card-text>
         Are you sure you want to permanently remove
-        <b class="text-error">{{ container.name }}</b
-        >?<br />
+        <b class="text-error">{{ container.name }}</b>?<br />
         All non-peristent data will be unrecoverable.
       </v-card-text>
       <v-card-actions>
         <v-spacer />
         <v-btn @click.prevent="removeDialog = false"> Cancel </v-btn>
-        <v-btn
-          color="error"
-          @click.prevent="
-            handleAction('remove');
-            removeDialog = false;
-          "
-        >
+        <v-btn color="error" @click.prevent="
+          handleAction('remove');
+        removeDialog = false;
+        ">
           Remove
         </v-btn>
       </v-card-actions>
@@ -61,7 +37,10 @@
 </template>
 
 <script lang="ts" setup>
-import type { Container } from "~/types/containers/yachtContainers";
+import { computed } from 'vue';
+import type { Container } from "~~/types/containers/yachtContainers";
+import { useContainersStore } from '~/stores/containers'; // Adjust the import path as needed
+
 const containers = useContainersStore();
 interface Props {
   container: Container;
@@ -70,24 +49,38 @@ interface Props {
   size?: string;
   loading?: boolean;
 }
+interface Action {
+  name: string,
+  icon: string,
+  color: string,
+  depends: string[],
+}
 const props = defineProps<Props>();
 const emit = defineEmits(["startLoading", "stopLoading"]);
-const removeDialog: Ref<boolean> = ref(false);
+const removeDialog = ref(false);
+
+const filteredActions = computed(() =>
+  actions.filter(action =>
+    action.depends.includes(props.container.status) || action.depends.includes('all')
+  )
+);
+
+const getButtonProps = (action: Action) => ({
+  class: 'flex-grow-1 py-2',
+  disabled: props.loading || false,
+  color: action.color,
+  icon: action.icon,
+});
 
 const handleAction = async (action: string) => {
-  if (action === "remove" && removeDialog.value === false) {
+  if (action === "remove" && !removeDialog.value) {
     removeDialog.value = true;
     return;
-  } else {
-    emit("startLoading");
-    await containers.fetchContainerAction(
-      props.server,
-      props.container.name,
-      action
-    );
-    emit("stopLoading");
-    return;
   }
+
+  emit("startLoading");
+  await containers.fetchContainerAction(props.server, props.container.name, action);
+  emit("stopLoading");
 };
 
 const actions = [

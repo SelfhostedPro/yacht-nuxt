@@ -59,7 +59,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { YachtTemplate } from '~/types/templates/yacht';
+import type { YachtTemplate } from '~~/types/templates/yacht';
 interface Emits {
   (e: 'createApp', app: YachtTemplate['templates'][0]): void
   (e: 'openInfo', app: YachtTemplate['templates'][0]): void

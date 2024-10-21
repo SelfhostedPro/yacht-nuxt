@@ -1,5 +1,5 @@
 import { z } from 'zod'
-
+import { Buffer } from 'node:buffer'
 const ServerSSHKeySchema = z.object({
     pem: z.union([z.string(), z.instanceof(Buffer)]).optional(),
     passphrase: z.string().optional()
@@ -14,7 +14,7 @@ const ServerConnectionSchema = z.object({
     ca: z.union([z.string(), z.array(z.string()), z.instanceof(Buffer), z.array(z.instanceof(Buffer))]).optional(),
     cert: z.union([z.string(), z.array(z.string()), z.instanceof(Buffer), z.array(z.instanceof(Buffer))]).optional(),
     key: z.union([z.string(), z.array(z.string()), z.instanceof(Buffer), z.array(z.instanceof(Buffer)), z.array(ServerSSHKeySchema)]).optional(),
-    protocol: z.union([z.literal('https'), z.literal('http'), z.literal('ssh')]).optional(),
+    protocol: z.union([z.literal('https'), z.literal('http'), z.literal('ssh'), z.literal('local')]).optional(),
     timeout: z.number().optional(),
     version: z.string().optional(),
     sshAuthAgent: z.string().optional(),

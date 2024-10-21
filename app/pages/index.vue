@@ -7,6 +7,7 @@
       <pre v-if="messages.length > 0" v-for="message in messages">{{ message }}</pre>
       <pre v-else>no messages yet</pre>
     </v-card-text> -->
+    <Dashboard />
   </v-card>
 </template>
 

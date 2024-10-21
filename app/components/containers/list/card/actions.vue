@@ -12,7 +12,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { Container } from "~/types/containers/yachtContainers";
+import type { Container } from "~~/types/containers/yachtContainers";
 defineProps<{ container: Container; server: string; loading?: boolean }>();
 const emit = defineEmits(["startLoading", "stopLoading"]);
 </script>

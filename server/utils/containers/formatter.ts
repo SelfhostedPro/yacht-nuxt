@@ -1,10 +1,10 @@
-import type { Container, ContainerMount, ContainerPort, ContainerStat } from "~/types/containers/yachtContainers";
-import type { FixedContainerInfo, FixedContainerInspectInfo } from "~/types/containers/fixedDockerode";
-import type { Port, ContainerInspectInfo, ContainerInfo } from "~/types/containers/dockerode"
+import type { Container, ContainerMount, ContainerPort, ContainerStat } from "~~/types/containers/yachtContainers";
+import type { FixedContainerInfo, FixedContainerInspectInfo } from "~~/types/containers/fixedDockerode";
+import type { Port, ContainerInspectInfo, ContainerInfo } from "~~/types/containers/dockerode"
 import { format, parseISO } from 'date-fns';
-import { type CreateContainerForm } from "~/types/containers/create";
+import { type CreateContainerForm } from "~~/types/containers/create";
 import type { ContainerCreateOptions, ContainerStats as DockerodeContainerStats } from "dockerode";
-import { useConfig } from "~/modules/config/runtime/server/utils/config";
+import { useConfig } from "~~/modules/config/runtime/server/utils/config";
 
 /**
  * Checks to see if the icon url is valid and loads.
@@ -95,7 +95,7 @@ const formatInfoPorts = (data: Port[]): ContainerPort[] => {
  */
 const splitPort = (port: string) => {
     const [portNumber, type] = port.split('/');
-    return { containerPort: parseInt(portNumber), type };
+    return { containerPort: parseInt(portNumber!), type };
 }
 /**
  * Transform ports data from info to ContainerPort type.
@@ -107,8 +107,8 @@ const formatInspectPorts = (data: ContainerInspectInfo): ContainerPort[] => {
     Object.entries(NetworkSettings.Ports).forEach(([port, forwarded]) => {
         const formattedPort: ContainerPort = { ...splitPort(port) };
         if (forwarded) {
-            formattedPort.hostPort = parseInt(forwarded[0].HostPort);
-            formattedPort.hostIP = forwarded[0].HostIp;
+            formattedPort.hostPort = parseInt(forwarded[0]!.HostPort!);
+            formattedPort.hostIP = forwarded[0]!.HostIp!;
         }
         portList.add(formattedPort);
     });
@@ -129,13 +129,13 @@ const formatInspectPorts = (data: ContainerInspectInfo): ContainerPort[] => {
 export const normalizeContainers = async (
     data: ContainerInfo[],
 ): Promise<Container[]> => {
-    const promises = data.map(normalizeContainerInfo, this);
+    const promises = data.map(normalizeContainerInfo);
     return Promise.all(promises);
 }
 
 export const normalizeContainerInfo = async (data: FixedContainerInfo): Promise<Container> => {
     return {
-        name: data.Names[0].slice(1),
+        name: data?.Names[0]!.slice(1),
         id: data.Id,
         shortId: data['Id'].substring(0, 10),
         image: data['Image'],
@@ -335,7 +335,7 @@ const replaceVariables = (obj: Record<string, any>, oldValue: string, newValue: 
 
 
 export interface FixedContainerStats extends DockerodeContainerStats {
-    name?: string;
+    name: string;
 }
 
 export function formatStats(stats: FixedContainerStats): string {

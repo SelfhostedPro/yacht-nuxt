@@ -22,7 +22,7 @@
 </template>
 
 <script setup lang="ts">
-import type { FileInfo } from "~/types/files";
+import type { FileInfo } from "~~/types/files";
 const fullscreen = ref(false);
 const language = ref<string>("plaintext");
 
@@ -48,9 +48,9 @@ watch(fullscreen, (isFullscreen) => {
 
 watch(activeFile, (activeFile) => {
   language.value = activeFile?.extension
-    ? extensionMap[activeFile.extension]
+    ? extensionMap[activeFile.extension] || "plaintext"
     : activeFile?.name
-    ? fileMap[activeFile.name]
+    ? fileMap[activeFile.name] || "plaintext"
     : "plaintext";
   editableFile.value = Object.assign(activeFile);
 });

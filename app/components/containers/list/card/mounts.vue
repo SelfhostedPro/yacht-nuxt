@@ -39,6 +39,6 @@
 </template>
 
 <script lang="ts" setup>
-import type { ContainerMount } from '~/types/containers/yachtContainers';
+import type { ContainerMount } from '~~/types/containers/yachtContainers';
 defineProps<{ mounts: ContainerMount[] }>()
 </script>

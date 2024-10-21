@@ -17,14 +17,14 @@
     </v-timeline-item>
   </v-timeline>
   <div v-else>
-    <v-card-title>{{ steps[currentStep].title }}</v-card-title>
-    <v-card-text>{{ steps[currentStep].description }}</v-card-text>
+    <v-card-title>{{ steps[currentStep]!.title }}</v-card-title>
+    <v-card-text>{{ steps[currentStep]!.description }}</v-card-text>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { useDisplay } from 'vuetify';
-import type { CreateContainerForm } from '~/types/containers/create';
+import type { CreateContainerForm } from '~~/types/containers/create';
 const { smAndDown } = useDisplay()
 const errors = useFormErrors()
 const form = useFormValues<CreateContainerForm>()
@@ -70,4 +70,4 @@ watchEffect(() => {
 
 </script>
 
-<style></style>~/shared/containers/create
+<style></style>

@@ -3,9 +3,9 @@ import { dirname } from 'node:path'
 import { BetterSqlite3Adapter } from "@lucia-auth/adapter-sqlite";
 import { Kysely, sql, SqliteDialect } from "kysely";
 import sqlite from 'better-sqlite3';
-import { configPaths } from '~/modules/config/runtime/server/utils/config'
+import { configPaths } from '~~/modules/config/runtime/server/utils/config'
 import type { DBUser, DBUserPrivate } from '../../../types/user';
-// import type { DBUser } from '~/types/auth';
+// import type { DBUser } from '~~/types/auth';
 // import { useConfigDir } from './config';
 
 // Define Database

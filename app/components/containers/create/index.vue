@@ -35,8 +35,8 @@
 </template>
 
 <script lang="ts" setup>
-import { yachtV2TemplatePortSchema, type YachtV2TemplatePort, type YachtTemplate, yachtV1TemplatePortSchema, type YachtV1TemplatePort, type yachtV1TemplatePorts } from '~/types/templates/yacht';
-import { createContainerFormSchema, type CreateContainerForm } from "~/types/containers/create"
+import { yachtV2TemplatePortSchema, type YachtV2TemplatePort, type YachtTemplate, yachtV1TemplatePortSchema, type YachtV1TemplatePort, type yachtV1TemplatePorts } from '~~/types/templates/yacht';
+import { createContainerFormSchema, type CreateContainerForm } from "~~/types/containers/create"
 import type { PartialDeep } from 'type-fest';
 
 const dialog = defineModel<boolean>('open', { default: false })
@@ -116,7 +116,7 @@ const populateFromTemplate = async (template: YachtTemplate['templates'][0]): Pr
       }
     }) || [],
     command: template?.command ? [template.command] : [],
-    sysctls: template?.sysctls?.map((sysctl) => ({ name: Object.keys(sysctl)[0], value: Object.values(sysctl)[0] })) || [],
+    sysctls: template?.sysctls?.filter((sysctl) => sysctl.name! && sysctl.value! ).map((sysctl) => ({ name: sysctl.name!, value: sysctl.value! })) || [],
     devices: template?.devices || [],
     capabilities: {
       add: template?.cap_add || [],
@@ -155,4 +155,4 @@ onBeforeUnmount(() => {
   background-color: rgba(var(--v-theme-error), 0.8) !important;
   color: rgb(var(--v-theme-on-surface)) !important;
 }
-</style>~/shared/templates/yacht~/shared/containers/create
+</style>

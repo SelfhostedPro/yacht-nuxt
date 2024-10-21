@@ -42,8 +42,8 @@
 
 <script lang="ts" setup>
 import { YAMLException, load } from 'js-yaml'
-import { addTemplateSchema } from '~/types/templates/yacht'
-import type { Field } from '~/types/forms'
+import { addTemplateSchema } from '~~/types/templates/yacht'
+import type { Field } from '~~/types/forms'
 const templateValid = ref(false)
 const loading = ref(false)
 const menuOpen = ref(false)

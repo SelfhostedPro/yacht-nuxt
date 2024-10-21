@@ -1,9 +1,9 @@
-// import { RefisterUserFormSchema } from "~/types/auth";
-// import type { DBUser, RegisterUserForm } from "~/types/auth";
-import type { DBUser } from "~/modules/db/types/user";
-import type { RegisterUserForm } from "~/modules/auth/types/auth";
-import { RegisterUserFormSchema } from "~/modules/auth/types/auth";
-import { Logger } from "~/modules/logging/runtime/server/composables/logger";
+// import { RefisterUserFormSchema } from "~~/types/auth";
+// import type { DBUser, RegisterUserForm } from "~~/types/auth";
+import type { DBUser } from "~~/modules/db/types/user";
+import type { RegisterUserForm } from "~~/modules/auth/types/auth";
+import { RegisterUserFormSchema } from "~~/modules/auth/types/auth";
+import { Logger } from "~~/modules/logging/runtime/server/composables/logger";
 import { useLucia } from "../../utils/auth";
 import { getUsers, createUser } from '../../utils/users'
 // import { getUsers} from 
@@ -29,10 +29,6 @@ export default eventHandler(async (event) => {
             statusCode: 400
         });
     }
-    // if (existingUsers.length > 0) {
-    //     return
-    // }
-    Logger.info(`Creating new user ${username}`)
     const user = await createUser(username, password)
     const session = await lucia.createSession(user.id, {});
     appendHeader(event, "Set-Cookie", lucia.createSessionCookie(session.id).serialize());

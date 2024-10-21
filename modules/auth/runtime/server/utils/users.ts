@@ -1,10 +1,10 @@
 import { Argon2id } from "oslo/password";
-// import { userTable } from '~/server/utils/db/schema'
+// import { userTable } from '~~/server/utils/db/schema'
 import { generateId } from "lucia";
-// import type { DBUser } from "~/types/auth";
+// import type { DBUser } from "~~/types/auth";
 import { SqliteError } from "better-sqlite3";
-import type { DBUser } from "~/modules/db/types/user";
-import { useDB } from '~/modules/db/runtime/server/utils/db'
+import type { DBUser } from "~~/modules/db/types/user";
+import { useDB } from '~~/modules/db/runtime/server/utils/db'
 import { createError } from '#imports'
 
 export const getUsers = async () => {

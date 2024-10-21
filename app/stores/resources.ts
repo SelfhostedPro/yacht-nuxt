@@ -1,6 +1,6 @@
 import type { ImageInspectInfo, NetworkInspectInfo, VolumeInspectInfo } from 'dockerode'
 import { defineStore } from 'pinia'
-import type { ServerImages, ServerNetworks, ServerVolumes } from '~/types/servers'
+import type { ServerImages, ServerNetworks, ServerVolumes } from '~~/types/servers'
 
 export const useResourcesStore = defineStore({
   id: 'ResourcesStore',
@@ -16,6 +16,9 @@ export const useResourcesStore = defineStore({
     async stopLoading(name: string) { this.loading = this.loading.filter((item) => item !== name) },
     // Determine type and set resource accordingly
     async setResource(serverName: string, data: NetworkInspectInfo & ImageInspectInfo & VolumeInspectInfo, resource: 'networks' | 'images' | 'volumes') {
+      if (!this[resource][serverName]) {
+        this[resource][serverName] = [];
+      }
       const idx = this[resource][serverName].findIndex(
         (_resource) => _resource.hasOwnProperty('Id')
           ? (_resource as NetworkInspectInfo & ImageInspectInfo).Id === data.Id

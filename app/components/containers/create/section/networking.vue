@@ -20,8 +20,8 @@
 </template>
 
 <script lang="ts" setup>
-import { type Field } from '~/types/forms'
-import type { CreateContainerForm } from '~/types/containers/create';
+import { type Field } from '~~/types/forms'
+import type { CreateContainerForm } from '~~/types/containers/create';
 
 const { value: form } = useFormValues<CreateContainerForm>()
 
