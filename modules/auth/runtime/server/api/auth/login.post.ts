@@ -3,7 +3,7 @@ import { Argon2id } from "oslo/password";
 import { generateId } from "lucia";
 import { LoginUserFormSchema } from "../../../../types/auth";
 import { useLucia } from '../../utils/auth'
-import type { DBUserPrivate } from "~/modules/db/types/user";
+import type { DBUserPrivate } from "~~/modules/db/types/user";
 import type { LoginUserForm } from "../../../../types/auth";
 
 export default eventHandler(async (event) => {

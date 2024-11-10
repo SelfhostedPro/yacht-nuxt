@@ -35,8 +35,8 @@
 </template>
 
 <script lang="ts" setup>
-import { yachtV2TemplatePortSchema, type YachtV2TemplatePort, type YachtTemplate, yachtV1TemplatePortSchema, type YachtV1TemplatePort, type yachtV1TemplatePorts } from '~/types/templates/yacht';
-import { createContainerFormSchema, type CreateContainerForm } from "~/types/containers/create"
+import { yachtV2TemplatePortSchema, type YachtV2TemplatePort, type YachtTemplate, yachtV1TemplatePortSchema, type YachtV1TemplatePort, type yachtV1TemplatePorts } from '~~/types/templates/yacht';
+import { createContainerFormSchema, type CreateContainerForm } from "~~/types/containers/create"
 import type { PartialDeep } from 'type-fest';
 
 const dialog = defineModel<boolean>('open', { default: false })

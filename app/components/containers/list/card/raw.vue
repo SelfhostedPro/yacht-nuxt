@@ -60,7 +60,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { Container } from '~/types/containers/yachtContainers';
+import type { Container } from '~~/types/containers/yachtContainers';
 const open = ref([] as string[])
 defineProps<{ container: Container }>()
 </script>

@@ -131,7 +131,7 @@ import type {
   ServerImages,
   ServerNetworks,
   ServerVolumes,
-} from "~/types/servers";
+} from "~~/types/servers";
 const selectedItems = ref<string[]>([]);
 
 interface Props {

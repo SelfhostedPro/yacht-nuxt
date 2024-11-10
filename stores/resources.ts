@@ -1,6 +1,6 @@
 import type { ImageInspectInfo, NetworkInspectInfo, VolumeInspectInfo } from 'dockerode'
 import { defineStore } from 'pinia'
-import type { ServerImages, ServerNetworks, ServerVolumes } from '~/types/servers'
+import type { ServerImages, ServerNetworks, ServerVolumes } from '~~/types/servers'
 
 export const useResourcesStore = defineStore({
   id: 'ResourcesStore',

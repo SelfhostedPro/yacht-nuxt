@@ -46,7 +46,7 @@
 import type {
   Container,
   ContainerStat,
-} from "~/types/containers/yachtContainers";
+} from "~~/types/containers/yachtContainers";
 interface Props {
   container: Container;
   stats?: ContainerStat;

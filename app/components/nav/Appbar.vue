@@ -73,8 +73,8 @@
 
 <script lang="ts" setup>
 import { useDisplay } from "vuetify";
-import { useUser } from "~/modules/auth/runtime/composables/user";
-import { useClientConfig } from "~/modules/config/runtime/composables/client-config";
+import { useUser } from "~~/modules/auth/runtime/composables/user";
+import { useClientConfig } from "~~/modules/config/runtime/composables/client-config";
 const clientConfig = useClientConfig()
 const user = useUser();
 defineProps(["links"]);

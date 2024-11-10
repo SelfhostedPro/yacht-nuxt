@@ -22,7 +22,7 @@
 </template>
 
 <script setup lang="ts">
-import type { FileInfo } from "~/types/files";
+import type { FileInfo } from "~~/types/files";
 const fullscreen = ref(false);
 const language = ref<string>("plaintext");
 

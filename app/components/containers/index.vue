@@ -96,7 +96,7 @@ import type {
   Container,
   ContainerStat,
   ContainerStats,
-} from "~/types/containers/yachtContainers";
+} from "~~/types/containers/yachtContainers";
 const containersStore = useContainersStore();
 const { servers, loading } = storeToRefs(containersStore);
 const createDialog = ref(false);

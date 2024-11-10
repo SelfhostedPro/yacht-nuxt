@@ -15,7 +15,7 @@
 </template>
 <script setup lang="ts">
 import type { Dree } from "dree";
-import type { FileInfo } from "~/types/files";
+import type { FileInfo } from "~~/types/files";
 import { join } from "path";
 interface Props {
   item: Dree;

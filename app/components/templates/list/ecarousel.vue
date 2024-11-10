@@ -64,7 +64,7 @@
 <script setup lang="ts">
 // import emblaCarouselVue from "embla-carousel-vue";
 // import Autoplay from "embla-carousel-autoplay";
-import type { YachtTemplate } from "~/types/templates/yacht";
+import type { YachtTemplate } from "~~/types/templates/yacht";
 
 const currentApp = ref<YachtTemplate["templates"][0]>();
 interface Emits {

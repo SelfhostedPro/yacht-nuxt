@@ -2,7 +2,7 @@ import { type FixedContainerStats, formatStats } from "./formatter"
 import { PassThrough as StreamPassThrough } from "stream"
 
 // Service Dependency Imports
-import type { ServerDict } from "~/types/servers"
+import type { ServerDict } from "~~/types/servers"
 
 export const getContainerStats = async (close: () => void, send: (callback: (id: number) => any) => void) => {
     const servers = Object.entries(await useServers())

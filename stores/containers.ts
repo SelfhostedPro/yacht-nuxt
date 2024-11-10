@@ -1,7 +1,7 @@
-import type { ServerContainers } from '~/types/servers'
-import type { Container, ContainerStat, ContainerStats } from '~/types/containers/yachtContainers'
+import type { ServerContainers } from '~~/types/servers'
+import type { Container, ContainerStat, ContainerStats } from '~~/types/containers/yachtContainers'
 import { defineStore } from 'pinia'
-import type { CreateContainerForm } from '~/types/containers/create'
+import type { CreateContainerForm } from '~~/types/containers/create'
 import { FetchError } from 'ofetch'
 
 export const useContainersStore = defineStore({

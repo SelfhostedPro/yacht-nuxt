@@ -1,6 +1,6 @@
 import { FetchError } from 'ofetch'
-import type { CreateContainerForm } from '~/types/containers/create'
-import type { Container } from '~/types/containers/yachtContainers'
+import type { CreateContainerForm } from '~~/types/containers/create'
+import type { Container } from '~~/types/containers/yachtContainers'
 import type { Notification } from '#imports'
 interface ErrorContext {
     container?: Container,

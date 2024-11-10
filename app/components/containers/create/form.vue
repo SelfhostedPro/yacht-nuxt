@@ -34,7 +34,7 @@ import {
   ContainersCreateSectionAdvanced,
   ContainersCreateSectionPreview
 } from '#components';
-import type { CreateContainerForm } from '~/types/containers/create';
+import type { CreateContainerForm } from '~~/types/containers/create';
 
 const { smAndDown } = useDisplay()
 const step = useState('containerFormStep', () => 0)

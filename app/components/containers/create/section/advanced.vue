@@ -83,8 +83,8 @@
 
 <script lang="ts" setup>
 
-import type { CreateContainerForm } from '~/types/containers/create';
-import { type Field } from '~/types/forms'
+import type { CreateContainerForm } from '~~/types/containers/create';
+import { type Field } from '~~/types/forms'
 const panelsOpen = ref([])
 // const { xs } = useDisplay()
 

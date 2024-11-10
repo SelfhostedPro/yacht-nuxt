@@ -107,7 +107,7 @@
   />
 </template>
 <script setup lang="ts">
-import type { YachtTemplate } from "~/types/templates/yacht";
+import type { YachtTemplate } from "~~/types/templates/yacht";
 
 const templatesStore = useTemplatesStore();
 const { loading, templates } = storeToRefs(templatesStore);

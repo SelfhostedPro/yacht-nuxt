@@ -1,4 +1,4 @@
-import type { FileInfo } from "~/types/files";
+import type { FileInfo } from "~~/types/files";
 
 
 export const useProjectsCWD = () => useState('projects-cwd', () =>
