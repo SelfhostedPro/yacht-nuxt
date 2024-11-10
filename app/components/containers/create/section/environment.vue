@@ -6,14 +6,14 @@
       <v-btn color="primary" class="float-right my-3" @click="pushEnv()">+</v-btn>
     </v-card-title>
     <v-card-text>
-      <common-form-dynamic-array path="env" :arrayFields="env" />
+      <common-form-dynamic-array path="env" :array-fields="env" />
     </v-card-text>
   </div>
 </template>
 
 <script lang="ts" setup>
 import type { CreateContainerForm } from '~~/types/containers/create';
-import { type Field } from '~~/types/forms'
+import type { Field } from '~~/types/forms'
 const { value: form, } = useFormValues<CreateContainerForm>()
 // const { xs } = useDisplay()
 

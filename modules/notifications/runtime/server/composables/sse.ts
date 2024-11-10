@@ -1,5 +1,6 @@
 import { createHooks } from 'hookable'
-import { H3Event, setResponseStatus } from 'h3'
+import type { H3Event} from 'h3';
+import { setResponseStatus } from 'h3'
 // import { authHooks } from './auth'
 
 export interface ServerSentEvent {

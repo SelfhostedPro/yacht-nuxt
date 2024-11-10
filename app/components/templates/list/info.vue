@@ -11,31 +11,32 @@
     <v-expand-transition>
       <v-card-subtitle v-if="expandedInfo" class="bg-surface">
         name: {{ template.name }}
-        <br />
+        <br >
         type: {{ template.type }}
-        <br />
+        <br >
         created: {{ formatDate(template.created) }}
-        <br />
+        <br >
         updated: {{ formatDate(template.updated) }}
-        <br />
+        <br >
         apps: {{ template.templates.length }}
       </v-card-subtitle>
     </v-expand-transition>
     <v-card-text v-if="template.description" class="mx-auto px-auto w-50 whitespace-pre">{{
       template.description }}</v-card-text>
     <v-card-actions class="flex-d justify-center">
-      <v-btn v-for="link in template['links']" :color="link.color || undefined" :key="link.text"
+      <v-btn
+v-for="link in template['links']" :key="link.text" :color="link.color || undefined"
         :prepend-icon="link.icon || 'mdi-link'" :href="link.url || undefined" target="_blank">{{
           link.text || 'link' }}</v-btn>
       <!-- <v-btn color="info" prepend-icon="mdi-restart" @click="updateTemplate()">update</v-btn> -->
-      <v-menu :close-on-content-click="false" location="top" transition="slide-y-transition" v-model="deleteMenu">
-        <template v-slot:activator="{ props }">
+      <v-menu v-model="deleteMenu" :close-on-content-click="false" location="top" transition="slide-y-transition">
+        <template #activator="{ props }">
           <v-btn v-bind="props" color="error" prepend-icon="mdi-delete">delete</v-btn>
         </template>
         <v-card :title="`delete template ${template.name}?`" max-width="30vw">
           <v-card-text>
-            This action cannot be undone. <br />
-            Apps deployed with this template will continue to run on your system.<br />
+            This action cannot be undone. <br >
+            Apps deployed with this template will continue to run on your system.<br >
           </v-card-text>
           <v-card-actions>
             <!-- <v-btn @click="deleteTemplate(); deleteMenu = false" color="error">confirm</v-btn> -->

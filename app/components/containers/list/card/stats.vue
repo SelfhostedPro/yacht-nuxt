@@ -7,7 +7,7 @@
             ? `memory: ${stats.memoryPercentage}%`
             : undefined
         }}
-        <br />
+        <br >
         {{ stats.cpuUsage ? `cpu: ${stats.cpuUsage}%` : undefined }}
       </template>
       <template #activator="{ props }">

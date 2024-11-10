@@ -1,12 +1,11 @@
 <template>
-  <v-btn-toggle class="pa-0 ma-0" multiple v-model="activeButtons">
+  <v-btn-toggle v-model="activeButtons" class="pa-0 ma-0" multiple>
     <v-btn
       value="hidden"
       class="h-50"
       size="x-small"
       :icon="activeButtons.includes('hidden') ? 'mdi-eye' : 'mdi-eye-off'"
-    >
-    </v-btn>
+    />
   </v-btn-toggle>
 </template>
 

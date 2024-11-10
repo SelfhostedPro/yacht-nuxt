@@ -2,11 +2,10 @@ import { watchConfig, type ConfigLayerMeta, type ConfigWatcher, type ResolvedCon
 import { defaultYachtConfig } from "./defaults"
 import fs from 'fs-extra'
 import { stringifyYAML } from 'confbox'
-import { resolve } from 'path'
+import { resolve , join } from 'path'
 import { YachtConfigSchema, type YachtConfig } from "../../../types"
 import { ZodError } from "zod"
 import type { ConfigSecrets } from "../../../types/secrets"
-import { join } from 'path'
 import * as crypto from 'crypto';
 
 

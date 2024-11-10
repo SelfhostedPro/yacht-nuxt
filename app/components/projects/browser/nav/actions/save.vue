@@ -1,5 +1,5 @@
 <template>
-  <v-btn @click="saveFile" :loading="isLoading" color="primary">
+  <v-btn :loading="isLoading" color="primary" @click="saveFile">
     save
     <v-icon icon="mdi-content-save" />
   </v-btn>

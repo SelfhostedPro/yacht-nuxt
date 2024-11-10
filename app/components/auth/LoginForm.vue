@@ -25,7 +25,7 @@
 // import { LoginUserFormSchema } from "~~/types/auth";
 // import type { User } from "~~/types/users";
 
-const { handleSubmit, handleReset } = useForm({
+const { handleSubmit } = useForm({
   initialValues: {
     username: "",
     password: "",
@@ -64,6 +64,7 @@ onMounted(async () => {
       user.value = data;
       await navigateTo("/");
     }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (e) {
     /* Don't do anything here, just surpress duplicate 401 error notification */
   }

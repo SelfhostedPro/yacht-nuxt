@@ -1,17 +1,20 @@
 <template>
-  <v-dialog v-model="dialog" @update:model-value="() => template ? populateFromTemplate(template) : null"
-    :close-on-content-click="false" persistent no-click-animation scrollable :fullscreen="maximize"
-    :width="maximize ? undefined : '80vw'" :height="maximize ? undefined : '80vh'">
+  <v-dialog
+v-model="dialog" :close-on-content-click="false"
+    persistent no-click-animation scrollable :fullscreen="maximize" :width="maximize ? undefined : '80vw'"
+    :height="maximize ? undefined : '80vh'" @update:model-value="() => template ? populateFromTemplate(template) : null">
     <template #default>
       <v-card color="foreground" width="80vw" height="100%" :loading="loading.includes('create')">
-        <common-title-bar class="form-bar" :loading="loading" color="primary" :closable="true"
+        <common-title-bar
+class="form-bar" :loading="loading" color="primary" :closable="true"
           :title="`create ${values.name || 'new container'}`" @maximize="maximize = !maximize"
           @close="$emit('close'); dialog = false" />
         <form class="overflow-y-hidden fill-height">
           <containers-create-form @validate="validate()" />
         </form>
         <v-card-actions style="background-color: rgb(var(--v-theme-surface)) !important;">
-          <v-btn color="warning"
+          <v-btn
+color="warning"
             @click="async () => resetForm({ values: template ? await populateFromTemplate(template) : undefined })">reset</v-btn>
           <v-spacer />
           <v-btn v-if="step !== 0" @click="step--; validate()">
@@ -24,7 +27,7 @@
             <v-btn :disabled="!meta.valid" color="primary" @click="onSubmit">
               submit
             </v-btn>
-            <v-tooltip class="submitTooltip" v-if="!meta.valid" location="top left" activator="parent">
+            <v-tooltip v-if="!meta.valid" class="submitTooltip" location="top left" activator="parent">
               <v-card-text v-for="error, key, i in errors" :key="i">{{ `${key}: ${error}` }}</v-card-text>
             </v-tooltip>
           </span>

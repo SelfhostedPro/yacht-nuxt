@@ -7,7 +7,9 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
   },
   "dependencies": {
     "@formkit/auto-animate": "^0.8.2",
@@ -38,8 +40,8 @@
     "kysely": "^0.27.3",
     "lucia": "^3.1.1",
     "markdown-it": "^14.1.0",
-    "nuxt-monaco-editor": "^1.2.7",
     "monaco-editor": "0.51.0",
+    "nuxt-monaco-editor": "^1.2.7",
     "oslo": "^1.2.0",
     "pinia": "^2.1.7",
     "simple-git": "^3.24.0",
@@ -53,6 +55,7 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
+    "@nuxt/eslint": "^0.6.1",
     "@pinia/nuxt": "^0.5.1",
     "@types/better-sqlite3": "^7.6.9",
     "@types/dockerode": "^3.3.28",
@@ -71,5 +74,6 @@
     "vite-plugin-node-polyfills": "^0.21.0",
     "vue-tsc": "^2",
     "vuetify-nuxt-module": "^0.13.2"
-  }
+  },
+  "packageManager": "pnpm@9.12.3+sha512.cce0f9de9c5a7c95bef944169cc5dfe8741abfb145078c0d508b868056848a87c81e626246cb60967cbd7fd29a6c062ef73ff840d96b3c86c40ac92cf4a813ee"
 }

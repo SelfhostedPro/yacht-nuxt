@@ -1,5 +1,5 @@
 import type { ServerContainers } from '~~/types/servers'
-import type { Container, ContainerStat, ContainerStats } from '~~/types/containers/yachtContainers'
+import type { Container } from '~~/types/containers/yachtContainers'
 import { defineStore } from 'pinia'
 import type { CreateContainerForm } from '~~/types/containers/create'
 import { FetchError } from 'ofetch'
@@ -9,7 +9,6 @@ export const useContainersStore = defineStore({
   state: () => ({
     servers: {} as ServerContainers,
     container: {} as Container,
-    // stats: {} as ContainerStats,
     loading: [] as string[],
   }),
   getters: {
@@ -21,16 +20,28 @@ export const useContainersStore = defineStore({
     async fetchContainers() {
       this.startLoading('containers')
       const { error, data, refresh, execute } = await useFetch(`/api/containers`, { key: 'container-list' })
-      data.value ? this.servers = data.value : console.log(data.value)
-      if (error.value) console.error(error.value.statusMessage)
+      if (data.value) {
+        this.servers = data.value
+      } else {
+        console.log('No data received')
+      }
+      if (error.value) {
+        console.error(error.value.statusMessage)
+      }
       this.stopLoading('containers')
       return { error, data, refresh, execute }
     },
     async fetchContainerDetails(server: string, id: string) {
       this.startLoading(id)
       const { error, data, refresh } = await useFetch<Container>(`/api/containers/${server}/${id}`, { key: `container-${id}` })
-      data.value ? this.container = data.value : console.log(data.value)
-      if (error.value) console.error(error.value.statusMessage)
+      if (data.value) {
+        this.container = data.value
+      } else {
+        console.log('No container data received')
+      }
+      if (error.value) {
+        console.error(error.value.statusMessage)
+      }
       this.stopLoading(id)
       return { error, data, refresh }
     },
@@ -47,7 +58,9 @@ export const useContainersStore = defineStore({
       } catch (e) {
         if (e instanceof FetchError) {
           useNotificationsStore().pushToast(handleDockerErrors(e))
-        } else console.error(e)
+        } else {
+          console.error(e)
+        }
         this.stopLoading('create')
       }
     },
@@ -56,7 +69,9 @@ export const useContainersStore = defineStore({
       try {
         const data = await $fetch<ServerContainers>(`/api/containers/${server}/${id}/actions/${action}`, { method: 'POST' })
         this.stopLoading(id)
-        if (data) this.servers = data
+        if (data) {
+          this.servers = data
+        }
         return { data }
       } catch (e) {
         this.stopLoading(id)

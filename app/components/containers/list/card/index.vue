@@ -1,9 +1,9 @@
 <template>
   <!-- :to="`/containers/${server}/${container.name}`" -->
-  <v-hover open-delay="100" v-slot="{ isHovering, props }">
+  <v-hover v-slot="{ isHovering, props }" open-delay="100">
     <v-card
+      v-auto-animate
       v-bind="props"
-      @click="$emit('selected')"
       :class="`v-container-card overflow-visible mt-8 ${
         isHovering || selected ? 'on-hover' : ''
       }`"
@@ -12,7 +12,7 @@
       :color="selected ? 'foreground' : 'surface'"
       flat
       :ripple="false"
-      v-auto-animate
+      @click="$emit('selected')"
     >
       <v-sheet
         :class="`mx-auto v-container-sheet 
@@ -36,15 +36,15 @@
         <v-btn
           variant="plain"
           icon
-          @click.stop
           :to="`/containers/${server}/${container.name}`"
+          @click.stop
           ><v-icon icon="mdi-information-outline"
         /></v-btn>
       </v-card-actions>
       <!-- Expansion Ref -->
       <v-expand-transition>
         <div v-show="showActions">
-          <div @click.stop class="pb-2 px-2 mx-2">
+          <div class="pb-2 px-2 mx-2" @click.stop>
             <!-- <div @click.stop class="d-flex flex-row rounded-lg pa-2"> -->
             <lazy-containers-list-card-actions
               :container="container"

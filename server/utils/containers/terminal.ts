@@ -1,4 +1,4 @@
-import { type Container, type ExecCreateOptions } from "dockerode"
+import type { Container, ExecCreateOptions } from "dockerode"
 import { PassThrough as StreamPassThrough } from "stream"
 
 

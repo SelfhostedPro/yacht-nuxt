@@ -12,23 +12,23 @@
             <v-row align="center">
               <v-col>
                 <common-form-dynamic-string
-                  :validateOnMount="false"
-                  @keyup.enter="onSubmit"
+                  :validate-on-mount="false"
                   block
                   dense
                   :field="urlField"
                   :hint="`will clone to ${cwd}`"
+                  @keyup.enter="onSubmit"
                 />
               </v-col>
               <v-col cols="3">
                 <v-btn
                   :loading="loading"
-                  @click="onSubmit"
                   class="mt-1"
                   variant="plain"
                   :rounded="0"
                   append-icon="mdi-magnify"
                   text="check"
+                  @click="onSubmit"
                 />
               </v-col>
             </v-row>
@@ -37,8 +37,8 @@
                 <span
                   v-for="error, , i in errors"
                   :key="i"
-                  v-html="error"
                   class="text-error"
+                  v-html="error"
                 />
               </v-col>
             </v-row>

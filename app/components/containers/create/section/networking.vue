@@ -14,13 +14,13 @@
       </v-card-title>
     </v-slide-y-transition>
     <v-card-text v-if="form.network_mode === 'bridge'">
-      <common-form-dynamic-array path="ports" :arrayFields="ports" />
+      <common-form-dynamic-array path="ports" :array-fields="ports" />
     </v-card-text>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { type Field } from '~~/types/forms'
+import type { Field } from '~~/types/forms'
 import type { CreateContainerForm } from '~~/types/containers/create';
 
 const { value: form } = useFormValues<CreateContainerForm>()

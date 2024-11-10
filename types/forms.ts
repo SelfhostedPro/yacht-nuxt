@@ -10,4 +10,4 @@ export interface Field {
     type: "VTextField" | "VSelect" | "VTextarea" | "VBtn" | "VBtnToggle" | "description" | "label";
 }
 
-export interface Structure extends Omit<Field, "value"> {}
+export type Structure = Omit<Field, "value">

@@ -1,7 +1,7 @@
 import { useClientConfig } from "../composables/client-config";
 
 export default defineNuxtRouteMiddleware(async (to, from) => {
-    if (process.client) return
+    if (import.meta.client) return
     const clientConfig = useClientConfig()
     try {
         const data = await useRequestFetch()<{ auth: boolean, wizard: boolean, theme: any, name: string }>("/api/settings/details");

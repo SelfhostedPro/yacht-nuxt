@@ -1,6 +1,6 @@
 <template>
   <div class="embla bg-surface">
-    <div class="embla__viewport" ref="emblaRef">
+    <div ref="emblaRef" class="embla__viewport">
       <div class="embla__container">
         <div
           v-for="featuredApp in template.featured"
@@ -25,9 +25,9 @@
               <div class="d-flex align-center mt-3 justify-center">
                 <v-btn
                   class="mr-auto"
-                  @click="$emit('createApp', template.templates[featuredApp])"
                   icon
                   variant="plain"
+                  @click="$emit('createApp', template.templates[featuredApp])"
                 >
                   <v-icon icon="mdi-plus" />
                 </v-btn>

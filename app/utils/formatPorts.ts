@@ -1,7 +1,6 @@
-import { type YachtTemplate } from "~~/types/templates/yacht"
-import { type CreateContainerForm } from "~~/types/containers/create"
+import type { YachtTemplate , type YachtV2TemplatePort, type yachtV1TemplatePorts } from "~~/types/templates/yacht"
+import type { CreateContainerForm } from "~~/types/containers/create"
 import { yachtV1TemplatePortSchema, yachtV2TemplatePortSchema } from "~~/types/templates/yacht"
-import { type YachtV2TemplatePort, type yachtV1TemplatePorts } from "~~/types/templates/yacht"
 
 
 export const useFormatPorts = async (ports: YachtTemplate['templates'][0]['ports']): Promise<CreateContainerForm['ports']> => {

@@ -10,8 +10,8 @@
     @click="if (!smAndDown) mode = modes.next;"
     @update:rail="(value) => (sidebarExpanded = !value)"
   >
-    <slot name="logo"> </slot>
-    <slot name="header-buttons"> </slot>
+    <slot name="logo"/>
+    <slot name="header-buttons"/>
 
     <v-divider />
     <!-- <slot name="list"> -->
@@ -27,9 +27,9 @@
 
         <v-list-group
           v-else
+          :key="link.text"
           fluid
           subgroup
-          :key="link.text"
           :prepend-icon="link.icon"
           :value="false"
         >
@@ -70,8 +70,7 @@
           variant="text"
           :icon="isDark ? 'mdi-weather-night' : 'mdi-weather-sunny'"
           @click.stop="toggleTheme()"
-        >
-        </v-btn>
+        />
         <v-btn
           size="large"
           variant="text"

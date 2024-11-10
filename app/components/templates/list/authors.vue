@@ -1,7 +1,7 @@
 <template>
   <v-tooltip v-for="author in authors" :key="author.name" :text="author.name" location="top">
-    <template v-slot:activator="{ props }">
-      <a v-bind="mergeProps(props, $attrs)" v-if="author.url" :href="author.url" target="_blank">
+    <template #activator="{ props }">
+      <a v-if="author.url" v-bind="mergeProps(props, $attrs)" :href="author.url" target="_blank">
         <v-avatar size="32">
           <v-img :src="author.avatar || `https://avatars.dicebear.com/api/initials/${author.name}.svg`" />
         </v-avatar>

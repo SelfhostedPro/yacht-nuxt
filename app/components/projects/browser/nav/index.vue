@@ -7,7 +7,7 @@
       </v-toolbar-title>
     </v-toolbar>
     <v-toolbar density="compact">
-      <v-btn @click="$emit('toParent')" icon="mdi-chevron-double-up" />
+      <v-btn icon="mdi-chevron-double-up" @click="$emit('toParent')" />
       <v-btn
         size="small"
         :icon="showHidden ? 'mdi-eye' : 'mdi-eye-off'"
@@ -21,11 +21,11 @@
         v-if="dirTree && dirTree.length > 0"
         path=""
         :items="dirTree"
-        :setActive="(item) => projectsStore.setActiveFile(item.path)"
+        :set-active="(item) => projectsStore.setActiveFile(item.path)"
         :load-children="getChildren"
-        :handleRightClick="handleRightClick"
+        :handle-right-click="handleRightClick"
       />
-      <v-card-text class="text-center" v-else>No files found in data directory.</v-card-text>
+      <v-card-text v-else class="text-center">No files found in data directory.</v-card-text>
     </v-list>
     <v-menu
       v-model:model-value="menu.open"

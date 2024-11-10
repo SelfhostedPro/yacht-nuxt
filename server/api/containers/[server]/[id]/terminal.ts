@@ -1,4 +1,4 @@
-import { type Duplex } from 'stream'
+import type { Duplex } from 'stream'
 import { v4 } from 'uuid'
 
 const terminalSessions: { [session: string]: { stream: Duplex } } = {}
@@ -27,7 +27,7 @@ export default defineEventHandler(async (event) => {
     })
   }
   if (event.method === 'POST') {
-    const { data, id } = await readBody<{ id: String, data: ArrayBuffer | Uint8Array | string }>(event)
+    const { data, id } = await readBody<{ id: string, data: ArrayBuffer | Uint8Array | string }>(event)
     if (!data || !id) throw createError('Data or id not specified')
     terminalSessions[`terminal:${containerId}-${id}`].stream.write(data)
   }

@@ -1,5 +1,5 @@
 <template>
-  <resources-list :name="resource"></resources-list>
+  <resources-list :name="resource"/>
 </template>
 
 <script setup lang="ts">

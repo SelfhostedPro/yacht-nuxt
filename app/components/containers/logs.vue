@@ -1,7 +1,7 @@
 <template>
   <Xterm
-    ref="xterm"
     v-if="attachAddon"
+    ref="xterm"
     :attach-addon="attachAddon"
     term-type="logs"
     @close="$emit('close')"
@@ -9,10 +9,10 @@
   >
     <template #btns>
       <v-tooltip v-if="isSupported" :text="'copy logs to clipboard'">
-        <template v-slot:activator="{ props }">
+        <template #activator="{ props }">
           <v-btn v-bind="props" icon @click="copy('')">
             <v-icon v-if="!copied"> mdi-content-copy </v-icon>
-            <v-icon color="green" v-else> mdi-check </v-icon>
+            <v-icon v-else color="green"> mdi-check </v-icon>
           </v-btn>
         </template>
       </v-tooltip>

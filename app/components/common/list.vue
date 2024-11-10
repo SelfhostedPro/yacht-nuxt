@@ -23,7 +23,7 @@
           <v-col v-if="selectedItems.length > 0">
             <slot
               name="bulk-buttons"
-              :selectedItems="selectedItems"
+              :selected-items="selectedItems"
               :server="Object.keys(resource)[tab]"
             />
           </v-col>
@@ -39,10 +39,10 @@
         :key="i"
         :value="i"
       >
-        <slot name="heading" :selectedItems="selectedItems" :server="server" />
+        <slot name="heading" :selected-items="selectedItems" :server="server" />
         <v-data-iterator
-          v-model:model-value="selectedItems"
           v-if="resource[server].length > 0"
+          v-model:model-value="selectedItems"
           :items="resource[server] as readonly any[]"
           :search="search"
           :item-value="

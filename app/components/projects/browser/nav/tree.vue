@@ -1,14 +1,14 @@
 <template>
   <div
-    :class="`mx-${depth || 0}`"
-    ref="rootitem"
     v-for="item in items"
+    ref="rootitem"
     :key="item.path"
+    :class="`mx-${depth || 0}`"
   >
     <v-list-group
+      v-if="item.type === 'directory'"
       subgroup
       fluid
-      v-if="item.type === 'directory'"
       :value="item.path"
     >
       <template #activator="{ isOpen, props }">
@@ -38,12 +38,12 @@
         v-if="item.children && item.children.length > 0"
         :path="`${path}/${item.relativePath}`"
         :items="item.children"
-        :loadChildren="loadChildren"
+        :load-children="loadChildren"
         :depth="depth ? 1 + depth : 1"
         :handle-right-click="handleRightClick"
-        :setActive="setActive"
+        :set-active="setActive"
       />
-      <v-card-text class="text-center" v-else
+      <v-card-text v-else class="text-center"
         >directory appears empty!</v-card-text
       >
     </v-list-group>

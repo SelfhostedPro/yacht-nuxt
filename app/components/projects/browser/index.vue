@@ -1,6 +1,6 @@
 <template>
   <v-card height="100vh" width="100%">
-    <v-layout :fullHeight="true">
+    <v-layout :full-height="true">
       <v-app-bar>
         <template #prepend>
           <v-app-bar-nav-icon @click="sidebarOpen = !sidebarOpen" />
@@ -10,16 +10,16 @@
         </v-toolbar-title>
         <template #append>
           <projects-browser-nav-actions-add
-            @added="getFolder()"
             :cwd="dir?.relativePath || ''"
+            @added="getFolder()"
           />
         </template>
       </v-app-bar>
       <projects-browser-nav
         :opened="sidebarOpen"
-        @to-parent="toParent"
         :tree="dirTree"
-      ></projects-browser-nav>
+        @to-parent="toParent"
+      />
       <v-main class="fill-height">
         <projects-browser-editor />
       </v-main>

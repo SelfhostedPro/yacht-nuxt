@@ -33,7 +33,7 @@
               (item.total || 100)) *
             100
           "
-        ></v-progress-linear>
+        />
       </v-card-item>
     </v-expand-transition>
   </v-card>

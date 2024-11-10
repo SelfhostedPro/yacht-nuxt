@@ -99,10 +99,15 @@ export const useProjectsStore = defineStore({
             const { data, error } = await $fetch<FileInfo>('/api/projects/file', { cache: 'no-cache', query: { path } })
                 .then((file) => ({ data: file, error: undefined }))
                 .catch((e) => ({ data: undefined, error: e }));
-            data ? this.activeFile = data : console.log(data);
+
+            if (data) {
+                this.activeFile = data;
+            } else {
+                console.log(data);
+            }
+
             if (error) console.error(error.statusMessage);
             this.stopLoading('file');
-            return { error, data };
         }
     }
 });

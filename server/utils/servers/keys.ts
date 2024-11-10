@@ -1,5 +1,4 @@
-import { generateKeyPairSync } from 'crypto';
-import { createCipheriv, createDecipheriv } from 'crypto';
+import { generateKeyPairSync , createCipheriv, createDecipheriv } from 'crypto';
 import * as sshpk from 'sshpk';
 import * as path from 'path';
 import { Client } from 'ssh2';

@@ -5,7 +5,7 @@
     </v-card-title>
     <v-card-text>
       <v-row>
-        <v-col cols="12" v-for="field, i in base" :key="i">
+        <v-col v-for="field, i in base" :key="i" cols="12">
           <common-form-dynamic-string :field="field" />
         </v-col>
       </v-row>
@@ -14,7 +14,7 @@
 </template>
 
 <script lang="ts" setup>
-import { type Field } from '~~/types/forms'
+import type { Field } from '~~/types/forms'
 
 const containerStore = useContainersStore()
 const { servers } = storeToRefs(containerStore)

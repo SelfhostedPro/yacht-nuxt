@@ -9,12 +9,12 @@
           _action.depends.includes(container.status) ||
           _action.depends.includes('all')
       )"
-      class="flex-grow-1 py-2"
       :key="action.name"
+      class="flex-grow-1 py-2"
       :disabled="loading || false"
       :color="action.color"
-      @click.prevent="handleAction(action.name)"
       :icon="action.icon"
+      @click.prevent="handleAction(action.name)"
     />
   </v-btn-group>
   <v-dialog v-model="removeDialog">
@@ -40,7 +40,7 @@
       <v-card-text>
         Are you sure you want to permanently remove
         <b class="text-error">{{ container.name }}</b
-        >?<br />
+        >?<br >
         All non-peristent data will be unrecoverable.
       </v-card-text>
       <v-card-actions>

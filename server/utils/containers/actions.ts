@@ -1,5 +1,5 @@
-import { type CreateContainerForm } from "~~/types/containers/create"
-import { type ServerDict } from "~~/types/servers"
+import type { CreateContainerForm } from "~~/types/containers/create"
+import type { ServerDict } from "~~/types/servers"
 import { normalizeContainerInspectInfo, normalizeCreate } from "./formatter"
 import type Dockerode from "dockerode"
 import type { ImagePullProgress } from "~~/types/images"

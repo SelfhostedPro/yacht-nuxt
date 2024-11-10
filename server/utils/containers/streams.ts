@@ -8,7 +8,7 @@ export const getContainerStats = async (close: () => void, send: (callback: (id:
     const servers = Object.entries(await useServers())
     // Get all servers
     servers.map(
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+         
         async ([_server, docker]): Promise<void> => {
 
             // Get all containers on server

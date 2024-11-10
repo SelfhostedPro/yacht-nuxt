@@ -1,6 +1,6 @@
 <template>
-  <v-card color="foreground" class="overflow-auto" id="networks-card">
-    <v-card-title>{{ resource.Name.toLowerCase() }} <v-btn @click="reveal = !reveal" variant="plain" icon><v-icon
+  <v-card id="networks-card" color="foreground" class="overflow-auto">
+    <v-card-title>{{ resource.Name.toLowerCase() }} <v-btn variant="plain" icon @click="reveal = !reveal"><v-icon
           :icon="reveal ? 'mdi-chevron-up' : 'mdi-chevron-down'" /></v-btn></v-card-title>
     <v-expand-transition>
       <v-card-text v-show="reveal">

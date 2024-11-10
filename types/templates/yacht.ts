@@ -1,5 +1,5 @@
 import { z } from "zod"
-import { capAddSchema, capDropSchema, keyValueSchema, nameValueSchema, optionalNameValueSchema } from "../shared"
+import { capAddSchema, capDropSchema } from "../shared"
 
 
 

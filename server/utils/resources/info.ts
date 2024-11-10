@@ -1,6 +1,6 @@
 import type { ServerVolumes, ServerImages, ServerNetworks } from "~~/types/servers";
 import type { ImageInspectInfo, ImageInfo, VolumeInspectInfo, NetworkInspectInfo } from 'dockerode'
-import { type ImagePullProgress } from "~~/types/images";
+import type { ImagePullProgress } from "~~/types/images";
 import type { ProgressItem, ProgressTitleUpdate, ProgressUpdate } from "~~/modules/notifications/types/progress";
 
 export const getImages = async (): Promise<ServerImages> => {

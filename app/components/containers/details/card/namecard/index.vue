@@ -10,28 +10,28 @@
         />
         <v-spacer v-if="!smAndDown" />
         <lazy-containers-logs
-          @close="logsOpen = false"
           v-if="logsOpen"
           v-model="logsOpen"
           :server="server"
           :name="container.name"
+          @close="logsOpen = false"
         />
         <lazy-containers-terminal
-          @close="terminalOpen = false"
           v-if="terminalOpen"
           v-model="terminalOpen"
           :server="server"
           :name="container.name"
+          @close="terminalOpen = false"
         />
       </template>
       <template #append>
-        <v-btn-group variant="text" v-if="!smAndDown">
+        <v-btn-group v-if="!smAndDown" variant="text">
           <v-tooltip
             v-for="button in toolbarButtons"
             :key="button.text"
             :text="button.text"
           >
-            <template v-slot:activator="{ props: tooltip }">
+            <template #activator="{ props: tooltip }">
               <v-btn
                 class="my-1"
                 size="default"
@@ -46,7 +46,7 @@
             </template>
           </v-tooltip>
         </v-btn-group>
-        <v-btn color="grey-lighten-5" v-else>
+        <v-btn v-else color="grey-lighten-5">
           <v-icon icon="mdi-dots-vertical" />
           <v-menu activator="parent">
             <v-card>
@@ -77,13 +77,13 @@
           "
         />
         <v-tooltip :text="container.status" location="bottom">
-          <template v-slot:activator="{ props }">
+          <template #activator="{ props }">
             <v-avatar
               class="ml-1"
               v-bind="props"
               :color="container.status == 'running' ? 'primary' : 'red'"
               size="6"
-            ></v-avatar>
+            />
           </template>
         </v-tooltip>
         {{ " " + container.name }}

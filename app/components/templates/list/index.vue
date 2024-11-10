@@ -12,12 +12,12 @@
             v-model="search"
             clearable
             density="comfortable"
-            @click:clear="search = ''"
             hide-details
             placeholder="Search"
             prepend-inner-icon="mdi-magnify"
             style="max-width: 300px"
             variant="solo"
+            @click:clear="search = ''"
           />
         </v-col>
         <v-col cols="3" class="d-flex justify-end align-center">
@@ -30,8 +30,8 @@
     </v-toolbar>
     <v-window v-model="tab" class="mt-5">
       <v-window-item
-        v-if="templates && templates.length > 0"
         v-for="(template, i) in templates"
+        v-if="templates && templates.length > 0"
         :key="i"
         :value="i"
       >
@@ -46,18 +46,18 @@
           </div>
         </v-fade-transition>
         <templates-list-info
+          v-if="search.length < 1"
           color="foreground"
           variant="flat"
           rounded="0"
           class="text-center mx-auto"
-          v-if="search.length < 1"
           :template="template"
         />
         <templates-list-card
-          @create-app="(app: YachtTemplate['templates'][0]) => createContainerFromTemplate(app)"
           class="mt-4"
           :template="template"
           :search="search"
+          @create-app="(app: YachtTemplate['templates'][0]) => createContainerFromTemplate(app)"
         />
       </v-window-item>
       <div v-else>
@@ -81,13 +81,13 @@
       :fullscreen="maximize"
       transition="dialog-bottom-transition"
     >
-      <template v-slot:default>
+      <template #default>
         <v-card color="background" class="overflow-auto">
           <common-title-bar
             :title="`${selectedApp?.title || selectedApp?.name} info`"
             color="primary"
-            @maximize="maximize = !maximize"
             :closable="true"
+            @maximize="maximize = !maximize"
             @close="
               openInfo = false;
               selectedApp = undefined;

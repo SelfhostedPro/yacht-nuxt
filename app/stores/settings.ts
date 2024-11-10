@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 // import { ThemeSettingsSchema, type RegisterUserForm, type ThemeSettings  } from '#imports'
-import { RegisterUserFormSchema, ThemeSettingsSchema } from '#imports'
-import { z } from 'zod'
+import type { RegisterUserFormSchema, ThemeSettingsSchema, YachtConfig } from '#imports'
+import type { z } from 'zod'
 type ThemeSettings = z.infer<typeof ThemeSettingsSchema>
 type RegisterUserForm = z.infer<typeof RegisterUserFormSchema>
 
@@ -22,11 +22,11 @@ export const useSettingsStore = defineStore({
     async stopLoading(name: string) { this.loading = this.loading.filter((item) => item !== name) },
     async fetchDetails() {
       this.startLoading('details')
-      const { data, error } = await useAsyncData('setting_details', () => $fetch<{ auth: boolean, theme: any, wizard: boolean, name: string }>('/api/settings/details'))
-      data.value ? this.details = data.value : null
+      const { data, error } = await useAsyncData('setting_details', () => $fetch<{ auth: boolean, theme: YachtConfig['theme'], wizard: boolean, name: string }>('/api/settings/details'))
+      this.details = data.value ?? this.details
       this.stopLoading('details')
       return { error, data }
-    },
+    },    
     async createInitialUser(form: RegisterUserForm) {
       this.startLoading('create')
       try {

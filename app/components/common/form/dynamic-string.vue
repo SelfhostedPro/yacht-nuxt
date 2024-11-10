@@ -5,12 +5,12 @@
     </v-card-title>
     <component
       v-bind="$attrs"
+      :is="getComponent(field.type)"
       v-else-if="field.type !== 'VBtnToggle' && field.type !== 'description'"
+      v-model="value"
       :clearable="field.multiple ? true : false"
       :multiple="field.multiple ?? field.multiple"
       :hide-details="errorMessage ? false : true"
-      :is="getComponent(field.type)"
-      v-model="value"
       :label="field.label"
       :items="field.items ?? field.items"
       :placeholder="field.placeholder"
@@ -19,10 +19,10 @@
     />
     <component
       v-bind="$attrs"
-      v-else-if="field.type === 'VBtnToggle'"
-      color="primary"
       :is="getComponent(field.type)"
+      v-else-if="field.type === 'VBtnToggle'"
       v-model="value"
+      color="primary"
       :label="field.label"
       @click="value = !value"
     >
@@ -33,8 +33,8 @@
       {{ field.label }}
     </component>
     <v-alert
-      color="primary"
       v-else-if="field.type === 'description' && value"
+      color="primary"
       type="info"
     >
       <v-card-text>{{ value }}</v-card-text>
@@ -44,7 +44,7 @@
 
 <script lang="ts" setup>
 import { VSelect, VTextField, VTextarea, VBtn } from "vuetify/components";
-import { type Field } from "~~/types/forms";
+import type { Field } from "~~/types/forms";
 const model = defineModel<Field>("field", { required: true });
 
 const getComponent = (type: Field["type"]) => {

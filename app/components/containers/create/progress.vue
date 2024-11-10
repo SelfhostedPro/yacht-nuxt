@@ -1,10 +1,11 @@
 <template>
   <v-timeline v-if="!smAndDown" class="my-3" truncate-line="both" side="end" line-inset="8">
-    <v-timeline-item v-for="step, i in steps"
-      :dot-color="step.errors && step.errors.length > 0 ? 'error' : currentStep >= i ? 'primary' : 'secondary'" :key="i"
-      @click="currentStep = i" :class="currentStep === i ? 'font-weight-regular' : 'font-weight-light text-disabled'">
+    <v-timeline-item
+v-for="step, i in steps"
+      :key="i" :dot-color="step.errors && step.errors.length > 0 ? 'error' : currentStep >= i ? 'primary' : 'secondary'"
+      :class="currentStep === i ? 'font-weight-regular' : 'font-weight-light text-disabled'" @click="currentStep = i">
       <template #icon>
-        <v-tooltip location="top end" v-if="step.errors" activator="parent">
+        <v-tooltip v-if="step.errors" location="top end" activator="parent">
           <v-card-text v-for="error in step.errors">{{ error }}</v-card-text>
         </v-tooltip>
       </template>

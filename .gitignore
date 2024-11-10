@@ -26,3 +26,4 @@ logs
 config
 data
 !modules/config
+.aider*

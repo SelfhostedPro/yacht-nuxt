@@ -1,10 +1,10 @@
 <template>
   <v-card
     id="images-card"
+    v-auto-animate
     class="pa-2 fill-height"
     density="compact"
     style="transition: height 0.3s ease-in-out; position: relative"
-    v-auto-animate
   >
     <v-row no-gutters>
       <v-col cols="12">
@@ -81,22 +81,22 @@
         <v-icon icon="mdi-open-in-new" />
       </v-btn>
       <v-btn
+        v-if="labels?.get('documentation')"
         size="small"
         target="_blank"
         variant="plain"
         icon
         :href="labels.get('documentation')"
-        v-if="labels?.get('documentation')"
       >
         <v-icon icon="mdi-file-document" />
       </v-btn>
       <v-btn
+        v-if="labels?.get('source')"
         size="small"
         target="_blank"
         variant="plain"
         icon
         :href="labels.get('source')"
-        v-if="labels?.get('source')"
       >
         <v-icon icon="mdi-github" />
       </v-btn>
@@ -119,8 +119,8 @@
 
 <script lang="ts" setup>
 import type { ImageInfo } from "dockerode";
-const reveal = ref(false);
 import { fromUnixTime } from "date-fns";
+const reveal = ref(false);
 interface Props {
   server: string;
   resource: ImageInfo;

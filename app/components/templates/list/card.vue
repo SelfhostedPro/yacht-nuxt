@@ -1,5 +1,6 @@
 <template>
-  <v-data-iterator v-if="template.templates.length > 0" :items="template.templates" :search="search"
+  <v-data-iterator
+v-if="template.templates.length > 0" :items="template.templates" :search="search"
     :items-per-page="12">
     <template #default="{ items }">
       <v-row>
@@ -9,10 +10,10 @@
               <v-card-title class="d-flex align-center">
                 {{ container.raw.title || container.raw.name }}
                 <v-spacer />
-                <v-btn class="float-right" variant="plain" @click="$emit('createApp', container.raw);" icon>
+                <v-btn class="float-right" variant="plain" icon @click="$emit('createApp', container.raw);">
                   <v-icon icon="mdi-plus" />
                 </v-btn>
-                <v-btn class="float-right" variant="plain" @click="$emit('openInfo', container.raw)" icon><v-icon
+                <v-btn class="float-right" variant="plain" icon @click="$emit('openInfo', container.raw)"><v-icon
                     icon="mdi-information-outline" />
                 </v-btn>
               </v-card-title>
@@ -29,12 +30,14 @@
     </template>
     <template #footer="{ page, pageCount, prevPage, nextPage }">
       <div class="d-flex align-center justify-center pa-4">
-        <v-btn :disabled="page === 1" icon="mdi-arrow-left" density="comfortable" variant="tonal" rounded
+        <v-btn
+:disabled="page === 1" icon="mdi-arrow-left" density="comfortable" variant="tonal" rounded
           @click="prevPage" />
         <div class="mx-2 text-caption">
           Page {{ page }} of {{ pageCount }}
         </div>
-        <v-btn :disabled="page >= pageCount" icon="mdi-arrow-right" density="comfortable" variant="tonal" rounded
+        <v-btn
+:disabled="page >= pageCount" icon="mdi-arrow-right" density="comfortable" variant="tonal" rounded
           @click="nextPage" />
       </div>
     </template>
@@ -49,7 +52,7 @@
           mdi-docker
         </v-icon>
         <div class="text-h6">
-          Add a new template to see it here. <br />
+          Add a new template to see it here. <br >
           ie. https://raw.githubusercontent.com/SelfhostedPro/yacht-api/main/default_template.json
         </div>
         <i>If there should be Templates on this server, check the logs for errors.</i>

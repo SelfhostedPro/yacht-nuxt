@@ -7,29 +7,33 @@
           <v-list-item class="align-center">
             <v-row align="center">
               <v-col>
-                <common-form-dynamic-string @keyup.enter="templateValid = false; loading = true; validate()" block dense
-                  :field="urlField" />
+                <common-form-dynamic-string
+block dense :field="urlField"
+                  @keyup.enter="templateValid = false; loading = true; validate()" />
               </v-col>
               <!-- <v-text-field dense label="template url" hide-details="auto"
                 placeholder="https://raw.githubusercontent.com/SelfhostedPro/yacht-api/main/default_template.json" /> -->
               <v-col cols="3">
-                <v-btn :loading="loading" @click="templateValid = false; loading = true; validate()" class="mt-1"
-                  variant="plain" :rounded="0" append-icon="mdi-magnify" text="check" />
+                <v-btn
+:loading="loading" class="mt-1" variant="plain"
+                  :rounded="0" append-icon="mdi-magnify" text="check" @click="templateValid = false; loading = true; validate()" />
               </v-col>
             </v-row>
             <v-row>
               <v-col v-auto-animate>
-                <span v-for="error, , i in errors" :key="i" v-html="error" class="text-error" />
+                <span v-for="error, , i in errors" :key="i" class="text-error" v-html="error" />
               </v-col>
             </v-row>
           </v-list-item>
           <v-expand-transition group>
             <div v-show="templateValid">
               <v-list-item>
-                <common-form-dynamic-string block dense :field="nameField"
+                <common-form-dynamic-string
+block dense :field="nameField"
                   hint="name of folder created in templates directory" />
                 <common-form-dynamic-string block dense :field="titleField" hint="used for tab name on this page." />
-                <v-btn v-if="templateValid" block :loading="loading" class="mt-1" variant="plain" :rounded="0"
+                <v-btn
+v-if="templateValid" block :loading="loading" class="mt-1" variant="plain" :rounded="0"
                   append-icon="mdi-plus" text="add" color="primary" @click="onSubmit" />
               </v-list-item>
             </div>

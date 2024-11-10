@@ -5,14 +5,14 @@
     <v-btn
       v-for="action in specialFiles[specialFileTypes[activeFile.name]].actions"
       :key="action.title"
-      @click="performAction(action.title)"
       :color="action.color"
+      @click="performAction(action.title)"
     >
       {{ action.title }}
     </v-btn>
   </template>
   <v-spacer />
-  <v-btn @click="saveFile" :loading="isLoading" color="primary">
+  <v-btn :loading="isLoading" color="primary" @click="saveFile">
     save
     <v-icon icon="mdi-content-save" />
   </v-btn>

@@ -47,7 +47,7 @@
             </v-row>
             <v-card-text>
               Are you sure you want to permanently remove the following
-              containers? <br />
+              containers? <br >
               <pre
                 class="text-error text-capitalize"
               ><b>{{ selectedItems.map((item: string) => item).join(',\n') }}</b></pre>

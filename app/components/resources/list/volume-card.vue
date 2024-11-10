@@ -1,9 +1,9 @@
 <template>
   <v-card class="pb-2">
-    <v-card-title><v-btn @click="reveal = !reveal" variant="plain" icon><v-icon
+    <v-card-title><v-btn variant="plain" icon @click="reveal = !reveal"><v-icon
           :icon="reveal ? 'mdi-chevron-up' : 'mdi-chevron-down'" /></v-btn>{{ resource.Name }}</v-card-title>
     <v-expand-transition>
-      <v-card-text class="overflow-auto" v-show="reveal">
+      <v-card-text v-show="reveal" class="overflow-auto">
         <pre>{{ resource }}</pre>
       </v-card-text>
     </v-expand-transition>

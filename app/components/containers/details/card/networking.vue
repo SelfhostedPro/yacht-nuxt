@@ -29,7 +29,7 @@
               <td v-else class="text-center">-</td>
               <td v-if="port.hostPort" class="text-right">
                 <v-tooltip :text="port.hostPort.toString()">
-                  <template v-slot:activator="{ props }">
+                  <template #activator="{ props }">
                     <v-btn v-bind="props" prepend-icon="mdi-link-variant" color="primary">{{
                       container.labels && container.labels[`sh.yacht.${port.hostPort}`] ||
                       port.hostPort }}</v-btn>

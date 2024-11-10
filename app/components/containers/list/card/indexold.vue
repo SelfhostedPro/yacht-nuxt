@@ -1,13 +1,13 @@
 <template>
   <!-- :to="`/containers/${server}/${container.name}`" -->
   <v-card
-    @click="$emit('selected')"
+    v-auto-animate
     class="mt-8 overflow-visible"
     density="compact"
     style="transition: height 0.3s ease-in-out"
     :loading="loading.includes(container.id) ? 'primary' : false"
     :color="selected ? 'secondary' : 'surface'"
-    v-auto-animate
+    @click="$emit('selected')"
   >
     <v-sheet
       class="v-sheet--offset mx-auto"
@@ -23,12 +23,12 @@
     <!-- Expansion Buttons -->
     <v-card-actions class="pt-0 mt-n2 v-card-actions--offset">
       <v-btn-toggle
-        @click.stop
         v-model="reveal"
         :rounded="false"
         multiple
         variant="text"
         color="primary"
+        @click.stop
       >
         <v-tooltip
           v-for="component in infoComponents"
@@ -36,7 +36,7 @@
           :text="component.name"
           location="bottom"
         >
-          <template v-slot:activator="{ props }">
+          <template #activator="{ props }">
             <v-btn
               v-bind="props"
               :active="reveal.includes(component.component)"
@@ -53,8 +53,8 @@
       <v-btn
         variant="plain"
         icon
-        @click.stop
         :to="`/containers/${server}/${container.name}`"
+        @click.stop
         ><v-icon icon="mdi-information-outline"
       /></v-btn>
     </v-card-actions>

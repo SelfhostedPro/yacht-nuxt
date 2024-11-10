@@ -1,6 +1,6 @@
 <template>
   <v-card-title v-if="info.title" tag="span">{{ info.title }}
-    <v-tooltip location="bottom" v-for="link, i in links" :key="i" :text="link?.text">
+    <v-tooltip v-for="link, i in links" :key="i" location="bottom" :text="link?.text">
       <template #activator="{ props: props }">
         <v-btn v-if="link?.url" size="small" icon target="_blank" variant="plain" :href="link.url" v-bind="props">
           <v-icon :icon="link?.icon" />

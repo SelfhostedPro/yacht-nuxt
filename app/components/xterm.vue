@@ -1,15 +1,16 @@
 
 <template>
-  <v-dialog scrollable :fullscreen="fullscreen || sm" :max-width="fullscreen || sm ? '100vw' : '70vw'"
+  <v-dialog
+scrollable :fullscreen="fullscreen || sm" :max-width="fullscreen || sm ? '100vw' : '70vw'"
     :max-height="fullscreen || sm ? '100vh' : '70vh'" transition="dialog-bottom-transition">
     <template #default>
       <v-card :loading="!term">
         <!-- title bar -->
         <common-title-bar :closable="true" :title="termType" @maximize="fullscreen = !fullscreen" @close="$emit('close')">
-          <template v-slot:btns>
+          <template #btns>
             <slot name="btns" />
             <v-tooltip :text="'refresh'">
-              <template v-slot:activator="{ props }">
+              <template #activator="{ props }">
                 <v-btn v-bind="props" icon @click="$emit('refresh')">
                   <v-icon> mdi-refresh </v-icon>
                 </v-btn>
@@ -18,7 +19,7 @@
           </template>
         </common-title-bar>
         <!-- xterm console -->
-        <v-card rounded="0" class="fill-height" ref="terminalCard" />
+        <v-card ref="terminalCard" rounded="0" class="fill-height" />
       </v-card>
     </template>
   </v-dialog>

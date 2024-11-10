@@ -4,7 +4,7 @@
       Advanced
       <v-spacer />
     </v-card-title>
-    <v-expansion-panels variant="popout" multiple v-model="panelsOpen" title="command">
+    <v-expansion-panels v-model="panelsOpen" variant="popout" multiple title="command">
 
       <v-expansion-panel title="command">
         <v-expansion-panel-text>
@@ -14,7 +14,7 @@
             </v-card-text>
             <v-btn color="primary" class="float-right my-3" @click="pushCommandField()">+</v-btn>
           </div>
-          <common-form-dynamic-array path="command" :arrayFields="commands" />
+          <common-form-dynamic-array path="command" :array-fields="commands" />
         </v-expansion-panel-text>
       </v-expansion-panel>
 
@@ -26,7 +26,7 @@
             </v-card-text>
             <v-btn color="primary" class="float-right my-3" @click="pushLabel()">+</v-btn>
           </div>
-          <common-form-dynamic-array path="labels" :arrayFields="labels" />
+          <common-form-dynamic-array path="labels" :array-fields="labels" />
         </v-expansion-panel-text>
       </v-expansion-panel>
 
@@ -38,7 +38,7 @@
             </v-card-text>
             <v-btn color="primary" class="float-right my-3" @click="pushSysctls()">+</v-btn>
           </div>
-          <common-form-dynamic-array path="sysctls" :arrayFields="sysctls" />
+          <common-form-dynamic-array path="sysctls" :array-fields="sysctls" />
         </v-expansion-panel-text>
       </v-expansion-panel>
 
@@ -50,7 +50,7 @@
             </v-card-text>
             <v-btn color="primary" class="float-right my-3" @click="pushDevices()">+</v-btn>
           </div>
-          <common-form-dynamic-array path="devices" :arrayFields="devices" />
+          <common-form-dynamic-array path="devices" :array-fields="devices" />
         </v-expansion-panel-text>
       </v-expansion-panel>
 
@@ -84,7 +84,7 @@
 <script lang="ts" setup>
 
 import type { CreateContainerForm } from '~~/types/containers/create';
-import { type Field } from '~~/types/forms'
+import type { Field } from '~~/types/forms'
 const panelsOpen = ref([])
 // const { xs } = useDisplay()
 

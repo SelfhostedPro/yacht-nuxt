@@ -7,12 +7,12 @@
     variant="flat"
   >
     <v-slide-group
-      @mouseenter="hovered = true"
-      @mouseleave="hovered = false"
+      v-model="carousel"
       mandatory
       :show-arrows="false"
-      v-model="carousel"
       center-active
+      @mouseenter="hovered = true"
+      @mouseleave="hovered = false"
     >
       <v-slide-group-item
         v-for="featuredApp in template.featured"
@@ -22,7 +22,6 @@
         <v-img
           cover
           class="d-flex align-end featured-image mx-3 my-3 rounded"
-          @click="toggle"
           :color="isSelected ? 'primary' : 'foreground'"
           max-width="50vw"
           min-width="30vw"
@@ -32,14 +31,15 @@
             template.templates[featuredApp].featured_image ||
             template.templates[featuredApp].logo
           "
+          @click="toggle"
         >
           <v-card rounded="0" class="featured-card">
             <div class="d-flex align-center mt-3 justify-center">
               <v-btn
                 class="mr-auto"
-                @click="$emit('createApp', template.templates[featuredApp])"
                 icon
                 variant="plain"
+                @click="$emit('createApp', template.templates[featuredApp])"
               >
                 <v-icon icon="mdi-plus" />
               </v-btn>

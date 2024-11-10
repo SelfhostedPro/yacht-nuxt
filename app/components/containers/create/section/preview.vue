@@ -30,7 +30,7 @@
           <v-expansion-panel-text>
             <v-row>
               <v-col cols="2">
-                <v-avatar size="60" :image="form.info?.icon"></v-avatar>
+                <v-avatar size="60" :image="form.info?.icon"/>
               </v-col>
               <v-col>
                 <v-card-title>{{ form.info?.title }}</v-card-title>
@@ -48,7 +48,7 @@
             <v-card-title>{{ form.network ? form.network : form.network_mode }}</v-card-title>
             <v-divider class="mb-3" thickness="3" color="primary" />
             <v-row dense>
-              <v-col xs="12" sm="12" md="6" v-for="port in form.ports">
+              <v-col v-for="port in form.ports" xs="12" sm="12" md="6">
                 <v-card color="foreground">
                   <v-card-title>
                     {{ port?.label || null }}
@@ -87,7 +87,7 @@
         <v-expansion-panel title="environment">
           <v-expansion-panel-text>
             <v-row dense>
-              <v-col xs="12" sm="12" md="6" v-for="env in form.env">
+              <v-col v-for="env in form.env" xs="12" sm="12" md="6">
                 <v-card color="foreground">
                   <v-card-title>{{ env.label || env.name }}</v-card-title>
                   <v-card-subtitle v-if="env.label">name: {{ env.name }}</v-card-subtitle>
@@ -101,11 +101,11 @@
         </v-expansion-panel>
         <v-expansion-panel title="advanced">
           <v-expansion-panel-text style="white-space: pre-wrap;">
-            labels: {{ form.labels }}<br />
-            capabilities: {{ form.capabilities }}<br />
-            command: {{ form.command }}<br />
-            limits: {{ form.limits }}<br />
-            sysctls: {{ form.sysctls }}<br />
+            labels: {{ form.labels }}<br >
+            capabilities: {{ form.capabilities }}<br >
+            command: {{ form.command }}<br >
+            limits: {{ form.limits }}<br >
+            sysctls: {{ form.sysctls }}<br >
             devices: {{ form.devices }}
           </v-expansion-panel-text>
         </v-expansion-panel>

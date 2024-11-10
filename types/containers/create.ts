@@ -1,6 +1,6 @@
 import { z } from "zod"
 import { containerOciInfoSchema } from "./yachtContainers"
-import { keyValueSchema, capAddSchema, capDropSchema, nameValueSchema, optionalNameValueSchema } from "../shared"
+import { capAddSchema, capDropSchema, nameValueSchema, optionalNameValueSchema } from "../shared"
 
 export const containerFormEnvsSchema = z.object({
     name: z.string().min(1, { message: 'Name must be at least 1 character long'}),

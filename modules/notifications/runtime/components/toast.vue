@@ -11,7 +11,7 @@
       <v-icon
         size="32"
         :icon="level ? levelMap[level].icon : 'mdi-information-outline'"
-      ></v-icon>
+      />
     </template>
     <template v-if="title" #title
       ><p class="text-h6">{{ title }}</p></template

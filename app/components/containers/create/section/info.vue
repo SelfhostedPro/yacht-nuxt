@@ -30,8 +30,7 @@
           <v-avatar size="60" :image="form.info?.icon || fields['icon'].placeholder" />
           {{ form.info?.title || fields['title'].placeholder }}
         </v-card-title>
-        <v-card-text v-html="$mdRenderer.render(form.info?.notes || fields['notes'].placeholder || '')">
-        </v-card-text>
+        <v-card-text v-html="$mdRenderer.render(form.info?.notes || fields['notes'].placeholder || '')"/>
         <v-card-text class="font-weight-black">DO NOT STORE SENSITIVE INFO HERE OR R/SELFHOSTED WILL JUDGE YOU
           😤</v-card-text>
       </v-card-text>
@@ -40,7 +39,7 @@
 </template>
 
 <script lang="ts" setup>
-import { type Field} from '~~/types/forms'
+import type { Field} from '~~/types/forms'
 // const { xs } = useDisplay()
 const preview = ref(false)
 const form = useFormValues()
