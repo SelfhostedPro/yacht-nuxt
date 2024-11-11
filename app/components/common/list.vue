@@ -41,7 +41,7 @@
       >
         <slot name="heading" :selected-items="selectedItems" :server="server" />
         <v-data-iterator
-          v-if="resource[server].length > 0"
+          v-if="resource[server] && resource[server]!.length > 0"
           v-model:model-value="selectedItems"
           :items="resource[server] as readonly any[]"
           :search="search"
@@ -56,8 +56,8 @@
           <template #default="{ items, ...rest }">
             <v-row>
               <v-col
-                v-for="(_resource, i) in items"
-                :key="i"
+                v-for="(_resource, i2) in items"
+                :key="i2"
                 cols="12"
                 sm="6"
                 md="4"

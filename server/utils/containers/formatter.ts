@@ -95,7 +95,10 @@ const formatInfoPorts = (data: Port[]): ContainerPort[] => {
  */
 const splitPort = (port: string) => {
     const [portNumber, type] = port.split('/');
-    return { containerPort: parseInt(portNumber), type };
+    return { 
+        containerPort: parseInt(portNumber || '0'), 
+        type: type || 'tcp' 
+    };
 }
 /**
  * Transform ports data from info to ContainerPort type.
@@ -106,9 +109,9 @@ const formatInspectPorts = (data: ContainerInspectInfo): ContainerPort[] => {
     // Check network settings for mapped ports
     Object.entries(NetworkSettings.Ports).forEach(([port, forwarded]) => {
         const formattedPort: ContainerPort = { ...splitPort(port) };
-        if (forwarded) {
-            formattedPort.hostPort = parseInt(forwarded[0].HostPort);
-            formattedPort.hostIP = forwarded[0].HostIp;
+        if (forwarded && forwarded[0]) {
+            formattedPort.hostPort = forwarded[0].HostPort ? parseInt(forwarded[0].HostPort) : undefined;
+            formattedPort.hostIP = forwarded[0].HostIp ?? undefined;
         }
         portList.add(formattedPort);
     });
@@ -134,8 +137,10 @@ export const normalizeContainers = async (
 }
 
 export const normalizeContainerInfo = async (data: FixedContainerInfo): Promise<Container> => {
+    const name = data.Names?.[0]?.slice(1) ?? '';
+    
     return {
-        name: data.Names[0].slice(1),
+        name,
         id: data.Id,
         shortId: data['Id'].substring(0, 10),
         image: data['Image'],
@@ -167,6 +172,7 @@ export const normalizeContainerInfo = async (data: FixedContainerInfo): Promise<
         labels: data.Labels,
     } as Container;
 }
+
 
 /**
  * Normalize container data from FixedContainerInspectInfo type.
@@ -314,22 +320,25 @@ const transformVariables = async (data: CreateContainerForm): Promise<CreateCont
     return data;
 };
 
-const replaceVariables = (obj: Record<string, any>, oldValue: string, newValue: string): Record<string, any> => {
-    // Use Object.assign to create a shallow copy of the object
+const replaceVariables = <T extends Record<string, unknown>>(
+    obj: T,
+    oldValue: string,
+    newValue: string
+): T => {    // Use Object.assign to create a shallow copy of the object
     const resultObj = JSON.parse(JSON.stringify(obj));
     const stack = [{ obj: resultObj }];
 
     while (stack.length) {
-        const item = stack.pop() as { obj: Record<string, any> };
+        const item = stack.pop() as { obj: Record<string, unknown> };
         for (const key in item.obj) {
             if (typeof item.obj[key] === 'string') {
-                item.obj[key] = item.obj[key].replace(oldValue, newValue);
-            } else if (typeof item.obj[key] === 'object') {
+                item.obj[key] = (item.obj[key] as string).replace(oldValue, newValue);
+            } else if (typeof item.obj[key] === 'object' && item.obj[key] !== null) {
                 // Push a new object onto the stack for nested objects
-                stack.push({ obj: item.obj[key] });
+                stack.push({ obj: item.obj[key] as Record<string, unknown> });
             }
         }
-    }
+    }    
     return resultObj;
 };
 

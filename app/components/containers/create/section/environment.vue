@@ -29,8 +29,11 @@ const env: ComputedRef<Field[][]> = computed(() => {
 }
 )
 const pushEnv = () => {
-  // @ts-expect- by leaving name and value undefined, the user will be forced to fill them in
-  form.env ? form.env.unshift({ name: '', value: '' }) : form.env = []
+  if (!form.env) {
+    form.env = [{ name: '', value: '' }]
+  } else {
+    form.env.unshift({ name: '', value: '' })
+  }
 }
 </script>
 

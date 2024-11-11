@@ -1,4 +1,3 @@
-import { mkdirp } from 'fs-extra'
 import { z } from 'zod'
 
 export default eventHandler(async (event) => {

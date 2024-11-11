@@ -27,7 +27,7 @@ const fullscreen = ref(false);
 const language = ref<string>("plaintext");
 
 const projectsStore = useProjectsStore();
-const { activeFile, currentPath } = storeToRefs(projectsStore);
+const { activeFile } = storeToRefs(projectsStore);
 const editableFile = ref<FileInfo>();
 defineEmits(["toParent"])
 const extensionMap: { [key: string]: string } = {
@@ -48,10 +48,10 @@ watch(fullscreen, (isFullscreen) => {
 
 watch(activeFile, (activeFile) => {
   language.value = activeFile?.extension
-    ? extensionMap[activeFile.extension]
+    ? extensionMap[activeFile.extension] || 'plaintext'
     : activeFile?.name
-    ? fileMap[activeFile.name]
-    : "plaintext";
+    ? fileMap[activeFile.name] || 'plaintext'
+    : 'plaintext';
   editableFile.value = Object.assign(activeFile);
 });
 </script>

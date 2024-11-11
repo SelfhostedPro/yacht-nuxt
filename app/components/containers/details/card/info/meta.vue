@@ -1,3 +1,5 @@
+<!-- eslint-disable vue/no-v-html -->
+<!-- eslint-disable vue/no-v-text-v-html-on-component -->
 <template>
   <v-card-title v-if="info.title" tag="span">{{ info.title }}
     <v-tooltip v-for="link, i in links" :key="i" location="bottom" :text="link?.text">
@@ -16,6 +18,9 @@
 
 <script lang="ts" setup>
 import type { Container } from '~~/types/containers/yachtContainers';
+
+const { $mdRenderer } = useNuxtApp()
+
 interface Props {
   info: Container['info']
 }

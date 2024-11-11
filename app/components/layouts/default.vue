@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 const { links } = defineProps<Props>();
-const route = useRoute();
 interface Props {
   links: Link[];
 }

@@ -35,8 +35,7 @@ const { server, name } = defineProps<Props>();
 // Used to wait for connection to initialize on refresh
 
 // Window Controls
-const timestamps = ref(false);
-const emit = defineEmits(["close"]);
+defineEmits(["close"]);
 const { isSupported, copy, copied } = useClipboard();
 const loading = ref(false);
 

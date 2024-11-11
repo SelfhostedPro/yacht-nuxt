@@ -29,8 +29,9 @@ const mounts: ComputedRef<Field[][]> = computed(() => {
 }
 )
 const pushMount = () => {
-  form.mounts ? form.mounts.unshift({ label: '', source: '', destination: '', read_only: false }) : form.mounts = []
+  form.mounts = form.mounts || []
+  form.mounts.unshift({ label: '', source: '', destination: '', read_only: false })
 }
 </script>
 
-<style></style>~/shared/containers/create~/shared/forms
+<style></style>

@@ -1,7 +1,7 @@
 import { defineNuxtModule, addServerImportsDir, addImportsDir, addPlugin, addComponentsDir, createResolver, addServerHandler } from '@nuxt/kit'
 
 export default defineNuxtModule({
-    setup(options, nuxt) {
+    setup() {
         const resolver = createResolver(import.meta.url)
         // Types
         addImportsDir(resolver.resolve('types'))

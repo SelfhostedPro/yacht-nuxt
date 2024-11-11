@@ -5,7 +5,7 @@ import type { Nuxt } from '@nuxt/schema'
 
 export default defineNuxtModule({
     meta: { name: 'auth' },
-    async setup(_options: any, nuxt: Nuxt | undefined) {
+    async setup(_options: unknown, nuxt: Nuxt | undefined) {
         await installModule(config, null, nuxt)
         await installModule(db, null, nuxt)
         const resolver = createResolver(import.meta.url)

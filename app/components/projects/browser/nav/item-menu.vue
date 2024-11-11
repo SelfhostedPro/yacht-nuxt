@@ -25,7 +25,7 @@ const { item, path } = defineProps<Props>();
 const emit = defineEmits(["closeMenu"]);
 
 const projectsStore = useProjectsStore();
-const { dir, currentPath, activeFile } = storeToRefs(projectsStore);
+const { dir, currentPath } = storeToRefs(projectsStore);
 
 const copyFile = async (path: string) => {
   const fileContent = await $fetch<FileInfo>("/api/projects/file", {
@@ -36,7 +36,7 @@ const copyFile = async (path: string) => {
   });
   if (!fileContent)
     throw createError(`Unable to retrieve file contents for filing.`);
-  const { copy, copied } = useClipboard({ legacy: true });
+  const { copy } = useClipboard({ legacy: true });
   copy(fileContent.content);
 };
 const changeFolder = async (item: Dree) => {

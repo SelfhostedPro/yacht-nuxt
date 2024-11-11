@@ -1,6 +1,5 @@
 // import { RefisterUserFormSchema } from "~~/types/auth";
 // import type { DBUser, RegisterUserForm } from "~~/types/auth";
-import type { DBUser } from "~~/modules/db/types/user";
 import type { RegisterUserForm } from "~~/modules/auth/types/auth";
 import { RegisterUserFormSchema } from "~~/modules/auth/types/auth";
 import { Logger } from "~~/modules/logging/runtime/server/composables/logger";

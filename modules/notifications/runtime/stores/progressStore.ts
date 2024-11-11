@@ -1,5 +1,6 @@
 import NotificationsProgress from "../components/progress.vue"
 import { useProgress } from "../composables/progress"
+
 export const useProgressStore = defineStore('lv-progressStore', {
     state: () => ({
         connected: false,
@@ -7,7 +8,8 @@ export const useProgressStore = defineStore('lv-progressStore', {
     }),
     actions: {
         async removeToast(id: string | number) {
-            delete this.progress[id]
+            // Use Reflect.deleteProperty instead of delete
+            Reflect.deleteProperty(this.progress, id)
         },
         async connect() {
             const { close, data, error, eventSource, open, status, event, } = useEventSource('/api/progress', [],
@@ -25,7 +27,6 @@ export const useProgressStore = defineStore('lv-progressStore', {
                 eventSource.value.onopen = (ev) => {
                     console.log('connected to progress SSE', ev)
                     this.connected = true
-                    // this.$patch({ connected: true })
                 }
                 eventSource.value.onmessage = async (ev) => {
                     if (typeof JSON.parse(ev.data) === 'string') return
@@ -45,39 +46,23 @@ export const useProgressStore = defineStore('lv-progressStore', {
                     items: {}
                 };
             }
+
+            const progressItem = this.progress[progress.id];
+            if (!progressItem) return;
+
             if (("item" in progress)) {
                 // If item, just update the item value.
-                this.progress[progress.id].items[progress.item.id] = progress.item
-                if (progress.item.status === 'done') delete this.progress[progress.id].items[progress.item.id]
+                if (progressItem.items) {
+                    progressItem.items[progress.item.id] = progress.item;
+                    if (progress.item.status === 'done') {
+                        Reflect.deleteProperty(progressItem.items, progress.item.id);
+                    }
+                }
             } else {
                 // If no item, update the title
-                this.progress[progress.id].title = progress.title
-                await useProgress(progress, NotificationsProgress)
+                progressItem.title = progress.title;
+                await useProgress(progress, NotificationsProgress);
             }
-            // const formattedCurrent = formatBytes(progressDetail.current);
-            // const formattedTotal = formatBytes(progressDetail.total);
-            // const calculatedProgress =
-            // (progressDetail.current / progressDetail.total) * 100;
-
-            // progressDict.value[title][id] = {
-            //     message: `${progress.status} - ${progress.id}`,
-            //     status: progress.status,
-            //     total: formattedTotal,
-            //     current: formattedCurrent,
-            //     progress: calculatedProgress,
-            // };
-
-            // if (progress.status === "Pull complete") {
-            //     delete progressDict.value[title][id];
-            // } else if (
-            //     progress.status === `Status: Image is up to date for ${item}` ||
-            //     progress.status === `Status: Downloaded newer image for ${item}`
-            // ) {
-            //     delete progressDict.value[title];
-            // }
-            // if (Object.keys(progressDict.value[title]).length === 0) {
-            //     delete progressDict.value[title];
-            // }
         }
     }
 })

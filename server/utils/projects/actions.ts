@@ -1,6 +1,6 @@
 import { simpleGit, type SimpleGitProgressEvent } from 'simple-git'
 import { ensureDir, mkdirp, pathExists, createFile } from 'fs-extra'
-import { join, basename, resolve, dirname } from 'path'
+import { join, dirname } from 'path'
 import { spawn } from 'node:child_process'
 
 const dataDir = useRuntimeConfig().yacht.configOptions.dataPath
@@ -60,13 +60,13 @@ export const cloneGitRepo = async (path: string, url: string) => {
     return result
 }
 
-export const getProjectFile = (path: string) => {
+// export const getProjectFile = (path: string) => {
 
-}
+// }
 
 export const projectAction = async (path: string, action: 'up' | 'down') => {
     console.log(join(dataDir, dirname(path)))
-    const composeCommand: Promise<{ code?: number | null, error?: unknown }> = new Promise((res, rej) => {
+    const composeCommand: Promise<{ code?: number | null, error?: unknown }> = new Promise((res) => {
         const compose = spawn('docker', ['compose', action, '-d'], { cwd: join(dataDir, dirname(path)), env: process.env, shell: true })
         compose.stdout.on('data', (data) => {
             console.log('data', data.toString())

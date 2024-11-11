@@ -32,10 +32,9 @@ interface Props {
 }
 
 const { server, name } = defineProps<Props>();
-const fullscreen = ref(false);
 const attachAddon = ref<AttachAddon | undefined>();
 const sessionId = useState("sessionId", () => "");
-const emit = defineEmits(["close"]);
+defineEmits(["close"]);
 
 const terminalSource: Ref<EventSource | undefined> = ref();
 const closeTerminal: Ref<(() => void) | undefined> = ref();

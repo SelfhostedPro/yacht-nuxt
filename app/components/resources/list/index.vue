@@ -47,7 +47,6 @@ import type { FixedVolumeInspectInfo } from "~~/types/containers/fixedDockerode"
 import type {
   NetworkInspectInfo,
   ImageInfo,
-  VolumeInspectInfo,
 } from "dockerode";
 import type { DataIteratorItem } from "~~/types/common/vuetify";
 interface Props {

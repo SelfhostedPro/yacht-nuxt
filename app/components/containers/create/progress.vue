@@ -1,16 +1,25 @@
 <template>
   <v-timeline v-if="!smAndDown" class="my-3" truncate-line="both" side="end" line-inset="8">
     <v-timeline-item
-v-for="step, i in steps"
-      :key="i" :dot-color="step.errors && step.errors.length > 0 ? 'error' : currentStep >= i ? 'primary' : 'secondary'"
-      :class="currentStep === i ? 'font-weight-regular' : 'font-weight-light text-disabled'" @click="currentStep = i">
+      v-for="(step, i) in steps"
+      :key="i"
+      :dot-color="step.errors && step.errors.length > 0 ? 'error' : currentStep >= i ? 'primary' : 'secondary'"
+      :class="currentStep === i ? 'font-weight-regular' : 'font-weight-light text-disabled'"
+      @click="currentStep = i"
+    >
       <template #icon>
         <v-tooltip v-if="step.errors" location="top end" activator="parent">
-          <v-card-text v-for="error in step.errors">{{ error }}</v-card-text>
+          <v-card-text v-for="error in step.errors" :key="error">{{ error }}</v-card-text>
         </v-tooltip>
       </template>
       <v-fade-transition hide-on-leave>
-        <v-alert v-if="currentStep === i" color="foreground" :rounded="0" :title="step.title" :text="step.description" />
+        <v-alert
+          v-if="currentStep === i"
+          color="foreground"
+          :rounded="0"
+          :title="step.title"
+          :text="step.description"
+        />
       </v-fade-transition>
       <v-fade-transition hide-on-leave>
         {{ currentStep !== i ? step.title : null }}
@@ -18,17 +27,15 @@ v-for="step, i in steps"
     </v-timeline-item>
   </v-timeline>
   <div v-else>
-    <v-card-title>{{ steps[currentStep].title }}</v-card-title>
-    <v-card-text>{{ steps[currentStep].description }}</v-card-text>
+    <v-card-title>{{ steps[currentStep]?.title || '' }}</v-card-title>
+    <v-card-text>{{ steps[currentStep]?.description || '' }}</v-card-text>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { useDisplay } from 'vuetify';
-import type { CreateContainerForm } from '~~/types/containers/create';
 const { smAndDown } = useDisplay()
 const errors = useFormErrors()
-const form = useFormValues<CreateContainerForm>()
 const currentStep = defineModel<number>('step', { default: 0 })
 
 function getErrors(paths: string[]) {
@@ -45,30 +52,31 @@ function getErrors(paths: string[]) {
   return fieldErrors.length > 0 ? fieldErrors : undefined;
 }
 
+interface Step {
+  title: string;
+  description: string;
+  paths?: string[];
+  errors?: string[];
+}
 
-const steps = computed(() => {
-  return [
-    { title: 'base', description: 'Basic information about your container.', paths: ['image', 'name', 'restart', 'server'] },
-    { title: 'info', description: 'Information that will be added to the labels of your container', paths: ['info'] },
-    { title: 'networking', description: 'Networking configuration for your container.', paths: ['network_mode', 'ports'] },
-    { title: 'storage', description: 'Storage configuration for your container.', paths: ['mounts'] },
-    { title: 'environment', description: 'Environment variables for your container.', paths: ['env'] },
-    { title: 'advanced', description: `Advanced container settings. Only change if you need to.`, paths: ['capabilities', 'command', 'limits', 'sysctls', 'devices'] },
-    { title: 'preview', description: `Preview your container before deploying.` },
-  ].map(step => ({
-    ...step,
-    errors: step.paths ? getErrors(step.paths) : undefined,
-  }));
-});
+const steps = ref<Step[]>([
+  { title: 'base', description: 'Basic information about your container.', paths: ['image', 'name', 'restart', 'server'] },
+  { title: 'info', description: 'Information that will be added to the labels of your container', paths: ['info'] },
+  { title: 'networking', description: 'Networking configuration for your container.', paths: ['network_mode', 'ports'] },
+  { title: 'storage', description: 'Storage configuration for your container.', paths: ['mounts'] },
+  { title: 'environment', description: 'Environment variables for your container.', paths: ['env'] },
+  { title: 'advanced', description: `Advanced container settings. Only change if you need to.`, paths: ['capabilities', 'command', 'limits', 'sysctls', 'devices'] },
+  { title: 'preview', description: `Preview your container before deploying.` },
+].map(step => ({
+  ...step,
+  errors: step.paths ? getErrors(step.paths) : undefined,
+})))
 
 watchEffect(() => {
   steps.value.forEach(step => {
     step.errors = step.paths ? getErrors(step.paths) : undefined;
   });
 });
-
-
-
 </script>
 
-<style></style>~/shared/containers/create
+<style></style>

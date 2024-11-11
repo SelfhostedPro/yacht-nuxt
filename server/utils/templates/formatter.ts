@@ -1,4 +1,13 @@
-import { yachtV1TemplateSchema, yachtV2TemplateSchema, portainerV1TemplateSchema, portainerV2TemplateSchema, type PortainerV1Template, type YachtV1Template, type YachtV2Template, type PortainerV2Template, type YachtTemplate, yachtTemplateSchema } from "~~/types/templates/yacht";
+import { 
+    yachtV1TemplateSchema, 
+    yachtV2TemplateSchema, 
+    portainerV1TemplateSchema, 
+    portainerV2TemplateSchema, 
+    type PortainerV1Template, 
+    type YachtV1Template, 
+    type PortainerV2Template, 
+    type YachtTemplate 
+} from "~~/types/templates/yacht";
 
 interface TemplateInfo {
     name: string;
@@ -21,16 +30,18 @@ export const getTemplateType = (template: PortainerV1Template[] | YachtV1Templat
     }
 }
 
-
 export const typeTemplate = async (template: PortainerV1Template[] | YachtV1Template[] | YachtTemplate | PortainerV2Template, { name, title, type, url }: TemplateInfo): Promise<YachtTemplate> => {
     const formattedTemplate: YachtTemplate | null = await formatTemplate({ name, title, url, type }, template);
-    if (!formattedTemplate === null) {
+    if (formattedTemplate === null) {
         throw createError('Unknown template type.');
     }
-    return formattedTemplate as YachtTemplate;
+    return formattedTemplate;
 }
 
-const formatTemplate = async (info: { name: string, title: string, url: string, type: 'yachtv1' | 'yachtv2' | 'portainerv1' | 'portainerv2' }, template: any): Promise<YachtTemplate | null> => {
+const formatTemplate = async (
+    info: TemplateInfo, 
+    template: PortainerV1Template[] | YachtV1Template[] | YachtTemplate | PortainerV2Template
+): Promise<YachtTemplate | null> => {
     const now = new Date().toISOString();
     switch (info.type) {
         case 'yachtv1':
@@ -42,11 +53,11 @@ const formatTemplate = async (info: { name: string, title: string, url: string, 
                 featured: undefined,
                 description: undefined,
                 links: undefined,
-                templates: template
+                templates: template as YachtV1Template[]
             };
         case 'yachtv2':
             return {
-                ...template,
+                ...(template as YachtTemplate),
                 name: info.name,
                 title: info.title,
                 created: now,
@@ -66,7 +77,7 @@ const formatTemplate = async (info: { name: string, title: string, url: string, 
                 ...info,
                 created: now,
                 updated: now,
-                templates: template.templates
+                templates: (template as PortainerV2Template).templates
             };
         default:
             return null;

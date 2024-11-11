@@ -69,12 +69,12 @@ interface Props {
     event: MouseEvent,
     path: string
   ) => Promise<void>;
-  setActive: (item: Dree) => Promise<any>;
+  setActive: (item: Dree) => Promise<unknown>;
   depth?: number;
 }
 const { loadChildren, handleRightClick, path } = defineProps<Props>();
 
-const emit = defineEmits(["rightClick"]);
+defineEmits(["rightClick"]);
 const fetchChildren = async (item: Dree, path: string) => {
   loading.value.push(item.name);
   await loadChildren(item, path);

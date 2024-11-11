@@ -22,9 +22,8 @@ import LoginForm from "~/components/auth/LoginForm.vue";
 import RegisterForm from "~/components/auth/RegisterForm.vue";
 const settingStore = useSettingsStore();
 const {
-  loading,
   details: {
-    value: { wizard, auth },
+    value: { wizard },
   },
 } = storeToRefs(settingStore);
 useAsyncData("details", () => settingStore.fetchDetails());

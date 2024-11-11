@@ -51,11 +51,11 @@ interface Props {
   server: string;
   name: string;
 }
-const { server, name } = defineProps<Props>();
+const { server } = defineProps<Props>();
 const containersStore = useContainersStore();
 const { smAndDown } = useDisplay();
-const { container, loading } = storeToRefs(containersStore);
-const { refresh } = await containersStore.fetchContainerDetails(server, name);
+const { container } = storeToRefs(containersStore);
+// const { refresh } = await containersStore.fetchContainerDetails(server, name);
 
 // const { refresh } = useAsyncData(
 //   `container-${server}-${name}`,

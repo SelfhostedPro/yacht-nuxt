@@ -1,27 +1,14 @@
 <template>
-  <common-list
-    :resource="servers"
-    name="containers"
-    :loading="loading.includes('containers')"
-  >
+  <common-list :resource="servers" name="containers" :loading="loading.includes('containers')">
     <template #bulk-buttons="{ selectedItems, server }">
       <v-btn-group>
-        <v-tooltip
-          v-for="action in actions"
-          :key="action.name"
-          :text="action.name"
-          location="bottom"
-        >
+        <v-tooltip v-for="action in actions" :key="action.name" :text="action.name" location="bottom">
           <template #activator="{ props: props }">
             <v-btn
-              v-bind="props"
-              :color="action.color"
-              class="my-1"
-              :disabled="loading.includes('containers')"
+v-bind="props" :color="action.color" class="my-1" :disabled="loading.includes('containers')"
               @click.prevent="
                 handleBulkAction(server, selectedItems, action.name)
-              "
-            >
+                ">
               <v-icon :icon="action.icon" />
             </v-btn>
           </template>
@@ -35,34 +22,26 @@
                 </v-card-title>
               </v-col>
               <v-col cols="1">
-                <v-btn
-                  :rounded="0"
-                  variant="plain"
-                  icon
-                  @click="removeDialog = false"
-                >
+                <v-btn :rounded="0" variant="plain" icon @click="removeDialog = false">
                   <v-icon icon="mdi-window-close" />
                 </v-btn>
               </v-col>
             </v-row>
             <v-card-text>
               Are you sure you want to permanently remove the following
-              containers? <br >
+              containers? <br>
               <pre
-                class="text-error text-capitalize"
-              ><b>{{ selectedItems.map((item: string) => item).join(',\n') }}</b></pre>
+                class="text-error text-capitalize"><b>{{ selectedItems.map((item: string) => item).join(',\n') }}</b></pre>
               All non-peristent data will be unrecoverable.
             </v-card-text>
             <v-card-actions>
               <v-spacer />
               <v-btn @click.prevent="removeDialog = false"> Cancel </v-btn>
               <v-btn
-                color="error"
-                @click.prevent="
-                  handleBulkAction(server, selectedItems, 'remove');
-                  removeDialog = false;
-                "
-              >
+color="error" @click.prevent="
+                handleBulkAction(server, selectedItems, 'remove');
+              removeDialog = false;
+              ">
                 Remove
               </v-btn>
             </v-card-actions>
@@ -81,12 +60,9 @@
     </template>
     <template #card="{ server, resource, toggleSelect, isSelected }">
       <lazy-containers-list-card
-        :container="(resource.raw as Container)"
-        :server="server"
-        :stats="stats[resource.raw.name] ? stats[resource.raw.name] : undefined"
-        :selected="isSelected(resource)"
-        @selected="toggleSelect(resource)"
-      />
+:container="(resource.raw as Container)" :server="server"
+        :stats="stats[resource.raw.name] ? stats[resource.raw.name] : undefined" :selected="isSelected(resource)"
+        @selected="toggleSelect(resource)" />
     </template>
   </common-list>
 </template>
@@ -147,10 +123,15 @@ const refresh = async () => {
 };
 
 const handleBulkAction = async (
-  server: string,
+  server: string | undefined,
   items: string[],
   action: string
 ) => {
+  if (!server) {
+    console.error('Server is undefined');
+    return;
+  }
+
   if (action === "remove" && removeDialog.value === false) {
     removeDialog.value = true;
     return;

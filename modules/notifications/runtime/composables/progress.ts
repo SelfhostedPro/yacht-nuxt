@@ -1,23 +1,37 @@
-import type { Pinia } from 'pinia'
+import type { Component } from 'vue'
+import { markRaw } from 'vue'
+import type { ProgressTitleUpdate } from '~~/modules/notifications/types/progress'
 import Progress from '../components/progress.vue'
-import { useProgressStore } from '#imports'
+import { useProgressStore, useNuxtApp } from '#imports'
 
+interface ProgressOptions {
+  [key: string]: unknown
+}
 
-// Main function for Progress. Copy and export it
-export const useProgress = async (response: ProgressTitleUpdate, component: Component = Progress, options?: any,) => {
+type ProgressFunction = (
+  response: ProgressTitleUpdate,
+  component?: Component,
+  options?: ProgressOptions
+) => Promise<unknown>
+
+// Main function for Progress
+export const useProgress: ProgressFunction = async (
+  response: ProgressTitleUpdate, 
+  component: Component = Progress,
+  _options?: ProgressOptions
+): Promise<unknown> => {
     const { $toast, $pinia } = useNuxtApp()
+    
     // Get progress store with active instance
     const progressStore = useProgressStore($pinia)
-    const { progress, connected } = storeToRefs(progressStore)
-    console.log('from progressts', response.id)
-
+    
     return $toast.custom(markRaw(component), {
         unstyled: true,
         duration: Number.POSITIVE_INFINITY,
-        onAutoClose(toast) {
+        onAutoClose(_toast) {
             progressStore.removeToast(response.id)
         },
-        onDismiss(toast) {
+        onDismiss(_toast) {
             progressStore.removeToast(response.id)
         },
         componentProps: { id: response.id }

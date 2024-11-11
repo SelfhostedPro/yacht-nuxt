@@ -8,19 +8,21 @@ import type { ImagePullProgress } from "~~/types/images"
 import { getContainers } from './info'
 import { processImageProgress } from "../resources/info"
 
-
-
 export const createContainer = async (form: CreateContainerForm) => {
-    const server: Dockerode | null = await useServers().then((servers: ServerDict) => servers[form.server])
+    const servers = await useServers()
+    if (!servers) {
+        throw createError('No servers available')
+    }
+    
+    const server = servers[form.server]
     if (!server) {
         throw createError(`Server ${form.server} not found!`)
     }
+
     // YachtLog({ title: 'CreateContainer', level: 'info', from: `services/containers - createContainer`, message: `Creating container: ${form.name} from image: ${form.image} on server: ${server}` })
     const pullStream = await server.pull(form.image);
     await new Promise((res) => server.modem.followProgress(pullStream, res, (progress: ImagePullProgress) => {
-
         sseHooks.callHook("sse:progress", processImageProgress(progress, form.image))
-
         // sseHooks.callHook("sse:progress", { id: progress.id, title: `Pulling ${form.image}`, item: form.image, status: progress.status, progress } as Progress)
     }));
     // YachtLog({ title: 'CreateContainer', level: 'info', from: `services/containers - createContainer`, message: `Image: ${form.image} pulled successfully.` })
@@ -42,45 +44,60 @@ export const createContainer = async (form: CreateContainerForm) => {
                 await server.getContainer(createdContainer.id).inspect(),
             );
         })
-
 }
-
 
 export const getContainerAction = async (server: string, id: string, action: string) => {
-    const _server: Dockerode | null = await useServers().then((servers: ServerDict) => servers[server])
-
-    if (_server) {
-        const container = _server.getContainer(id)
-        const actions: { [action: string]: () => void } = {
-            start: async () => container.start(),
-            stop: async () => container.stop(),
-            pause: async () => container.pause(),
-            unpause: async () => container.unpause(),
-            kill: async () => container.kill(),
-            remove: async () => container.remove({ force: true }),
-            restart: async () => container.restart(),
+    const _server = await useServers().then((servers: ServerDict | undefined) => {
+        if (!servers) {
+            throw createError('No servers available')
         }
-        if (action in actions) {
-            try {
-                await actions[action]()
-                if (action !== 'remove') {
-                    const _container = await normalizeContainerInspectInfo(await container.inspect())
-                    Logger(`${action} performed on ${_container.info.title || _container.name}: ${_container.shortId}`, 'container - action', { title: 'ContainerAction', level: 'info', message: `${action} performed on ${_container.info.title || _container.name}: ${_container.shortId}`, timeout: 2000 })
+        const selectedServer = servers[server]
+        if (!selectedServer) {
+            throw createError(`Server ${server} not found`)
+        }
+        return selectedServer
+    })
 
-                } else Logger(`${action} performed on ${id}: ${container.id}`, 'services-containers', { title: 'ContainerAction', level: 'info', message: `${action} performed on ${id}: ${container.id}`, timeout: 2000 })
-                return await getContainers()
-            } catch (e: Error | any) {
-                if (e.statusCode && e.statusCode === 304) {
+    const container = _server.getContainer(id)
+    const actions = {
+        start: () => container.start(),
+        stop: () => container.stop(),
+        pause: () => container.pause(),
+        unpause: () => container.unpause(),
+        kill: () => container.kill(),
+        remove: () => container.remove({ force: true }),
+        restart: () => container.restart(),
+    } as const
+
+    type ActionKey = keyof typeof actions
+    const isValidAction = (key: string): key is ActionKey => key in actions
+
+    if (isValidAction(action)) {
+        try {
+            await actions[action]()
+            if (action !== 'remove') {
+                const _container = await normalizeContainerInspectInfo(await container.inspect())
+                Logger(`${action} performed on ${_container.info.title || _container.name}: ${_container.shortId}`, 'container - action', { title: 'ContainerAction', level: 'info', message: `${action} performed on ${_container.info.title || _container.name}: ${_container.shortId}`, timeout: 2000 })
+            } else {
+                Logger(`${action} performed on ${id}: ${container.id}`, 'services-containers', { title: 'ContainerAction', level: 'info', message: `${action} performed on ${id}: ${container.id}`, timeout: 2000 })
+            }
+            return await getContainers()
+        } catch (e) {
+            if (e instanceof Error) {
+                const dockerError = e as { statusCode?: number; message: string }
+                if (dockerError.statusCode === 304) {
                     Logger(`Container ${id} is already ${action}ed!`, 'containers - action', { message: `Container ${id} is already ${action}ed!`, level: 'info' })
                 } else {
-                    createError(e)
+                    throw createError({
+                        statusMessage: dockerError.message,
+                        statusCode: dockerError.statusCode,
+                    })
                 }
-                return await getContainers()
             }
-        } else {
-            Logger(`Action ${action} not valid!`, 'ContainerActionError', { title: 'ContainerActionError', level: 'error', message: `Action ${action} not valid!` })
-            throw createError(`Action ${action} not valid!`)
+            return await getContainers()
         }
+    } else {
+        Logger(`Action ${action} not valid!`, 'ContainerActionError', { title: 'ContainerActionError', level: 'error', message: `Action ${action} not valid!` })
+        throw createError(`Action ${action} not valid!`)
     }
 }
-

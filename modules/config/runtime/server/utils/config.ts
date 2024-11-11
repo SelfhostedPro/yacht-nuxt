@@ -1,4 +1,4 @@
-import { watchConfig, type ConfigLayerMeta, type ConfigWatcher, type ResolvedConfig } from "c12"
+import { watchConfig } from "c12"
 import { defaultYachtConfig } from "./defaults"
 import fs from 'fs-extra'
 import { stringifyYAML } from 'confbox'
@@ -11,8 +11,8 @@ import * as crypto from 'crypto';
 
 const nuxtConfig = useRuntimeConfig()
 
-const configStorage = useStorage('config')
-const dataStorage = useStorage('data')
+// const configStorage = useStorage('config')
+// const dataStorage = useStorage('data')
 
 const DefaultWatchOptions = {
     cwd: nuxtConfig.yacht.configOptions.configPath,
@@ -24,10 +24,10 @@ const DefaultWatchOptions = {
 
 const _config = watchConfig({
     ...DefaultWatchOptions,
-    onWatch(event) {
+    onWatch() {
 
     },
-    onUpdate(event) {
+    onUpdate() {
 
     }
 })
@@ -59,7 +59,7 @@ export const useConfig = async (): Promise<YachtConfig> => {
     return config.config
 }
 
-export const backupConfig = async (config: any, path: string) => {
+export const backupConfig = async (config: unknown, path: string) => {
     fs.outputFile(resolve(path, 'config.bak.yaml'), stringifyYAML(config, { indent: 2 }), { encoding: 'utf8' })
 }
 
@@ -123,7 +123,8 @@ export const getSecrets = async () => {
             if (!secrets.accessSecret || !secrets.refreshSecret || !secrets.passphraseSecret || !secrets.authSecret) {
                 return await generateSecretTokens()
             } else return secrets
-        } catch (e) {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        } catch (_e) {
             return await generateSecretTokens();
         }
     } else return await generateSecretTokens();

@@ -1,15 +1,13 @@
-import { yachtTemplateSchema, type PortainerV1Template, type PortainerV2Template, type YachtTemplate, type YachtV1Template, type YachtV2Template } from "~~/types/templates/yacht";
+import { yachtTemplateSchema, type PortainerV1Template, type PortainerV2Template, type YachtTemplate, type YachtV1Template } from "~~/types/templates/yacht";
 import { typeTemplate, getTemplateType } from "./formatter";
 import fs from 'fs-extra'
 import { configPaths } from "~~/modules/config/runtime/server/utils/config";
 import {
-    parseJSON5,
     parseJSONC,
     parseYAML,
     parseTOML,
 } from "confbox";
 
-const configStorage = useStorage('base')
 export interface addYachtTemplate {
     url: string;
     name: string;

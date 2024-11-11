@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/no-v-html -->
 <template>
   <v-btn color="primary">
     <v-icon icon="mdi-plus" />
@@ -35,7 +36,7 @@
             <v-row>
               <v-col v-auto-animate>
                 <span
-                  v-for="error, , i in errors"
+                  v-for="error, _, i in errors"
                   :key="i"
                   class="text-error"
                   v-html="error"

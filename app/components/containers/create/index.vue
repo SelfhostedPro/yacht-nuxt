@@ -1,8 +1,8 @@
 <template>
   <v-dialog
-v-model="dialog" :close-on-content-click="false"
-    persistent no-click-animation scrollable :fullscreen="maximize" :width="maximize ? undefined : '80vw'"
-    :height="maximize ? undefined : '80vh'" @update:model-value="() => template ? populateFromTemplate(template) : null">
+v-model="dialog" :close-on-content-click="false" persistent no-click-animation scrollable
+    :fullscreen="maximize" :width="maximize ? undefined : '80vw'" :height="maximize ? undefined : '80vh'"
+    @update:model-value="() => template ? populateFromTemplate(template) : null">
     <template #default>
       <v-card color="foreground" width="80vw" height="100%" :loading="loading.includes('create')">
         <common-title-bar
@@ -38,7 +38,7 @@ color="warning"
 </template>
 
 <script lang="ts" setup>
-import { yachtV2TemplatePortSchema, type YachtV2TemplatePort, type YachtTemplate, yachtV1TemplatePortSchema, type YachtV1TemplatePort, type yachtV1TemplatePorts } from '~~/types/templates/yacht';
+import type { YachtTemplate } from '~~/types/templates/yacht';
 import { createContainerFormSchema, type CreateContainerForm } from "~~/types/containers/create"
 import type { PartialDeep } from 'type-fest';
 
@@ -119,7 +119,7 @@ const populateFromTemplate = async (template: YachtTemplate['templates'][0]): Pr
       }
     }) || [],
     command: template?.command ? [template.command] : [],
-    sysctls: template?.sysctls?.map((sysctl) => ({ name: Object.keys(sysctl)[0], value: Object.values(sysctl)[0] })) || [],
+    sysctls: template?.sysctls?.map((sysctl) => ({ name: Object.keys(sysctl)[0] || '', value: Object.values(sysctl)[0] || '' })) || [],
     devices: template?.devices || [],
     capabilities: {
       add: template?.cap_add || [],

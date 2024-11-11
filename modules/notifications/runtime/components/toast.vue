@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/multi-word-component-names -->
 <template>
   <v-alert
     :width="smAndDown ? '100%' : '30vw'"
@@ -28,7 +29,7 @@ import type { Notification, NotificationLevel } from "#imports";
 defineEmits(["closeToast"]);
 const { smAndDown } = useDisplay();
 
-const { dedupe, level, message, timeout, title } = defineProps<Notification>();
+const { level, message, title } = defineProps<Notification>();
 
 const levelMap: {
   [level in NotificationLevel]: {

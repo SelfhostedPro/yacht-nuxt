@@ -3,12 +3,12 @@
     v-if="activeFile && Object.keys(specialFileTypes).includes(activeFile.name)"
   >
     <v-btn
-      v-for="action in specialFiles[specialFileTypes[activeFile.name]].actions"
-      :key="action.title"
-      :color="action.color"
-      @click="performAction(action.title)"
+      v-for="actionItem in getFileActions()"
+      :key="actionItem.title"
+      :color="actionItem.color"
+      @click="performAction(actionItem.title)"
     >
-      {{ action.title }}
+      {{ actionItem.title }}
     </v-btn>
   </template>
   <v-spacer />
@@ -17,6 +17,7 @@
     <v-icon icon="mdi-content-save" />
   </v-btn>
 </template>
+
 <script setup lang="ts">
 // Setup Projects Store
 const projectsStore = useProjectsStore();
@@ -24,10 +25,17 @@ const { activeFile } = storeToRefs(projectsStore);
 
 const isLoading = ref(false);
 
-type action = { title: string; color?: string };
-type SpecialFiles = { [key: string]: { actions: action[] } };
+interface Action {
+  title: string;
+  color?: string;
+}
 
-const specialFileTypes: { [name: string]: keyof SpecialFiles } = {
+interface SpecialFiles {
+  compose: { actions: Action[] };
+  docker: { actions: Action[] };
+}
+
+const specialFileTypes: Record<string, keyof SpecialFiles> = {
   "docker-compose.yml": "compose",
   "docker-compose.yaml": "compose",
   "compose.yaml": "compose",
@@ -47,33 +55,36 @@ const specialFiles: SpecialFiles = {
   },
 };
 
-// const actions: action[] = ["up", "down"];
+const getFileActions = (): Action[] => {
+  if (!activeFile.value?.name) return [];
+  const fileType = specialFileTypes[activeFile.value.name];
+  return fileType ? specialFiles[fileType].actions : [];
+};
 
 // Action Functions
-// Used to interact with API to save/bring up/down/etc.
-
 const saveFile = async () => {
   isLoading.value = true;
-  await $fetch("/api/projects/save", {
-    method: "POST",
-    body: {
-      content: activeFile.value?.content,
-      path: activeFile.value?.path,
-    },
-  })
-    .then((res) => {
-      isLoading.value = false;
-    })
-    .catch((e) => {
-      isLoading.value = false;
+  try {
+    await $fetch("/api/projects/save", {
+      method: "POST",
+      body: {
+        content: activeFile.value?.content,
+        path: activeFile.value?.path,
+      },
     });
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  } catch (_error) {
+    // Error handling could be added here
+  } finally {
+    isLoading.value = false;
+  }
 };
 
 const performAction = async (action: string) => {
   await $fetch(`/api/projects/action`, {
     method: "POST",
     body: {
-      action: action,
+      action,
       path: activeFile.value?.path,
     },
   });

@@ -97,15 +97,11 @@ import { useDisplay } from "vuetify";
 
 // Sidebar Settings
 const sidebarExpanded: Ref<boolean> = ref(false);
-const sidebarExpand = async (value: boolean) => {
-  await nextTick();
-  sidebarExpanded.value = !value;
-};
 
 // Size
 type sidebarMode = "auto" | "mini" | "full";
 const mode: Ref<sidebarMode> = ref("auto");
-const modes: ComputedRef<{ current: sidebarMode; next: sidebarMode }> =
+  const modes: ComputedRef<{ current: sidebarMode; next: sidebarMode }> =
   computed(() => {
     switch (mode.value) {
       case "auto":
@@ -114,8 +110,11 @@ const modes: ComputedRef<{ current: sidebarMode; next: sidebarMode }> =
         return { current: "full", next: "mini" };
       case "mini":
         return { current: "mini", next: "auto" };
+      default:
+        return { current: "auto", next: "full" }; // Default fallback
     }
   });
+
 const modeIcons = {
   auto: "mdi-lock-open",
   mini: "mdi-arrow-collapse-left",

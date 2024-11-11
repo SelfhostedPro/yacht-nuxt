@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/multi-word-component-names -->
 <template>
   <v-card
     :width="smAndDown ? '100%' : '30vw'"
@@ -10,7 +11,7 @@
       ><p class="text-h6">{{ title }}</p></template
     >
     <v-expand-transition group>
-      <v-card-item v-for="(item, i) in items">
+      <v-card-item v-for="(item, i) in items" :key="i">
         <v-card-subtitle class="d-flex justify-space-between">
           <p>{{ item.status }}</p>
           <p>

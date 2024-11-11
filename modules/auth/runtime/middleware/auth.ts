@@ -2,7 +2,7 @@ import type { User } from "../../types/user";
 import { useClientConfig } from "~~/modules/config/runtime/composables/client-config";
 import { useUser } from "../composables/user";
 
-export default defineNuxtRouteMiddleware(async (from, to) => {
+export default defineNuxtRouteMiddleware(async (from) => {
     // console.log(`${from.path} => ${to.path}`)
     const config = useClientConfig()
     if (
@@ -17,7 +17,8 @@ export default defineNuxtRouteMiddleware(async (from, to) => {
             if (data) {
                 user.value = data;
             }
-        } catch (e) {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        } catch (_error) {
             // useToast({ title: 'Authentication Error', message: 'not able to fetch user information. Please login again.', level: 'error', dedupe: false })
             return await navigateTo({ path: '/login' }, { replace: true })
         }

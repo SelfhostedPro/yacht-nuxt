@@ -64,8 +64,7 @@ v-if="template.templates.length > 0" :items="template.templates" :search="search
 <script lang="ts" setup>
 import type { YachtTemplate } from '~~/types/templates/yacht';
 interface Emits {
-  (e: 'createApp', app: YachtTemplate['templates'][0]): void
-  (e: 'openInfo', app: YachtTemplate['templates'][0]): void
+  (e: 'createApp' | 'openInfo', app: YachtTemplate['templates'][0]): void
 }
 defineEmits<Emits>()
 interface Props {

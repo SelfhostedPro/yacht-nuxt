@@ -82,49 +82,72 @@
 </template>
 
 <script lang="ts" setup>
-
 import type { CreateContainerForm } from '~~/types/containers/create';
 import type { Field } from '~~/types/forms'
-const panelsOpen = ref([])
-// const { xs } = useDisplay()
 
+const panelsOpen = ref([])
 const form = useFormValues<CreateContainerForm>()
 
-const commands: ComputedRef<Field[][]> = computed(() => { return form.value.command?.map((command, index) => ([{ label: "command", value: `command[${index}]`, placeholder: "/bin/sh", cols: "12", type: "VTextField" }])) || [] })
+const commands: ComputedRef<Field[][]> = computed(() => {
+  return form.value.command?.map((_, index) => ([
+    { label: "command", value: `command[${index}]`, placeholder: "/bin/sh", cols: "12", type: "VTextField" }
+  ])) || []
+})
+
 const pushCommandField = () => {
-  form.value.command ? form.value.command.push('') : form.value.command = ['']
+  if (form.value.command) {
+    form.value.command.push('')
+  } else {
+    form.value.command = ['']
+  }
 }
 
 const labels: ComputedRef<Field[][]> = computed(() => {
-  return form.value.labels?.map((label, index) => ([
+  return form.value.labels?.map((_, index) => ([
     { label: "name", cols: '6', value: `labels[${index}].name`, placeholder: "TZ", type: "VTextField" },
     { label: "value", cols: '6', value: `labels[${index}].value`, placeholder: "America/Los_Angeles", type: "VTextField" },
   ])) || []
 })
+
 const pushLabel = () => {
-  form.value.labels ? form.value.labels.unshift({ name: '', value: '' }) : form.value.labels = []
+  if (form.value.labels) {
+    form.value.labels.unshift({ name: '', value: '' })
+  } else {
+    form.value.labels = [{ name: '', value: '' }]
+  }
 }
 
 const sysctls: ComputedRef<Field[][]> = computed(() => {
-  return form.value.sysctls?.map((sysctl, index) => ([
+  return form.value.sysctls?.map((_, index) => ([
     { label: "name", value: `sysctls[${index}].name`, placeholder: "net.ipv6.conf.all.disable_ipv6", cols: "12", type: "VTextField" },
     { label: "value", value: `sysctls[${index}].value`, placeholder: "1", cols: "12", type: "VTextField" },
   ])) || []
 })
+
 const pushSysctls = () => {
-  form.value.sysctls ? form.value.sysctls.unshift({ name: '', value: '' }) : form.value.sysctls = []
+  if (form.value.sysctls) {
+    form.value.sysctls.unshift({ name: '', value: '' })
+  } else {
+    form.value.sysctls = [{ name: '', value: '' }]
+  }
 }
 
 const devices: ComputedRef<Field[][]> = computed(() => {
-  return form.value.devices?.map((device, index) => ([
+  return form.value.devices?.map((_, index) => ([
     { label: "host", value: `devices[${index}].name`, placeholder: "name", cols: "12", type: "VTextField" },
     { label: "container", value: `devices[${index}].path`, placeholder: "path", cols: "8", type: "VTextField" },
     { label: "permissions", value: `devices[${index}].permissions`, placeholder: "rwm", items: ['r', 'w', 'm', 'mw', 'rm', 'rwm', 'rw'], cols: "4", type: "VSelect" },
   ])) || []
 })
+
 const pushDevices = () => {
-  form.value.devices ? form.value.devices.push({ host: '', container: '', permissions: 'rwm' }) : form.value.devices = []
+  if (form.value.devices) {
+    form.value.devices.push({ host: '', container: '', permissions: 'rwm' })
+  } else {
+    form.value.devices = [{ host: '', container: '', permissions: 'rwm' }]
+  }
 }
+
 
 const capAddField: Field = {
   label: "capability",

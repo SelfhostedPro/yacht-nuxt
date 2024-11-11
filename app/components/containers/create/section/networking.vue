@@ -43,8 +43,12 @@ const ports: ComputedRef<Field[][]> = computed(() => {
   )) || []
 })
 const pushPort = () => {
-  form.ports ? form.ports.unshift({ label: undefined, host: undefined, container: undefined, protocol: undefined }) : form.ports = []
+  if (!form.ports) {
+    form.ports = []
+  }
+  form.ports.unshift({ label: undefined, host: undefined, container: undefined, protocol: undefined })
 }
+
 </script>
 
 <style></style>~/shared/forms~/shared/containers/create

@@ -4,21 +4,18 @@
       <div class="embla__container">
         <div
           v-for="featuredApp in template.featured"
-          :key="template.templates[featuredApp].title"
+          :key="featuredApp"
           class="embla__slide embla__class-names rounded pa-0 my-0 mx-5"
         >
-          <!-- @click="toggle"
-          :color="isSelected ? 'primary' : 'foreground'"
-          :aspect-ratio="isSelected ? 16 / 9 : 4 / 3" -->
-
           <v-img
+            v-if="template.templates[featuredApp]"
             cover
             class="d-flex align-end featured-image overflow-visible justify-center"
             color="surface"
             height="50vh"
             :src="
-              template.templates[featuredApp].featured_image ||
-              template.templates[featuredApp].logo
+              template.templates[featuredApp]?.featured_image ||
+              template.templates[featuredApp]?.logo
             "
           >
             <div class="featured-card mx-n1">
@@ -27,7 +24,7 @@
                   class="mr-auto"
                   icon
                   variant="plain"
-                  @click="$emit('createApp', template.templates[featuredApp])"
+                  @click="handleCreateApp(featuredApp)"
                 >
                   <v-icon icon="mdi-plus" />
                 </v-btn>
@@ -39,52 +36,43 @@
                   "
                   class="text-high-emphasis"
                   >{{
-                    template.templates[featuredApp].title ||
-                    template.templates[featuredApp].name
+                    template.templates[featuredApp]?.title ||
+                    template.templates[featuredApp]?.name
                   }}</v-card-title
                 >
               </div>
-              <!-- isSelected &&  -->
               <v-card-text
-                v-if="template.templates[featuredApp].description"
+                v-if="template.templates[featuredApp]?.description"
                 style="height: 60px"
                 class="text-high-emphasis overflow-auto pb-2"
-                >{{ template.templates[featuredApp].description }}</v-card-text
+                >{{ template.templates[featuredApp]?.description }}</v-card-text
               >
             </div>
           </v-img>
         </div>
       </div>
     </div>
-    <!-- <v-btn @click="emblaApi?.scrollPrev()" class="embla__prev">Prev</v-btn>
-    <v-btn @click="emblaApi?.scrollNext()" class="embla__next">Next</v-btn> -->
   </div>
 </template>
 
 <script setup lang="ts">
-// import emblaCarouselVue from "embla-carousel-vue";
-// import Autoplay from "embla-carousel-autoplay";
 import type { YachtTemplate } from "~~/types/templates/yacht";
 
-const currentApp = ref<YachtTemplate["templates"][0]>();
 interface Emits {
   (e: "createApp", app: YachtTemplate["templates"][0]): void;
 }
-defineEmits<Emits>();
+const emit = defineEmits<Emits>();
 interface Props {
   template: YachtTemplate;
 }
 const { template } = defineProps<Props>();
 
-// const [emblaRef, emblaApi] = emblaCarouselVue({ loop: true }, [
-//   Autoplay({ stopOnMouseEnter: true, stopOnInteraction: false }),
-// ]);
-
-// watchEffect(() => {
-//   if (emblaApi.value) {
-//     console.log(emblaApi.value.slideNodes()); // Access API
-//   }
-// });
+const handleCreateApp = (featuredApp: number) => {
+  const app = template.templates[featuredApp];
+  if (app) {
+    emit('createApp', app);
+  }
+};
 </script>
 
 <style scoped>
@@ -101,7 +89,6 @@ const { template } = defineProps<Props>();
   flex: 0 0 50%;
   min-width: 0;
   padding: 0;
-  /* overflow: hidden; */
 }
 .featured-card {
   width: 101%;

@@ -1,10 +1,8 @@
-import { join, extname, dirname, basename } from 'node:path'
+import { join, extname, basename } from 'node:path'
 import { mkdirp, pathExists, outputFile } from 'fs-extra/esm'
 import { readFile } from 'fs/promises'
 import dree from 'dree';
-import { fileURLToPath } from 'url'
 import type { CallbackAsync, Dree, ScanOptions, } from 'dree';
-import { useNuxtApp } from 'nuxt/app';
 
 export const dataDir = useRuntimeConfig().yacht.configOptions.dataPath
 

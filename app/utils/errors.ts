@@ -1,51 +1,60 @@
 import type { FetchError } from 'ofetch'
-import type { CreateContainerForm } from '~~/types/containers/create'
-import type { Container } from '~~/types/containers/yachtContainers'
 import type { Notification } from '#imports'
-interface ErrorContext {
-    container?: Container,
-    form?: CreateContainerForm,
-    rest?: any
+
+interface ErrorPattern {
+  pattern: RegExp
+  title: string
+  message: (matches: RegExpMatchArray) => string
 }
 
-/** Standard format for generating error messages from strings. 
- * Docker doesn't provide a decent way of formatting errors so we get to have fun here.
- * 
- * Create a dictionary of status codes, 
- * if we have a match, loop through the patterns to see the first one with a match.
- * Specify the key of the data match we want to use (not required if message doesn't need to be dynamic)
- * Then, pass that match (insert) into the message callback function to get the string we want to return to the user.
- * Please someone put me out of my misery or tell me a better way to do this :'(
+const errorPatterns: Record<number, ErrorPattern[]> = {
+  409: [
+    {
+      pattern: /name "\/(.+?)" is already in use by container/,
+      title: 'Name Conflict',
+      message: (matches) => 
+        `The container name '${matches[1]}' is already in use by another container. Please remove or rename the existing container to reuse the name.`
+    }
+  ],
+  500: [
+    {
+      pattern: /'(.+?)'/,
+      title: 'Invalid Volume',
+      message: (matches) => `Invalid mount path: ${matches[1]}`
+    }
+  ]
+} as const
+
+/**
+ * Handles Docker-specific errors and converts them to user-friendly notifications
+ * @param error The fetch error from the API call
+ * @returns A formatted notification object
  */
-interface Pattern {
-    pattern: RegExp, title: string, key: number, message: ((insert: string) => string)
-}
+export const handleDockerErrors = (error: FetchError): Notification => {
+  const statusCode = error.statusCode
+  const errorMessage = error.message
 
-const errorPatterns: { [key: number]: { patterns: Pattern[] } } = {
-    409: {
-        patterns: [{ pattern: /(.*?)name "\/(.*?)" is already in use by container/, title: 'Name Conflict', key: 2, message: (insert) => `The container name '${insert}' is already in use by another container. Please remove or rename the existing container to reuse the name.` }]
-    },
-    500: {
-        patterns: [{ pattern: /(.*?)'(.*?)'(.*?)/, title: 'Invalid Volume', key: 2, message: (insert) => `invalid mount path: ${insert}` }]
-    }
-}
-
-export const handleDockerErrors = (e: FetchError, context?: ErrorContext): Notification => {
-    if (e.statusCode && errorPatterns.hasOwnProperty(e.statusCode)) {
-        for (const _pattern of errorPatterns[e.statusCode].patterns) {
-            if (!e.message.match(_pattern.pattern)) continue
-            else {
-                const { pattern, key, message, title, } = _pattern
-                const insert = e.message.match(pattern)
-                console.log('matches', insert)
-                if (insert !== null) {
-                    const returnMessage = message(insert[key])
-                    return { title, message: returnMessage, level: 'error' }
-                } else return { title, message: e.message, level: 'error' }
-            }
+  // If we have patterns for this status code, try to match them
+  if (statusCode && typeof statusCode === 'number' && statusCode in errorPatterns) {
+    // Type assertion to help TypeScript understand the patterns will exist
+    const patterns = errorPatterns[statusCode] as ErrorPattern[]
+    for (const pattern of patterns) {
+      const matches = errorMessage.match(pattern.pattern)
+      
+      if (matches) {
+        return {
+          title: pattern.title,
+          message: pattern.message(matches),
+          level: 'error'
         }
-        return { title: 'Unknown Error', message: e.message, level: 'error' }
-    } else return {
-        title: 'Unknown Error', message: e.message, level: 'error'
+      }
     }
+  }
+
+  // Default error if no patterns match
+  return {
+    title: 'Unknown Error',
+    message: errorMessage,
+    level: 'error'
+  }
 }

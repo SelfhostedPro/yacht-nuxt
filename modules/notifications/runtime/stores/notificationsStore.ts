@@ -7,9 +7,15 @@ export const useNotificationsStore = defineStore('lv-notificationsStore', {
     }),
     actions: {
         async removeToast(id: string | number, recent: boolean) {
-            recent
-                ? this.notifications = this.notifications.filter(({ id: notificationID }) => notificationID !== id)
-                : this.recentNotifications = this.recentNotifications.filter(({ id: notificationID }) => notificationID !== id)
+            if (recent) {
+                this.notifications = this.notifications.filter(
+                    ({ id: notificationID }) => notificationID !== id
+                );
+            } else {
+                this.recentNotifications = this.recentNotifications.filter(
+                    ({ id: notificationID }) => notificationID !== id
+                );
+            }
         },
         async pushToast(notification: Notification) {
             // useLVToast imported from @labvue/ui/composables/toast.ts

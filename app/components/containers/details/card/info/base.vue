@@ -33,4 +33,3 @@ interface Props {
 }
 defineProps<Props>()
 </script>
-~/shared/containers/yachtContainers

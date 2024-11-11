@@ -1,15 +1,20 @@
-import type { Container, ExecCreateOptions } from "dockerode"
-import { PassThrough as StreamPassThrough } from "stream"
+import type { Container, ExecCreateOptions } from "dockerode";
+import { PassThrough as StreamPassThrough } from "stream";
 
-
-export const streamContainerStdout = async (server: string, id: string, send: (callback: (id: number) => any) => void, close: () => void, error: (message: string) => void, reqId: string) => {
-    const _server = await getServer(server)
-    // const _containerStream: StreamPassThrough = new StreamPassThrough()
-    const _commandStream = new StreamPassThrough()
-    if (!_server) throw createError('Server not found')
-    // get the container
+export const streamContainerStdout = async (
+    server: string, 
+    id: string, 
+    send: (callback: (id: number) => unknown) => void, 
+    close: () => void, 
+    error: (message: string) => void, 
+    reqId: string
+) => {
+    const _server = await getServer(server);
+    const _commandStream = new StreamPassThrough();
+    
+    if (!_server) throw createError('Server not found');
+    
     const container: Container = _server.getContainer(id);
-    // form container command to get shell
     const cmd: ExecCreateOptions = {
         AttachStdout: true,
         AttachStderr: true,
@@ -17,13 +22,14 @@ export const streamContainerStdout = async (server: string, id: string, send: (c
         Tty: true,
         Cmd: ['/bin/bash'],
     };
-    // Send the command to the container
-    container.exec(cmd, (err, exec) => {
-        if (err) {
-            createError(err)
-            error(err.message || 'Unable to create exec!')
-            close()
+
+    container.exec(cmd, (execErr, exec) => {
+        if (execErr) {
+            createError(execErr);
+            error(execErr.message || 'Unable to create exec!');
+            return close();
         }
+
         const options = {
             Tty: true,
             follow: true,
@@ -33,36 +39,43 @@ export const streamContainerStdout = async (server: string, id: string, send: (c
             stderr: true,
             hijack: true,
         };
-        exec?.start(options, (err, stream) => {
-            if (!stream) throw createError('Unable to create stream!')
 
-            // Have container output sent back to client via SSE
-            stream?.on('data', (chunk: Buffer) => {
-                send(() => ({ id: reqId, data: chunk.toString('utf8') }))
-            })
+        exec?.start(options, (startErr, stream) => {
+            if (startErr) {
+                error(startErr.message || 'Stream start error');
+                return close();
+            }
+            if (!stream) {
+                error('Unable to create stream!');
+                return close();
+            }
 
-            // Have commands sent from command stream sent to container
+            stream.on('data', (chunk: Buffer) => {
+                send(() => ({ id: reqId, data: chunk.toString('utf8') }));
+            });
+
             _commandStream.on('data', (chunk: Buffer) => {
-                stream.write(chunk)
-            })
+                stream.write(chunk);
+            });
 
-            // If the container stream closes, close the command stream
-            stream?.on('close', (...props: any) => {
-                // Change this to append the ID and then add a selector to the client to close the correct stream
-                send(() => ({ id: reqId, data: `Container Stream Closed: ${JSON.stringify(props)}` }))
-                close()
-                _commandStream.destroy()
-                console.log('Container Stream Closed', props)
-            })
-            _commandStream?.on('close', (...props: any) => {
-                send(() => `Command Stream Closed: ${JSON.stringify(props)}`)
-                close()
-                stream.destroy()
-                console.log('Command Stream Closed', props)
-            })
-        })
-    })
+            // Using proper types for stream events
+            stream.on('close', () => {
+                send(() => ({ id: reqId, data: 'Container Stream Closed' }));
+                close();
+                _commandStream.destroy();
+                console.log('Container Stream Closed');
+            });
+
+            _commandStream.on('close', () => {
+                send(() => 'Command Stream Closed');
+                close();
+                stream.destroy();
+                console.log('Command Stream Closed');
+            });
+        });
+    });
+
     return {
         stream: _commandStream
-    }
-}
+    };
+};

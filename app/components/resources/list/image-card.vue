@@ -1,3 +1,5 @@
+<!-- eslint-disable vue/no-v-html -->
+<!-- eslint-disable vue/no-v-text-v-html-on-component -->
 <template>
   <v-card
     id="images-card"
@@ -120,6 +122,8 @@
 <script lang="ts" setup>
 import type { ImageInfo } from "dockerode";
 import { fromUnixTime } from "date-fns";
+const { $mdRenderer } = useNuxtApp()
+
 const reveal = ref(false);
 interface Props {
   server: string;

@@ -89,12 +89,6 @@ import SonnerClient from "~~/modules/notifications/runtime/components/sonner.cli
 //   testProgress: testProgressNotification,
 // };
 const notificationsStore = useNotificationsStore();
-const theme = useTheme();
-const toggleTheme = () => {
-  theme.global.name.value = theme.global.current.value.dark
-    ? "yachtLightTheme"
-    : "yachtDarkTheme";
-};
 const links = [
   {
     to: "/",

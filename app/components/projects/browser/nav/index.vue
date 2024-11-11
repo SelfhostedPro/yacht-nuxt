@@ -8,43 +8,24 @@
     </v-toolbar>
     <v-toolbar density="compact">
       <v-btn icon="mdi-chevron-double-up" @click="$emit('toParent')" />
-      <v-btn
-        size="small"
-        :icon="showHidden ? 'mdi-eye' : 'mdi-eye-off'"
-        @click="showHidden = !showHidden"
-      />
+      <v-btn size="small" :icon="showHidden ? 'mdi-eye' : 'mdi-eye-off'" @click="showHidden = !showHidden" />
       <!-- <v-btn size="small" :icon="''" @click="''" /> -->
     </v-toolbar>
     <v-progress-linear v-if="loading.includes('tree')" indeterminate />
     <v-list v-model:opened="openedTree" density="compact">
-      <projects-browser-nav-tree
-        v-if="dirTree && dirTree.length > 0"
-        path=""
-        :items="dirTree"
-        :set-active="(item) => projectsStore.setActiveFile(item.path)"
-        :load-children="getChildren"
-        :handle-right-click="handleRightClick"
-      />
+      <projects-browser-nav-tree v-if="dirTree && dirTree.length > 0" path="" :items="dirTree"
+        :set-active="(item) => projectsStore.setActiveFile(item.path)" :load-children="getChildren"
+        :handle-right-click="handleRightClick" />
       <v-card-text v-else class="text-center">No files found in data directory.</v-card-text>
     </v-list>
-    <v-menu
-      v-model:model-value="menu.open"
-      :target="[menu.chords.x, menu.chords.y]"
-      location="right"
-      :open-on-click="false"
-      :close-on-content-click="false"
-      location-strategy="connected"
-    >
-      <projects-browser-nav-item-menu
-        v-if="menu.item && menu.item.path"
-        :item="menu.item"
-        :path="menu.item.path"
+    <v-menu v-model:model-value="menu.open" :target="[menu.chords.x, menu.chords.y]" location="right"
+      :open-on-click="false" :close-on-content-click="false" location-strategy="connected">
+      <projects-browser-nav-item-menu v-if="menu.item && menu.item.path" :item="menu.item" :path="menu.item.path"
         @close-menu="
           menu.open = false;
-          menu.item = undefined;
-          menu.path = '';
-        "
-      />
+        menu.item = undefined;
+        menu.path = '';
+        " />
     </v-menu>
   </v-navigation-drawer>
 </template>
@@ -61,7 +42,7 @@ const openedTree = ref<string[]>([]);
 
 const projectsStore = useProjectsStore();
 const { getChildren } = projectsStore;
-const { currentPath, dir, dirTree, loading, showHidden, filter } =
+const { currentPath, dirTree, loading, showHidden } =
   storeToRefs(projectsStore);
 
 interface Props {

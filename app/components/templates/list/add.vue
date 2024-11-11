@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/no-v-html -->
 <template>
   <v-btn color="primary">
     <v-icon icon="mdi-plus" />
@@ -21,7 +22,7 @@ block dense :field="urlField"
             </v-row>
             <v-row>
               <v-col v-auto-animate>
-                <span v-for="error, , i in errors" :key="i" class="text-error" v-html="error" />
+                <span v-for="error, _, i in errors" :key="i" class="text-error" v-html="error" />
               </v-col>
             </v-row>
           </v-list-item>
@@ -55,7 +56,7 @@ const templatesStore = useTemplatesStore()
 
 const emit = defineEmits(["added"])
 
-const { values, validate: finalVal, setFieldValue, handleSubmit, setFieldError, setErrors, errors } = useForm({ validationSchema: toTypedSchema(addTemplateSchema) })
+const { values, setFieldValue, handleSubmit, setFieldError, errors } = useForm({ validationSchema: toTypedSchema(addTemplateSchema) })
 
 const urlField = {
   label: "url",
@@ -78,15 +79,6 @@ const titleField = {
   type: "VTextField",
   validateOnMount: false
 } as Field
-
-
-const isGithubUrl = (url: string) => {
-  return url.includes('github.com') ? false : true
-}
-
-const templateExists = (name: string) => {
-  return templatesStore.templates.find((t) => t.name === name) ? false : true
-}
 
 const validate = async () => {
   if (!values.url) {

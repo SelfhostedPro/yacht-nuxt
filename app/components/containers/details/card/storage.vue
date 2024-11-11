@@ -33,4 +33,4 @@ const tab = ref(0)
 
 </script>
 
-<style></style>~/shared/containers/yachtContainers
+<style></style>

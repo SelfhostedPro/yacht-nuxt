@@ -16,10 +16,10 @@ const saveFile = async () => {
       path: file.value?.path,
     },
   })
-    .then((res) => {
+    .then(() => {
       isLoading.value = false;
     })
-    .catch((e) => {
+    .catch(() => {
       isLoading.value = false;
     });
 };

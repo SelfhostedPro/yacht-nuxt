@@ -1,10 +1,9 @@
 import type { Notification } from '#imports'
 import { useNotificationsStore } from '#imports'
-import type { Pinia } from 'pinia'
 import LVToast from '../components/toast.vue'
 
 // Main function for toasting
-export const useLVToast = ({ message, dedupe, timeout, level, title }: Notification, options?: any,) => {
+export const useLVToast = ({ message, dedupe, timeout, level, title }: Notification) => {
     const { $toast, $pinia } = useNuxtApp()
     // Get notification store with active instance
     const notificationStore = useNotificationsStore($pinia)

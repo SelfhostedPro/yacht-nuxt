@@ -1,9 +1,9 @@
 <template>
   <!-- :to="`/containers/${server}/${container.name}`" -->
-  <v-hover v-slot="{ isHovering, props }" open-delay="100">
+  <v-hover v-slot="{ isHovering, props: props2 }" open-delay="100">
     <v-card
       v-auto-animate
-      v-bind="props"
+      v-bind="props2"
       :class="`v-container-card overflow-visible mt-8 ${
         isHovering || selected ? 'on-hover' : ''
       }`"
@@ -79,7 +79,7 @@ interface Props {
 defineEmits(["selected"]);
 
 // Define Props
-const props = defineProps<Props>();
+const { container, stats, server, selected } = defineProps<Props>();
 
 // const infoComponents = [
 //   {
@@ -205,4 +205,3 @@ const props = defineProps<Props>();
   }
   </style>
   -->
-~/shared/containers/yachtContainers~/shared/common/vuetify

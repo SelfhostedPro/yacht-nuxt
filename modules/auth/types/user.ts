@@ -14,14 +14,14 @@ const userSchema = z.object({
 }).partial()
 export type User = z.infer<typeof userSchema>
 
-const authFileUserSchema = userSchema.required({ id: true, username: true, hashedPassword: true, roles: true })
+export const authFileUserSchema = userSchema.required({ id: true, username: true, hashedPassword: true, roles: true })
 export type AuthfileUser = z.infer<typeof authFileUserSchema>
 
-const desentitizedAuthfileUserSchema = userSchema.required({ id: true, username: true, roles: true, otpActive: true })
+export const desentitizedAuthfileUserSchema = userSchema.required({ id: true, username: true, roles: true, otpActive: true })
 export type DesentizedAuthfileUser = z.infer<typeof desentitizedAuthfileUserSchema>
 
-const userCreateSchema = userSchema.required({ username: true, password: true, roles: true })
+export const userCreateSchema = userSchema.required({ username: true, password: true, roles: true })
 export type UserCreate = z.infer<typeof userCreateSchema>
 
-const userLoginSchema = userSchema.required({ username: true, password: true })
+export const userLoginSchema = userSchema.required({ username: true, password: true })
 export type UserLogin = z.infer<typeof userLoginSchema>

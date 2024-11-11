@@ -1,4 +1,4 @@
-
+<!-- eslint-disable vue/multi-word-component-names -->
 <template>
   <v-dialog
 scrollable :fullscreen="fullscreen || sm" :max-width="fullscreen || sm ? '100vw' : '70vw'"
@@ -36,7 +36,6 @@ defineEmits(['close', 'maximize', 'refresh', 'copy'])
 
 // Window Controls
 const fullscreen: Ref<boolean> = ref(false)
-const loading = ref(false)
 const { sm } = useDisplay()
 
 const terminalCard: Ref<VCard | null> = useState('terminalRef', () => null)

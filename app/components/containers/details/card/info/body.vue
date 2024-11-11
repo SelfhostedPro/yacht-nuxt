@@ -18,10 +18,8 @@
 <script setup lang="ts">
 import type { Container } from '~~/types/containers/yachtContainers';
 const tab = ref(0)
-const { xs } = useDisplay()
 defineProps<{
 	container: Container;
 	server: string;
 }>()
 </script>
-~/shared/containers/yachtContainers
