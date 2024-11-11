@@ -26,5 +26,6 @@ logs
 config
 data
 !modules/config
+!layers/config
 .aider*
 .venv*

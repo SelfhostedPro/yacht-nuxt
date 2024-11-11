@@ -1,6 +1,19 @@
+import { resolve } from 'pathe'
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: true },
+  extends: [
+    'core',
+    'layers/config',
+    'layers/auth',
+    'layers/notifications'
+  ],
+  alias: {
+    '#core': resolve('core'),
+    '#auth': resolve('layers/auth'),
+    '#config': resolve('layers/config'),
+    '#notifications': resolve('layers/notifications')
+  },
   modules: [
     'vuetify-nuxt-module',
     '@pinia/nuxt',
@@ -13,7 +26,6 @@ export default defineNuxtConfig({
 
   build: {
     transpile: ['vue-sonner', 'vuetify'],
-    analyze: true, // To visualize bundle size
   },
   experimental: {
     clientNodeCompat: true

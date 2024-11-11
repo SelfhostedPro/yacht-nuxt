@@ -74,6 +74,9 @@ importers:
       fs-extra:
         specifier: ^11.2.0
         version: 11.2.0
+      h3:
+        specifier: ^1.13.0
+        version: 1.13.0
       hookable:
         specifier: ^5.5.3
         version: 5.5.3
@@ -98,6 +101,9 @@ importers:
       oslo:
         specifier: ^1.2.1
         version: 1.2.1
+      pathe:
+        specifier: ^1.1.2
+        version: 1.1.2
       pinia:
         specifier: ^2.2.6
         version: 2.2.6(typescript@5.6.3)(vue@3.5.12(typescript@5.6.3))
