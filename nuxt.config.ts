@@ -13,6 +13,7 @@ export default defineNuxtConfig({
 
   build: {
     transpile: ['vue-sonner', 'vuetify'],
+    analyze: true, // To visualize bundle size
   },
   experimental: {
     clientNodeCompat: true
@@ -40,7 +41,6 @@ export default defineNuxtConfig({
     experimental: {
       openAPI: true
     },
-    //@ts-expect-error
     openAPI: {
       meta: {
         title: 'Yacht API',
@@ -49,10 +49,5 @@ export default defineNuxtConfig({
       },
     },
   },
-
-  vite: {
-    plugins: []
-  },
-
   compatibilityDate: '2024-10-03'
 })

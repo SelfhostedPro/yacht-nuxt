@@ -1,5 +1,5 @@
 import type { FetchError } from 'ofetch'
-import type { Notification } from '#imports'
+import type { Notification } from '~~/modules/notifications/types/notifications'
 
 interface ErrorPattern {
   pattern: RegExp

@@ -46,7 +46,7 @@
 
 <script lang="ts" setup>
 import { ClientOnly } from "#components";
-import SonnerClient from "~~/modules/notifications/runtime/components/sonner.client.vue";
+import SonnerClient from "#imports";
 // const RawProgress = markRaw(NotificationsLVProgress);
 // const testProgressNotification: ProgressItems = {
 //   c2964e85ea54: {

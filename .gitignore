@@ -27,3 +27,4 @@ config
 data
 !modules/config
 .aider*
+.venv*

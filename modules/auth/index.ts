@@ -1,6 +1,7 @@
 import { defineNuxtModule, addImportsDir, addServerHandler, createResolver, addRouteMiddleware, installModule, addImports } from '@nuxt/kit'
 import db from '../db'
 import config from '../config'
+import logging from '../logging'
 import type { Nuxt } from '@nuxt/schema'
 
 export default defineNuxtModule({
@@ -8,6 +9,7 @@ export default defineNuxtModule({
     async setup(_options: unknown, nuxt: Nuxt | undefined) {
         await installModule(config, null, nuxt)
         await installModule(db, null, nuxt)
+        await installModule(logging, null, nuxt)
         const resolver = createResolver(import.meta.url)
         addImportsDir(resolver.resolve('types'))
         addImports([

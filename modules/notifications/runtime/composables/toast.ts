@@ -1,4 +1,4 @@
-import type { Notification } from '#imports'
+import type { Notification } from '~~/modules/notifications/types/notifications'
 import { useNotificationsStore } from '#imports'
 import LVToast from '../components/toast.vue'
 
