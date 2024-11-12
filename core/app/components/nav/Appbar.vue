@@ -73,7 +73,7 @@
 
 <script lang="ts" setup>
 import { useDisplay } from "vuetify";
-import { useUser } from "#auth/composables/user";
+import { useUser } from "#auth/app/composables/user";
 import { useClientConfig } from "#config/app/composables/client-config";
 const clientConfig = useClientConfig()
 const user = useUser();

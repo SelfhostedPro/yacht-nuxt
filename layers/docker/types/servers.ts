@@ -1,7 +1,7 @@
 import Docker from 'dockerode'
 import { z } from 'zod'
-import { containerSchema } from "#core/types/containers/yachtContainers"
-import type { Container } from "#core/types/containers/yachtContainers"
+import { containerSchema } from "#docker/types/containers/yachtContainers"
+import type { Container } from "#docker/types/containers/yachtContainers"
 
 export const ServerDictSchema = z.record(z.instanceof(Docker))
 export type ServerDict = z.infer<typeof ServerDictSchema>

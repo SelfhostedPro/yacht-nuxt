@@ -71,7 +71,7 @@
   </v-card>
 </template>
 <script setup lang="ts">
-import type { Container } from '#core/types/containers/yachtContainers';
+import type { Container } from '#docker/types/containers/yachtContainers';
 
 interface Props {
   container: Container

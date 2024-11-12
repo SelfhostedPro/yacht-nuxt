@@ -1,5 +1,5 @@
-import type { Container } from "#core/types/containers/yachtContainers"
-import type { ServerContainers, ServerDict } from "#core/types/servers"
+import type { Container } from "#docker/types/containers/yachtContainers"
+import type { ServerContainers, ServerDict } from "#docker/types/servers"
 import { normalizeContainers, normalizeContainerInspectInfo } from "./formatter"
 
 export const getContainers = async () => {

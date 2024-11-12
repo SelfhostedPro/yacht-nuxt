@@ -11,8 +11,6 @@ import { Logger } from '#notifications/server/composables/logger'
 
 const nuxtConfig = useRuntimeConfig()
 
-// const configStorage = useStorage('config')
-// const dataStorage = useStorage('data')
 
 const DefaultWatchOptions = {
     cwd: nuxtConfig.yacht.configOptions.configPath,

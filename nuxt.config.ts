@@ -6,12 +6,14 @@ export default defineNuxtConfig({
     'core',
     'layers/config',
     'layers/auth',
-    'layers/notifications'
+    'layers/notifications',
+    'layers/docker'
   ],
   alias: {
     '#core': resolve('core'),
     '#auth': resolve('layers/auth'),
     '#config': resolve('layers/config'),
+    '#docker': resolve('layers/docker'),
     '#notifications': resolve('layers/notifications')
   },
   modules: [
@@ -60,6 +62,16 @@ export default defineNuxtConfig({
         version: '1.0',
       },
     },
+    // storage: {
+    //   config: {
+    //     type: 'fs',
+    //     path: process.env.NODE_ENV === 'production' ? '../config' : './config'
+    //   },
+    //   data: {
+    //     type: 'fs',
+    //     path: process.env.NODE_ENV === 'production' ? '../data' : './data'
+    //   }
+    // }
   },
   compatibilityDate: '2024-10-03'
 })

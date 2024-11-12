@@ -39,6 +39,6 @@
 </template>
 
 <script lang="ts" setup>
-import type { ContainerMount } from '#core/types/containers/yachtContainers';
+import type { ContainerMount } from '#docker/types/containers/yachtContainers';
 defineProps<{ mounts: ContainerMount[] }>()
 </script>

@@ -62,7 +62,7 @@
 import type {
   Container,
   ContainerStat,
-} from "#core/types/containers/yachtContainers";
+} from "#docker/types/containers/yachtContainers";
 import { useContainersStore } from "#core/app/stores/containers";
 // import type { SelectableItem } from "~~/types/common/vuetify";
 

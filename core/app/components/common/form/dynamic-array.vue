@@ -24,7 +24,7 @@ v-for="field, i2 in fields" :key="i2"
 <script lang="ts" setup>
 import type { Field } from '#core/types/forms'
 import { useDisplay } from "vuetify";
-import type { CreateContainerForm } from '#core/types/containers/create';
+import type { CreateContainerForm } from '#docker/types/containers/create';
 const { xs } = useDisplay();
 const arrayFields = defineModel<Field[][]>("arrayFields", { required: true });
 const emit = defineEmits(['validate'])

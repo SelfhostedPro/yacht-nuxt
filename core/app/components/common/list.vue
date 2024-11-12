@@ -131,7 +131,7 @@ import type {
   ServerImages,
   ServerNetworks,
   ServerVolumes,
-} from "#core/types/servers";
+} from "#docker/types/servers";
 const selectedItems = ref<string[]>([]);
 
 interface Props {

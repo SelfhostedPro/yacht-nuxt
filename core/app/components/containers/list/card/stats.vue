@@ -36,7 +36,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { ContainerStat } from "#core/types/containers/yachtContainers";
+import type { ContainerStat } from "#docker/types/containers/yachtContainers";
 import { useContainersStore } from "#core/app/stores/containers";
 const { loading } = useContainersStore();
 interface Props {

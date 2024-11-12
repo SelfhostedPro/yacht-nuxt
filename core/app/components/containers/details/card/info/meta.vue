@@ -17,7 +17,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { Container } from '#core/types/containers/yachtContainers';
+import type { Container } from '#docker/types/containers/yachtContainers';
 
 const { $mdRenderer } = useNuxtApp()
 

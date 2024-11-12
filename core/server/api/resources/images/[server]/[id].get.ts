@@ -1,4 +1,5 @@
 import type { ImageInspectInfo } from 'dockerode'
+import { getImage } from '#docker/server/utils/resources/info'
 
 export default defineEventHandler(async (event): Promise<ImageInspectInfo> => {
   const id = event.context.params?.id

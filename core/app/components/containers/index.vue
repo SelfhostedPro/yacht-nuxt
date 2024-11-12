@@ -72,7 +72,7 @@ import type {
   Container,
   ContainerStat,
   ContainerStats,
-} from "#core/types/containers/yachtContainers";
+} from "#docker/types/containers/yachtContainers";
 import { useContainersStore } from "#core/app/stores/containers";
 const containersStore = useContainersStore();
 const { servers, loading } = storeToRefs(containersStore);

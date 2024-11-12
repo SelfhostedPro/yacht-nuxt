@@ -18,7 +18,7 @@
 
 <script lang="ts" setup>
 import { parseISO } from 'date-fns';
-import type { FixedVolumeInspectInfo } from '#core/types/containers/fixedDockerode';
+import type { FixedVolumeInspectInfo } from '#docker/types/containers/fixedDockerode';
 
 
 

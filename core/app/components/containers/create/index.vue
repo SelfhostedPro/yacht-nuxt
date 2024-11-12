@@ -39,7 +39,7 @@ color="warning"
 
 <script lang="ts" setup>
 import type { YachtTemplate } from '#core/types/templates/yacht';
-import { createContainerFormSchema, type CreateContainerForm } from "#core/types/containers/create"
+import { createContainerFormSchema, type CreateContainerForm } from "#docker/types/containers/create"
 import type { PartialDeep } from 'type-fest';
 import { useContainersStore} from '#core/app/stores/containers'
 

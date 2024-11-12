@@ -116,7 +116,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { CreateContainerForm } from '#core/types/containers/create'
+import type { CreateContainerForm } from '#docker/types/containers/create'
 import type { ComputedRef } from 'vue'
 const { $mdRenderer } = useNuxtApp()
 

@@ -1,5 +1,5 @@
 import type { YachtTemplate, YachtV2TemplatePort, yachtV1TemplatePorts } from "#core/types/templates/yacht"
-import type { CreateContainerForm } from "#core/types/containers/create"
+import type { CreateContainerForm } from "#docker/types/containers/create"
 import { yachtV1TemplatePortSchema, yachtV2TemplatePortSchema } from "#core/types/templates/yacht"
 
 export const useFormatPorts = async (ports: YachtTemplate['templates'][0]['ports']): Promise<CreateContainerForm['ports']> => {

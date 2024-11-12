@@ -1,6 +1,6 @@
 import { type FixedContainerStats, formatStats } from "./formatter"
 import { PassThrough as StreamPassThrough } from "stream"
-import type { ServerDict } from "#core/types/servers"
+import type { ServerDict } from "#docker/types/servers"
 import { sseHooks } from "#core/server/utils/sse"
 // Define a type for the send callback
 type SendCallback = (callback: (id: number) => FixedContainerStats | string) => void

@@ -1,3 +1,5 @@
+import { getContainerAction } from '#docker/server/utils/containers/actions'
+
 export default defineEventHandler(async (event) => {
   const server = event.context.params?.server
   const id = event.context.params?.id

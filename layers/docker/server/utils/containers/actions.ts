@@ -1,8 +1,8 @@
-import type { CreateContainerForm } from "#core/types/containers/create"
-import type { ServerDict } from "#core/types/servers"
+import type { CreateContainerForm } from "#docker/types/containers/create"
+import type { ServerDict } from "#docker/types/servers"
 import { normalizeContainerInspectInfo, normalizeCreate } from "./formatter"
 import type Dockerode from "dockerode"
-import type { ImagePullProgress } from "#core/types/images"
+import type { ImagePullProgress } from "#docker/types/images"
 import { sseHooks } from "#core/server/utils/sse"
 import { Logger } from '#notifications/server/composables/logger'
 // Service Dependency Imports

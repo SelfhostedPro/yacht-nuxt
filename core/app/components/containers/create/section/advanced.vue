@@ -83,7 +83,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { CreateContainerForm } from '#core/types/containers/create';
+import type { CreateContainerForm } from '#docker/types/containers/create';
 import type { Field } from '#core/types/forms'
 
 const panelsOpen = ref([])
@@ -222,4 +222,4 @@ const memoryLimitsField: Field = {
 }
 </script>
 
-<style></style>~/shared/containers/create~/shared/forms
+<style></style>

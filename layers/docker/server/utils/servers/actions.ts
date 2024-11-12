@@ -1,4 +1,4 @@
-import type { ServerDict } from "#core/types/servers"
+import type { ServerDict } from "#docker/types/servers"
 
 // Service Dependency Imports
 import { sshAdapter, localAdapter } from "./adapters";

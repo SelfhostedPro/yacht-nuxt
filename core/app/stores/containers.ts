@@ -1,7 +1,7 @@
-import type { ServerContainers } from '#core/types/servers'
-import type { Container } from '#core/types/containers/yachtContainers'
+import type { ServerContainers } from '#docker/types/servers'
+import type { Container } from '#docker/types/containers/yachtContainers'
 import { defineStore } from 'pinia'
-import type { CreateContainerForm } from '#core/types/containers/create'
+import type { CreateContainerForm } from '#docker/types/containers/create'
 import { FetchError } from 'ofetch'
 import { useNotificationsStore } from '#notifications/app/stores/notificationsStore'
 

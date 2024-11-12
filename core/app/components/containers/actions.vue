@@ -61,7 +61,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { Container } from "#core/types/containers/yachtContainers";
+import type { Container } from "#docker/types/containers/yachtContainers";
 import { useContainersStore } from "#core/app/stores/containers";
 const containers = useContainersStore();
 interface Props {

@@ -2,6 +2,7 @@ import type { Duplex } from 'stream'
 import { v4 } from 'uuid'
 import { useSSE } from "#core/server/utils/sse"
 
+
 const terminalSessions = new Map<string, { stream: Duplex }>()
 
 export default defineEventHandler(async (event) => {

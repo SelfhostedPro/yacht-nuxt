@@ -1,6 +1,6 @@
-import type { ServerVolumes, ServerImages, ServerNetworks } from "#core/types/servers";
+import type { ServerVolumes, ServerImages, ServerNetworks } from "#docker/types/servers";
 import type { ImageInspectInfo, ImageInfo, VolumeInspectInfo, NetworkInspectInfo } from 'dockerode'
-import type { ImagePullProgress } from "#core/types/images";
+import type { ImagePullProgress } from "#docker/types/images";
 import type { ProgressItem, ProgressTitleUpdate, ProgressUpdate } from "#notifications/types/progress";
 
 export const getImages = async (): Promise<ServerImages> => {

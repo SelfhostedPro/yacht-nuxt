@@ -21,7 +21,7 @@
 
 <script lang="ts" setup>
 import type { Field } from '#core/types/forms'
-import type { CreateContainerForm } from '#core/types/containers/create';
+import type { CreateContainerForm } from '#docker/types/containers/create';
 
 const { value: form } = useFormValues<CreateContainerForm>()
 
