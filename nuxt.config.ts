@@ -2,6 +2,9 @@ import { resolve } from 'pathe'
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: true },
+  future: {
+    compatibilityVersion: 4,
+  },
   extends: [
     'core',
     'layers/config',
@@ -32,9 +35,7 @@ export default defineNuxtConfig({
   experimental: {
     clientNodeCompat: true
   },
-  future: {
-    compatibilityVersion: 4,
-  },
+
   typescript: {
     typeCheck: true,
     strict: true

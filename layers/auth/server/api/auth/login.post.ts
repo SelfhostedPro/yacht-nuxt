@@ -5,6 +5,7 @@ import { LoginUserFormSchema } from "../../../types/auth";
 import { useLucia } from '../../utils/auth'
 import type { DBUserPrivate } from "#config/types/user";
 import type { LoginUserForm } from "../../../types/auth";
+import { useDB } from '#config/server/utils/db'
 
 export default eventHandler(async (event) => {
     const db = useDB()

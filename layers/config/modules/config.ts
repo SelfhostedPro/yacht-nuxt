@@ -1,6 +1,6 @@
 import { defineNuxtModule } from '@nuxt/kit'
 import { defu } from 'defu'
-import { join } from 'path'
+import { join } from 'pathe'
 
 export default defineNuxtModule({
     meta: { name: 'config' },
