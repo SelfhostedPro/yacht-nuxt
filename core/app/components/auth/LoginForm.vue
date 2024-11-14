@@ -1,24 +1,38 @@
 <template>
-  <v-card-text>
-    <v-form fast-fail>
-      <v-text-field
-        v-model="username.value.value"
-        label="username"
-        append-inner-icon="mdi-account-circle"
-        @keyup.enter="submit"
-      />
-      <v-text-field
-        v-model="password.value.value"
-        label="password"
-        type="password"
-        append-inner-icon="mdi-shield-key"
-        @keyup.enter="submit"
-      />
-    </v-form>
-    <v-spacer />
-    <v-btn block color="primary" elevation="4" @click="submit"> submit </v-btn>
-    <span>{{ error }}</span>
-  </v-card-text>
+  <div class="space-y-4 w-full max-w-sm">
+    <form @submit.prevent="submit" class="space-y-4">
+
+      <!-- Username -->
+      <FormField v-slot="{ componentField }" name="username">
+        <FormItem v-auto-animate>
+          <FormLabel>Username</FormLabel>
+          <FormControl>
+            <Input v-bind="componentField" type="text" placeholder="Enter username" @keyup.enter="submit" />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      </FormField>
+
+      <!-- Password -->
+      <FormField v-slot="{ componentField }" name="password">
+        <FormItem v-auto-animate>
+          <FormLabel>Password</FormLabel>
+          <FormControl>
+            <Input v-bind="componentField" type="password" placeholder="Enter password" @keyup.enter="submit" />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      </FormField>
+
+      <Button type="submit" class="w-full">
+        Sign In
+      </Button>
+
+      <p v-if="error" class="text-sm text-red-500 mt-2">
+        {{ error }}
+      </p>
+    </form>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -45,10 +59,6 @@ const submit = handleSubmit(async (values) => {
       method: "POST",
       body: values,
     });
-    // const data = await useRequestFetch()<User | null>("/api/auth/me");
-    // if (data && user.value) {
-    //   user.value = data;
-    // }
     await navigateTo("/");
   } catch (err) {
     error.value = JSON.stringify(err);
@@ -64,7 +74,6 @@ onMounted(async () => {
       user.value = data;
       await navigateTo("/");
     }
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (e) {
     /* Don't do anything here, just surpress duplicate 401 error notification */
   }

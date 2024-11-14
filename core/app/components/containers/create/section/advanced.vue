@@ -1,84 +1,114 @@
-<!-- eslint-disable vue/multi-word-component-names -->
 <template>
-  <div>
-    <v-card-title class="d-flex align-center">
-      Advanced
-      <v-spacer />
-    </v-card-title>
-    <v-expansion-panels v-model="panelsOpen" variant="popout" multiple title="command">
+  <div class="space-y-4">
+    <div class="flex items-center justify-between">
+      <h3 class="text-lg font-medium">Advanced</h3>
+    </div>
 
-      <v-expansion-panel title="command">
-        <v-expansion-panel-text>
-          <div class="d-flex justify-space-between">
-            <v-card-text>
+    <Accordion type="multiple" v-model:value="panelsOpen" class="w-full">
+      <!-- Commands -->
+      <AccordionItem value="command">
+        <AccordionTrigger>Command</AccordionTrigger>
+        <AccordionContent>
+          <div class="flex justify-between items-center mb-4">
+            <p class="text-muted-foreground">
               Add custom commands to your container.
-            </v-card-text>
-            <v-btn color="primary" class="float-right my-3" @click="pushCommandField()">+</v-btn>
+            </p>
+            <Button variant="outline" size="sm" @click="pushCommandField()">
+              <Icon icon="lucide:plus" class="h-4 w-4" />
+            </Button>
           </div>
           <common-form-dynamic-array path="command" :array-fields="commands" />
-        </v-expansion-panel-text>
-      </v-expansion-panel>
+        </AccordionContent>
+      </AccordionItem>
 
-      <v-expansion-panel title="labels">
-        <v-expansion-panel-text>
-          <div class="d-flex justify-space-between">
-            <v-card-text>
+      <!-- Labels -->
+      <AccordionItem value="labels">
+        <AccordionTrigger>Labels</AccordionTrigger>
+        <AccordionContent>
+          <div class="flex justify-between items-center mb-4">
+            <p class="text-muted-foreground">
               Add custom labels to your container.
-            </v-card-text>
-            <v-btn color="primary" class="float-right my-3" @click="pushLabel()">+</v-btn>
+            </p>
+            <Button variant="outline" size="sm" @click="pushLabel()">
+              <Icon icon="lucide:plus" class="h-4 w-4" />
+            </Button>
           </div>
           <common-form-dynamic-array path="labels" :array-fields="labels" />
-        </v-expansion-panel-text>
-      </v-expansion-panel>
+        </AccordionContent>
+      </AccordionItem>
 
-      <v-expansion-panel title="sysctls">
-        <v-expansion-panel-text>
-          <div class="d-flex justify-space-between">
-            <v-card-text>
+      <!-- Sysctls -->
+      <AccordionItem value="sysctls">
+        <AccordionTrigger>Sysctls</AccordionTrigger>
+        <AccordionContent>
+          <div class="flex justify-between items-center mb-4">
+            <p class="text-muted-foreground">
               Add custom sysctls to your container.
-            </v-card-text>
-            <v-btn color="primary" class="float-right my-3" @click="pushSysctls()">+</v-btn>
+            </p>
+            <Button variant="outline" size="sm" @click="pushSysctls()">
+              <Icon icon="lucide:plus" class="h-4 w-4" />
+            </Button>
           </div>
           <common-form-dynamic-array path="sysctls" :array-fields="sysctls" />
-        </v-expansion-panel-text>
-      </v-expansion-panel>
+        </AccordionContent>
+      </AccordionItem>
 
-      <v-expansion-panel title="devices">
-        <v-expansion-panel-text>
-          <div class="d-flex justify-space-between">
-            <v-card-text>
+      <!-- Devices -->
+      <AccordionItem value="devices">
+        <AccordionTrigger>Devices</AccordionTrigger>
+        <AccordionContent>
+          <div class="flex justify-between items-center mb-4">
+            <p class="text-muted-foreground">
               Add custom devices to your container.
-            </v-card-text>
-            <v-btn color="primary" class="float-right my-3" @click="pushDevices()">+</v-btn>
+            </p>
+            <Button variant="outline" size="sm" @click="pushDevices()">
+              <Icon icon="lucide:plus" class="h-4 w-4" />
+            </Button>
           </div>
           <common-form-dynamic-array path="devices" :array-fields="devices" />
-        </v-expansion-panel-text>
-      </v-expansion-panel>
+        </AccordionContent>
+      </AccordionItem>
 
-      <v-expansion-panel title="capabilities">
-        <v-expansion-panel-text>
-          <v-card-text>
-            Add or drop custom capabilities for your container.
-          </v-card-text>
-          <v-card-text>Add</v-card-text>
-          <common-form-dynamic-string :field="capAddField" />
-          <v-card-text>Drop</v-card-text>
-          <common-form-dynamic-string :field="capDropField" />
-        </v-expansion-panel-text>
-      </v-expansion-panel>
+      <!-- Capabilities -->
+      <AccordionItem value="capabilities">
+        <AccordionTrigger>Capabilities</AccordionTrigger>
+        <AccordionContent>
+          <div class="space-y-4">
+            <p class="text-muted-foreground">
+              Add or drop custom capabilities for your container.
+            </p>
+            <div class="space-y-2">
+              <h4 class="font-medium">Add</h4>
+              <common-form-dynamic-string :field="capAddField" />
+            </div>
+            <div class="space-y-2">
+              <h4 class="font-medium">Drop</h4>
+              <common-form-dynamic-string :field="capDropField" />
+            </div>
+          </div>
+        </AccordionContent>
+      </AccordionItem>
 
-      <v-expansion-panel title="limits">
-        <v-expansion-panel-text>
-          <v-card-text>
-            Add custom commands to your container.
-          </v-card-text>
-          <v-card-text>CPU</v-card-text>
-          <common-form-dynamic-string :field="cpuLimitsField" />
-          <v-card-text>Memory</v-card-text>
-          <common-form-dynamic-string :field="memoryLimitsField" />
-        </v-expansion-panel-text>
-      </v-expansion-panel>
-    </v-expansion-panels>
+      <!-- Limits -->
+      <AccordionItem value="limits">
+        <AccordionTrigger>Limits</AccordionTrigger>
+        <AccordionContent>
+          <div class="space-y-4">
+            <p class="text-muted-foreground">
+              Add custom commands to your container.
+            </p>
+            <div class="space-y-2">
+              <h4 class="font-medium">CPU</h4>
+              <common-form-dynamic-string :field="cpuLimitsField" />
+            </div>
+            <div class="space-y-2">
+              <h4 class="font-medium">Memory</h4>
+              <common-form-dynamic-string :field="memoryLimitsField" />
+            </div>
+          </div>
+        </AccordionContent>
+      </AccordionItem>
+    </Accordion>
   </div>
 </template>
 
@@ -91,7 +121,13 @@ const form = useFormValues<CreateContainerForm>()
 
 const commands: ComputedRef<Field[][]> = computed(() => {
   return form.value.command?.map((_, index) => ([
-    { label: "command", value: `command[${index}]`, placeholder: "/bin/sh", cols: "12", type: "VTextField" }
+    { 
+      label: "command", 
+      value: `command[${index}]`, 
+      name: `command[${index}]`,
+      placeholder: "/bin/sh", 
+      type: "input" 
+    }
   ])) || []
 })
 
@@ -105,8 +141,20 @@ const pushCommandField = () => {
 
 const labels: ComputedRef<Field[][]> = computed(() => {
   return form.value.labels?.map((_, index) => ([
-    { label: "name", cols: '6', value: `labels[${index}].name`, placeholder: "TZ", type: "VTextField" },
-    { label: "value", cols: '6', value: `labels[${index}].value`, placeholder: "America/Los_Angeles", type: "VTextField" },
+    { 
+      label: "name", 
+      name: `labels[${index}].name`,
+      value: `labels[${index}].name`, 
+      placeholder: "TZ", 
+      type: "input" 
+    },
+    { 
+      label: "value", 
+      name: `labels[${index}].value`,
+      value: `labels[${index}].value`, 
+      placeholder: "America/Los_Angeles", 
+      type: "input" 
+    },
   ])) || []
 })
 
@@ -120,8 +168,20 @@ const pushLabel = () => {
 
 const sysctls: ComputedRef<Field[][]> = computed(() => {
   return form.value.sysctls?.map((_, index) => ([
-    { label: "name", value: `sysctls[${index}].name`, placeholder: "net.ipv6.conf.all.disable_ipv6", cols: "12", type: "VTextField" },
-    { label: "value", value: `sysctls[${index}].value`, placeholder: "1", cols: "12", type: "VTextField" },
+    { 
+      label: "name", 
+      name: `sysctls[${index}].name`,
+      value: `sysctls[${index}].name`, 
+      placeholder: "net.ipv6.conf.all.disable_ipv6", 
+      type: "input" 
+    },
+    { 
+      label: "value",
+      name: `sysctls[${index}].value`, 
+      value: `sysctls[${index}].value`, 
+      placeholder: "1", 
+      type: "input" 
+    },
   ])) || []
 })
 
@@ -135,9 +195,28 @@ const pushSysctls = () => {
 
 const devices: ComputedRef<Field[][]> = computed(() => {
   return form.value.devices?.map((_, index) => ([
-    { label: "host", value: `devices[${index}].name`, placeholder: "name", cols: "12", type: "VTextField" },
-    { label: "container", value: `devices[${index}].path`, placeholder: "path", cols: "8", type: "VTextField" },
-    { label: "permissions", value: `devices[${index}].permissions`, placeholder: "rwm", items: ['r', 'w', 'm', 'mw', 'rm', 'rwm', 'rw'], cols: "4", type: "VSelect" },
+    { 
+      label: "host", 
+      name: `devices[${index}].name`,
+      value: `devices[${index}].name`, 
+      placeholder: "name", 
+      type: "input" 
+    },
+    { 
+      label: "container", 
+      name: `devices[${index}].path`,
+      value: `devices[${index}].path`, 
+      placeholder: "path", 
+      type: "input" 
+    },
+    { 
+      label: "permissions", 
+      name: `devices[${index}].permissions`,
+      value: `devices[${index}].permissions`, 
+      placeholder: "rwm", 
+      items: ['r', 'w', 'm', 'mw', 'rm', 'rwm', 'rw'], 
+      type: "select" 
+    },
   ])) || []
 })
 
@@ -149,10 +228,10 @@ const pushDevices = () => {
   }
 }
 
-
 const capAddField: Field = {
   label: "capability",
-  value: `capabilities.add`,
+  name: "capabilities.add",
+  value: "capabilities.add",
   placeholder: "SYS_ADMIN",
   multiple: true,
   items: [
@@ -180,12 +259,13 @@ const capAddField: Field = {
     "WAKE_ALARM",
     "BLOCK_SUSPEND"
   ],
-  cols: "12",
-  type: "VSelect"
+  type: "select"
 }
+
 const capDropField: Field = {
   label: "capability",
-  value: `capabilities.drop`,
+  name: "capabilities.drop",
+  value: "capabilities.drop",
   placeholder: "KILL",
   multiple: true,
   items: [
@@ -202,24 +282,22 @@ const capDropField: Field = {
     "NET_RAW",
     "SYS_CHROOT",
   ],
-  cols: "12",
-  type: "VSelect"
+  type: "select"
 }
 
 const cpuLimitsField: Field = {
   label: "CPU",
-  value: `limits.cpu`,
+  name: "limits.cpu",
+  value: "limits.cpu",
   placeholder: "1",
-  cols: "12",
-  type: "VTextField"
+  type: "input"
 }
+
 const memoryLimitsField: Field = {
   label: "Memory",
-  value: `limits.memory`,
+  name: "limits.memory",
+  value: "limits.memory",
   placeholder: "1000b | 100k | 10m | 1g",
-  cols: "12",
-  type: "VTextField"
+  type: "input"
 }
 </script>
-
-<style></style>

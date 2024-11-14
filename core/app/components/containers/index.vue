@@ -1,79 +1,74 @@
 <template>
   <common-list :resource="servers" name="containers" :loading="loading.includes('containers')">
     <template #bulk-buttons="{ selectedItems, server }">
-      <v-btn-group>
-        <v-tooltip v-for="action in actions" :key="action.name" :text="action.name" location="bottom">
-          <template #activator="{ props: props }">
-            <v-btn
-v-bind="props" :color="action.color" class="my-1" :disabled="loading.includes('containers')"
-              @click.prevent="
-                handleBulkAction(server, selectedItems, action.name)
-                ">
-              <v-icon :icon="action.icon" />
-            </v-btn>
-          </template>
-        </v-tooltip>
-        <v-dialog v-model="removeDialog">
-          <v-card width="40vw" class="mx-auto">
-            <v-row no-gutters>
-              <v-col>
-                <v-card-title class="text-no-wrap mt-3 ml-5">
-                  remove <b class="text-error">multiple containers</b>?
-                </v-card-title>
-              </v-col>
-              <v-col cols="1">
-                <v-btn :rounded="0" variant="plain" icon @click="removeDialog = false">
-                  <v-icon icon="mdi-window-close" />
-                </v-btn>
-              </v-col>
-            </v-row>
-            <v-card-text>
-              Are you sure you want to permanently remove the following
-              containers? <br>
-              <pre
-                class="text-error text-capitalize"><b>{{ selectedItems.map((item: string) => item).join(',\n') }}</b></pre>
-              All non-peristent data will be unrecoverable.
-            </v-card-text>
-            <v-card-actions>
-              <v-spacer />
-              <v-btn @click.prevent="removeDialog = false"> Cancel </v-btn>
-              <v-btn
-color="error" @click.prevent="
-                handleBulkAction(server, selectedItems, 'remove');
-              removeDialog = false;
-              ">
-                Remove
-              </v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
-      </v-btn-group>
+      <div class="flex space-x-2">
+        <Dialog
+          v-for="action in actions"
+          :key="action.name"
+          class="flex items-center px-4 py-2 rounded-md text-white"
+          :class="{
+            'bg-green-500': action.color === 'success',
+            'bg-yellow-500': action.color === 'warning',
+            'bg-red-500': action.color === 'error',
+            'bg-blue-500': action.color === 'info'
+          }"
+          :disabled="loading.includes('containers')"
+          @click.prevent="handleBulkAction(server, selectedItems, action.name)"
+        >
+          <icon :name="action.icon" class="mr-2" />
+          {{ action.name }}
+        </Dialog>
+      </div>
+      <Dialog v-model="removeDialog">
+        <div class="max-w-lg mx-auto p-4 bg-white rounded-md shadow-lg">
+          <h3 class="font-bold">Remove Multiple Containers?</h3>
+          <p>Are you sure you want to permanently remove the following containers?</p>
+          <pre class="text-red-500">{{ selectedItems.join(',\n') }}</pre>
+          <p>All non-persistent data will be unrecoverable.</p>
+          <div class="flex justify-end space-x-2 mt-4">
+            <Button class="px-4 py-2 bg-gray-300 rounded-md" @click="removeDialog = false">Cancel</Button>
+            <Button
+              class="px-4 py-2 bg-red-500 text-white rounded-md"
+              @click.prevent="handleBulkAction(server, selectedItems, 'remove'); removeDialog = false;"
+            >
+              Remove
+            </Button>
+          </div>
+        </div>
+      </Dialog>
     </template>
     <template #buttons>
-      <v-btn icon color="primary" @click="createDialog = true">
-        <v-icon icon="mdi-plus" />
-      </v-btn>
+      <Button class="flex items-center px-4 py-2 bg-blue-500 text-white rounded-md" @click="createDialog = true">
+        <icon name="mdi-plus" />
+      </Button>
       <containers-create v-if="createDialog" v-model:open="createDialog" />
-      <v-btn icon :loading="loading.includes('containers')" @click="refresh()">
-        <v-icon>mdi-refresh</v-icon>
-      </v-btn>
+      <Button
+        class="flex items-center px-4 py-2 bg-gray-300 rounded-md"
+        :class="{ 'opacity-60 cursor-not-allowed': loading.includes('containers') }"
+        @click="refresh()"
+      >
+        <icon name="mdi-refresh" />
+      </Button>
     </template>
-    <template #card="{ server, resource, toggleSelect, isSelected }">
+    <template #card="{ server, resource, toggleSelection, isSelected }">
       <lazy-containers-list-card
-:container="(resource.raw as Container)" :server="server"
-        :stats="stats[resource.raw.name] ? stats[resource.raw.name] : undefined" :selected="isSelected(resource)"
-        @selected="toggleSelect(resource)" />
+        :container="resource.raw as Container"
+        :server="server"
+        :stats="stats[resource.raw.name] || undefined"
+        :selected="isSelected(resource)"
+        @selected="toggleSelection(resource)"
+      />
     </template>
   </common-list>
 </template>
 
 <script lang="ts" setup>
-import type {
-  Container,
-  ContainerStat,
-  ContainerStats,
-} from "#docker/types/containers/yachtContainers";
+import { ref, onMounted, nextTick } from 'vue';
+import { onBeforeRouteLeave } from 'vue-router'; // Import from vue-router
+import type { Container, ContainerStat, ContainerStats } from "#docker/types/containers/yachtContainers";
 import { useContainersStore } from "#core/app/stores/containers";
+import { fetchSSE } from '#core/app/utils/fetch';
+
 const containersStore = useContainersStore();
 const { servers, loading } = storeToRefs(containersStore);
 const createDialog = ref(false);
@@ -133,7 +128,7 @@ const handleBulkAction = async (
     return;
   }
 
-  if (action === "remove" && removeDialog.value === false) {
+  if (action === "remove" && !removeDialog.value) {
     removeDialog.value = true;
     return;
   } else {
@@ -153,7 +148,7 @@ onMounted(async () => {
   statsLoading.value = false;
 });
 
-onBeforeRouteLeave(async () => {
+onBeforeRouteLeave(() => {
   statController.value.abort();
 });
 
@@ -202,5 +197,3 @@ const actions = [
   },
 ];
 </script>
-
-<style></style>

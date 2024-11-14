@@ -1,46 +1,59 @@
-<!-- eslint-disable vue/multi-word-component-names -->
 <template>
-  <v-dialog
-scrollable :fullscreen="fullscreen || sm" :max-width="fullscreen || sm ? '100vw' : '70vw'"
-    :max-height="fullscreen || sm ? '100vh' : '70vh'" transition="dialog-bottom-transition">
-    <template #default>
-      <v-card :loading="!term">
-        <!-- title bar -->
-        <common-title-bar :closable="true" :title="termType" @maximize="fullscreen = !fullscreen" @close="$emit('close')">
-          <template #btns>
+  <Dialog :open="true" @update:open="$emit('close')">
+    <DialogContent :class="[
+      fullscreen || isMobile ? 'w-screen h-screen' : 'w-[70vw] h-[70vh]',
+      'transition-all duration-200'
+    ]">
+      <!-- Title bar -->
+      <DialogHeader>
+        <DialogTitle class="flex justify-between items-center">
+          <span>{{ termType }}</span>
+          <div class="flex gap-2">
             <slot name="btns" />
-            <v-tooltip :text="'refresh'">
-              <template #activator="{ props }">
-                <v-btn v-bind="props" icon @click="$emit('refresh')">
-                  <v-icon> mdi-refresh </v-icon>
-                </v-btn>
-              </template>
-            </v-tooltip>
-          </template>
-        </common-title-bar>
-        <!-- xterm console -->
-        <v-card ref="terminalCard" rounded="0" class="fill-height" />
-      </v-card>
-    </template>
-  </v-dialog>
+            <Button variant="ghost" size="icon" @click="$emit('refresh')" class="relative group">
+              <Icon icon="mdi:refresh" class="h-4 w-4" />
+              <span class="sr-only">Refresh</span>
+            </Button>
+            <Button variant="ghost" size="icon" @click="fullscreen = !fullscreen">
+              <Icon :icon="fullscreen ? 'mdi:minimize' : 'mdi:maximize'" class="h-4 w-4" />
+              <span class="sr-only">Toggle fullscreen</span>
+            </Button>
+            <Button variant="ghost" size="icon" @click="$emit('close')">
+              <Icon icon="mdi:close" class="h-4 w-4" />
+              <span class="sr-only">Close</span>
+            </Button>
+          </div>
+        </DialogTitle>
+      </DialogHeader>
+
+      <!-- Terminal -->
+      <Card ref="terminalCard" class="h-full rounded-none" :class="{ 'opacity-50': !term }">
+        <CardContent class="p-0 h-full">
+          <!-- xterm will be mounted here -->
+        </CardContent>
+      </Card>
+    </DialogContent>
+  </Dialog>
 </template>
 
 <script lang="ts" setup>
-import type { VCard } from 'vuetify/components'
 import type { Terminal } from '@xterm/xterm'
 import type { AttachAddon } from '@xterm/addon-attach';
 import type { FitAddon } from '@xterm/addon-fit'
+import type { Card } from '#ui/app/components/ui/card'
 import '@xterm/xterm/css/xterm.css';
+import { breakpointsTailwind, useBreakpoints } from '@vueuse/core'
+
+const breakpoints = useBreakpoints(breakpointsTailwind)
+const isMobile = breakpoints.smaller('sm')
 
 defineEmits(['close', 'maximize', 'refresh', 'copy'])
 
 // Window Controls
-const fullscreen: Ref<boolean> = ref(false)
-const { sm } = useDisplay()
-
-const terminalCard: Ref<VCard | null> = useState('terminalRef', () => null)
-const term: Ref<Terminal | null> = useState('terminal', () => null)
-const fitAddon: Ref<FitAddon | null> = useState('fitAddon', () => null)
+const fullscreen = ref(false)
+const terminalCard = ref<HTMLElement | null>(null)
+const term = ref<Terminal | null>(null)
+const fitAddon = ref<FitAddon | null>(null)
 
 interface Props {
   termType: 'logs' | 'terminal',
@@ -53,24 +66,26 @@ useResizeObserver(terminalCard, () => {
 })
 
 const loadTermData = async () => {
-  if (term.value) {
-    if (attachAddon) term.value.loadAddon(attachAddon)
+  if (term.value && attachAddon) {
+    term.value.loadAddon(attachAddon)
   }
 }
 
 onMounted(async () => {
   const { Terminal } = await import('@xterm/xterm')
   const { FitAddon } = await import('@xterm/addon-fit')
-  term.value = new Terminal({ allowProposedApi: true, convertEol: termType === 'logs', disableStdin: termType === 'logs' })
+  term.value = new Terminal({
+    allowProposedApi: true,
+    convertEol: termType === 'logs',
+    disableStdin: termType === 'logs'
+  })
   fitAddon.value = new FitAddon()
   // Load addons
   term.value.loadAddon(fitAddon.value)
   // Open Terminal and set it as the focus
-  term.value.open(terminalCard.value?.$el)
+  term.value.open(terminalCard.value as HTMLElement)
   fitAddon.value.fit()
   term.value.focus()
   loadTermData()
 })
 </script>
-
-<style></style>

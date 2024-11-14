@@ -1,60 +1,67 @@
 <template>
-  <v-card id="networks-card" color="foreground" class="overflow-auto">
-    <v-card-title>{{ resource.Name.toLowerCase() }} <v-btn variant="plain" icon @click="reveal = !reveal"><v-icon
-          :icon="reveal ? 'mdi-chevron-up' : 'mdi-chevron-down'" /></v-btn></v-card-title>
-    <v-expand-transition>
-      <v-card-text v-show="reveal">
-        <pre>{{ resource }}</pre>
-      </v-card-text>
-    </v-expand-transition>
-    <v-card-subtitle>id: {{ resource.Id.slice(0, 12) }}</v-card-subtitle>
-    <v-card-subtitle>created: {{ formatDates(resource.Created) }}</v-card-subtitle>
-    <v-list>
-      <v-row>
-        <v-col>
-          <v-list-item>
-            <v-list-item-title>driver</v-list-item-title>
-            <v-list-item-subtitle>{{ resource.Driver }}</v-list-item-subtitle>
-          </v-list-item>
-        </v-col>
-        <v-col>
-          <v-list-item>
-            <v-list-item-title>ipv6</v-list-item-title>
-            <v-list-item-subtitle>{{ resource.EnableIPv6 }}</v-list-item-subtitle>
-          </v-list-item>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col>
-          <v-list-item v-if="resource.IPAM?.Config && resource.IPAM.Config[0] && resource.IPAM?.Config[0]['Subnet']">
-            <v-list-item-title>subnet</v-list-item-title>
-            <v-list-item-subtitle>{{ resource.IPAM.Config[0]['Subnet'] }}</v-list-item-subtitle>
-          </v-list-item>
-        </v-col>
-        <v-col>
-          <v-list-item v-if="resource.IPAM?.Config && resource.IPAM.Config[0] && resource.IPAM?.Config[0]['Gateway']">
-            <v-list-item-title>gateway</v-list-item-title>
-            <v-list-item-subtitle>{{ resource.IPAM.Config[0]['Gateway'] }}</v-list-item-subtitle>
-          </v-list-item>
-        </v-col>
-      </v-row>
-    </v-list>
-  </v-card>
+  <Card id="networks-card" class="overflow-auto bg-foreground">
+    <CardHeader class="flex justify-between items-center">
+      <CardTitle>{{ resource.Name.toLowerCase() }}</CardTitle>
+      <Button variant="ghost" icon @click="reveal = !reveal">
+        <component :is="reveal ? ChevronUp : ChevronDown" class="w-4 h-4" />
+      </Button>
+    </CardHeader>
+    <CardContent v-if="reveal" class="transition-all duration-300">
+      <pre>{{ resource }}</pre>
+    </CardContent>
+    <CardFooter>
+      <div class="flex flex-col space-y-2">
+        <div class="flex justify-between">
+          <span>id:</span>
+          <span>{{ resource.Id.slice(0, 12) }}</span>
+        </div>
+        <div class="flex justify-between">
+          <span>created:</span>
+          <span>{{ formatDates(resource.Created) }}</span>
+        </div>
+        <div class="flex justify-between">
+          <span>driver:</span>
+          <span>{{ resource.Driver }}</span>
+        </div>
+        <div class="flex justify-between">
+          <span>ipv6:</span>
+          <span>{{ resource.EnableIPv6 }}</span>
+        </div>
+        <div v-if="resource.IPAM?.Config && resource.IPAM.Config[0] && resource.IPAM.Config[0]['Subnet']"
+          class="flex justify-between">
+          <span>subnet:</span>
+          <span>{{ resource.IPAM.Config[0]['Subnet'] }}</span>
+        </div>
+        <div v-if="resource.IPAM?.Config && resource.IPAM.Config[0] && resource.IPAM.Config[0]['Gateway']"
+          class="flex justify-between">
+          <span>gateway:</span>
+          <span>{{ resource.IPAM.Config[0]['Gateway'] }}</span>
+        </div>
+      </div>
+    </CardFooter>
+  </Card>
 </template>
 
 <script lang="ts" setup>
-import type { NetworkInspectInfo } from 'dockerode';
+import { ref } from 'vue';
 import { parseISO } from 'date-fns';
-const reveal = ref(false)
+import { ChevronDown, ChevronUp } from 'lucide-vue-next';
+import type { NetworkInspectInfo } from 'dockerode';
+
+const reveal = ref(false);
 
 const formatDates = (date: string) => {
-  return parseISO(date).toLocaleString()
-}
+  return parseISO(date).toLocaleString();
+};
+
 interface Props {
-  server: string,
-  resource: NetworkInspectInfo
+  server: string;
+  resource: NetworkInspectInfo;
 }
-defineProps<Props>()
+
+defineProps<Props>();
 </script>
 
-<style></style>
+<style scoped>
+/* Add any additional styling if needed */
+</style>

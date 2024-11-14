@@ -1,49 +1,45 @@
-<!-- eslint-disable vue/multi-word-component-names -->
 <template>
-  <v-card
-    :width="smAndDown ? '100%' : '30vw'"
-    :title="title"
-    style="transition: all 0.2"
-    variant="elevated"
-    border="bottom"
-  >
-    <template v-if="title" #title
-      ><p class="text-h6">{{ title }}</p></template
-    >
-    <v-expand-transition group>
-      <v-card-item v-for="(item, i) in items" :key="i">
-        <v-card-subtitle class="d-flex justify-space-between">
-          <p>{{ item.status }}</p>
-          <p>
-            {{
-              item.current && item.total
-                ? bytes
+  <Card :class="[isMobile ? 'w-full' : 'w-[30vw]']" class="transition-all duration-200">
+    <CardHeader v-if="title">
+      <CardTitle>{{ title }}</CardTitle>
+    </CardHeader>
+    <CardContent>
+      <TransitionGroup name="expand">
+        <div v-for="(item, i) in items" :key="i" class="space-y-2 mb-4">
+          <div class="flex justify-between text-sm text-muted-foreground">
+            <span>{{ item.status }}</span>
+            <span v-if="item.current && item.total">
+              {{
+                bytes
                   ? `${formatBytes(item.current)} / ${formatBytes(item.total)}`
                   : `${item.current} / ${item.total}`
-                : null
-            }}
-          </p>
-        </v-card-subtitle>
-        <v-progress-linear
-          :model-value="
-            ((item.current ||
-              // If waiting or pulling fs layer, bar should be empty if there's no current/total values.
-              (item.status === 'Waiting' || item.status === 'Pulling fs layer'
-                ? 0
-                : 100)) /
-              (item.total || 100)) *
-            100
-          "
-        />
-      </v-card-item>
-    </v-expand-transition>
-  </v-card>
+              }}
+            </span>
+          </div>
+          <Progress
+            :model-value="
+              ((item.current ||
+                (item.status === 'Waiting' || item.status === 'Pulling fs layer'
+                  ? 0
+                  : 100)) /
+                (item.total || 100)) *
+              100
+            "
+          />
+        </div>
+      </TransitionGroup>
+    </CardContent>
+  </Card>
 </template>
 
 <script setup lang="ts">
 import { useProgressStore } from '#notifications/app/stores/progressStore';
 import type { ProgressItems } from '#notifications/types/progress';
-const { smAndDown } = useDisplay();
+import { breakpointsTailwind, useBreakpoints } from '@vueuse/core'
+import { Progress } from '#ui/app/components/ui/progress'
+const breakpoints = useBreakpoints(breakpointsTailwind)
+const isMobile = breakpoints.smaller('sm') // smaller than 640px
+
 defineEmits(["closeToast"]);
 
 interface Props {
@@ -62,3 +58,15 @@ const { title, items, bytes } = progress.value[id] || {
   bytes: false,
 };
 </script>
+
+<style scoped>
+.expand-enter-active,
+.expand-leave-active {
+  transition: all 0.2s ease;
+}
+.expand-enter-from,
+.expand-leave-to {
+  opacity: 0;
+  transform: translateY(-20px);
+}
+</style>

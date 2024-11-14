@@ -1,128 +1,77 @@
-<!-- eslint-disable vue/no-v-html -->
-<!-- eslint-disable vue/no-v-text-v-html-on-component -->
 <template>
-  <v-card
-    id="images-card"
-    v-auto-animate
-    class="pa-2 fill-height"
-    density="compact"
-    style="transition: height 0.3s ease-in-out; position: relative"
-  >
-    <v-row no-gutters>
-      <v-col cols="12">
-        <v-sheet max-height="110px">
-          <v-card-item>
-            <template #prepend>
-              <v-avatar>
-                <v-img :src="vendorIcon">
-                  <template #error>
-                    <v-img src="/docker-placeholder-logo.png" />
-                  </template>
-                </v-img>
-              </v-avatar>
-            </template>
-            <v-card-title>
-              {{ imageTitle }}
-              <v-btn
-                size="small"
-                variant="plain"
-                icon
-                @click="reveal = !reveal"
-              >
-                <v-icon
-                  :icon="reveal ? 'mdi-chevron-up' : 'mdi-chevron-down'"
-                />
-              </v-btn>
-            </v-card-title>
-            <v-card-subtitle>{{
-              resource.RepoTags && resource.RepoTags[0]
-            }}</v-card-subtitle>
-            <v-card-subtitle
-              >size: {{ imageSize.toFixed(2) + " MB" }}</v-card-subtitle
-            >
-            <v-card-subtitle
-              >created: {{ formatDates(resource.Created) }}</v-card-subtitle
-            >
-          </v-card-item>
-        </v-sheet>
-      </v-col>
-      <v-col cols="12">
-        <v-sheet height="110px" class="overflow-auto">
-          <v-card-text
-            v-if="labels?.get('description')"
-            v-html="$mdRenderer.render(labels.get('description'))"
-          />
-          <v-card-text v-else class="text--secondary">
-            {{ imageTitle?.toLowerCase() }} does not provide
-            <a
-              href="https://github.com/opencontainers/image-spec/blob/main/annotations.md"
-              >oci labels for a description</a
-            >.
-          </v-card-text>
-        </v-sheet>
-      </v-col>
-    </v-row>
+  <Card id="images-card" class="p-2 h-full transition-height duration-300 ease-in-out relative">
+    <div class="flex flex-col space-y-2">
+      <div class="flex max-h-28">
+        <CardHeader>
+          <template #avatar>
+            <Avatar>
+              <img :src="vendorIcon" alt="Vendor Icon" class="object-cover" />
+            </Avatar>
+          </template>
+          <CardTitle>
+            {{ imageTitle }}
+            <Button size="sm" variant="ghost" class="ml-2" @click="reveal = !reveal">
+              <component :is="reveal ? ChevronUp : ChevronDown" class="w-4 h-4" />
+            </Button>
+          </CardTitle>
+          <CardDescription>
+            {{ resource.RepoTags && resource.RepoTags[0] }}
+          </CardDescription>
+          <CardDescription>
+            Size: {{ imageSize.toFixed(2) + " MB" }}
+          </CardDescription>
+          <CardDescription>
+            Created: {{ formatDates(resource.Created) }}
+          </CardDescription>
+        </CardHeader>
+      </div>
 
-    <v-card-actions
-      v-if="
-        labels &&
-        (labels.get('url') ||
-          labels.get('documentation') ||
-          labels.get('source'))
-      "
-      class="pa-0 align-end"
-    >
-      <v-btn
-        v-if="labels?.get('url')"
-        size="small"
-        target="_blank"
-        variant="plain"
-        icon
-        :href="labels.get('url')"
-      >
-        <v-icon icon="mdi-open-in-new" />
-      </v-btn>
-      <v-btn
-        v-if="labels?.get('documentation')"
-        size="small"
-        target="_blank"
-        variant="plain"
-        icon
-        :href="labels.get('documentation')"
-      >
-        <v-icon icon="mdi-file-document" />
-      </v-btn>
-      <v-btn
-        v-if="labels?.get('source')"
-        size="small"
-        target="_blank"
-        variant="plain"
-        icon
-        :href="labels.get('source')"
-      >
-        <v-icon icon="mdi-github" />
-      </v-btn>
-      <v-spacer />
-      <span
-        v-if="labels?.get('vendor')"
-        class="text-overline font-weight-light ma-0"
-      >
+      <div class="flex max-h-28 overflow-auto">
+        <CardContent>
+          <div v-if="labels?.get('description')" v-html="$mdRenderer.render(labels.get('description'))" />
+          <div v-else class="text-secondary">
+            {{ imageTitle?.toLowerCase() }} does not provide
+            <a href="https://github.com/opencontainers/image-spec/blob/main/annotations.md">
+              OCI labels for a description
+            </a>.
+          </div>
+        </CardContent>
+      </div>
+    </div>
+
+    <CardFooter v-if="hasLinks" class="p-0 flex justify-between items-center">
+      <div class="flex space-x-2">
+        <Button v-if="labels?.get('url')" size="sm" variant="ghost" target="_blank" :href="labels.get('url')">
+          <ExternalLink class="w-4 h-4" />
+        </Button>
+        <Button v-if="labels?.get('documentation')" size="sm" variant="ghost" target="_blank"
+          :href="labels.get('documentation')">
+          <FileText class="w-4 h-4" />
+        </Button>
+        <Button v-if="labels?.get('source')" size="sm" variant="ghost" target="_blank" :href="labels.get('source')">
+          <Github class="w-4 h-4" />
+        </Button>
+      </div>
+      <span v-if="labels?.get('vendor')" class="text-sm font-light">
         by {{ labels.get("vendor") }}
       </span>
-    </v-card-actions>
-    <v-expand-transition>
-      <div v-show="reveal">
-        <pre class="overflow-auto"> {{ resource }}</pre>
-        <pre class="overflow-auto"> {{ labels }}</pre>
-      </div>
-    </v-expand-transition>
-  </v-card>
+    </CardFooter>
+
+    <div v-show="reveal" class="transition-all duration-300">
+      <pre class="overflow-auto">{{ resource }}</pre>
+      <pre class="overflow-auto">{{ labels }}</pre>
+    </div>
+  </Card>
 </template>
 
 <script lang="ts" setup>
-import type { ImageInfo } from "dockerode";
-import { fromUnixTime } from "date-fns";
-const { $mdRenderer } = useNuxtApp()
+import { ref, computed } from 'vue';
+import { useNuxtApp } from '#app';
+import { ExternalLink, FileText, Github, ChevronUp, ChevronDown } from 'lucide-vue-next';
+import type { ImageInfo } from 'dockerode';
+import { fromUnixTime } from 'date-fns';
+
+const { $mdRenderer } = useNuxtApp();
 
 const reveal = ref(false);
 interface Props {
@@ -150,10 +99,8 @@ const keyMap: { [key: string]: string } = {
 };
 
 const labels = computed(() => {
-  // Return early if labels are not defined
-  if (!props.resource.Labels) return;
+  if (!props.resource.Labels) return new Map();
   const LabelList = new Map();
-  // Use Object.keys() for efficiency
   for (const key of Object.keys(props.resource.Labels)) {
     const mappedKey = keyMap[key];
     if (mappedKey) {
@@ -164,17 +111,14 @@ const labels = computed(() => {
 });
 
 const imageTitle = computed(() => {
-  // Assuming labels.value is a Map-like object that might have a 'title' key
-  const titleLabel = labels.value?.get("title");
+  const titleLabel = labels.value.get("title");
   if (titleLabel) {
     return titleLabel;
   }
-  // Assuming props.resource.RepoTags is an array of strings
   const repoTag = props.resource.RepoTags?.[0];
   if (repoTag && repoTag !== "<none>:<none>") {
     return repoTag;
   }
-  // Fallback to slicing the Id if available, otherwise just use the full Id
   return props.resource.Id?.slice(7, 19) ?? props.resource.Id;
 });
 
@@ -190,11 +134,17 @@ const formatDates = (date: number) => {
   return fromUnixTime(date).toLocaleString();
 };
 const vendorIcon = computed(() => {
-  const vendor = String(labels.value?.get("vendor")).toLowerCase();
+  const vendor = String(labels.value.get("vendor")).toLowerCase();
   return vendor && vendor !== "undefined"
-    ? vendorIconMap[vendor] || labels.value?.get("yacht.icon")
+    ? vendorIconMap[vendor] || labels.value.get("yacht.icon")
     : '/docker-placeholder-logo.png';
+});
+
+const hasLinks = computed(() => {
+  return labels.value.size > 0 && (labels.value.get('url') || labels.value.get('documentation') || labels.value.get('source'));
 });
 </script>
 
-<style></style>
+<style scoped>
+/* Add any additional styles here if necessary */
+</style>

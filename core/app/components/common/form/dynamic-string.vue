@@ -1,76 +1,85 @@
 <template>
   <div>
-    <v-card-title v-if="field.type === 'label' && value" type="info">
+    <Label v-if="field.type === 'label' && value">
       {{ value }}
-    </v-card-title>
-    <component
-      v-bind="$attrs"
-      :is="getComponent(field.type)"
-      v-else-if="field.type !== 'VBtnToggle' && field.type !== 'description'"
+    </Label>
+
+    <FormField
+      v-else-if="field.type !== 'button' && field.type !== 'description'"
+      v-slot="{ componentField }"
+      :name="field.name"
+    >
+      <FormItem v-auto-animate>
+        <FormLabel>{{ field.label }}</FormLabel>
+        <FormControl>
+          <component
+            :is="getComponent(field.type)"
+            v-bind="componentField"
+            :placeholder="field.placeholder"
+            :multiple="field.multiple"
+            :options="field.items"
+          />
+        </FormControl>
+        <FormMessage />
+      </FormItem>
+    </FormField>
+
+    <Button
+      v-else-if="field.type === 'button'"
       v-model="value"
-      :clearable="field.multiple ? true : false"
-      :multiple="field.multiple ?? field.multiple"
-      :hide-details="errorMessage ? false : true"
-      :label="field.label"
-      :items="field.items ?? field.items"
-      :placeholder="field.placeholder"
-      :auto-expand="field.type === 'VTextarea'"
-      :error-messages="errorMessage"
-    />
-    <component
-      v-bind="$attrs"
-      :is="getComponent(field.type)"
-      v-else-if="field.type === 'VBtnToggle'"
-      v-model="value"
-      color="primary"
-      :label="field.label"
       @click="value = !value"
     >
-      <v-icon
-        v-if="field.icons"
-        :icon="value ? field.icons[0] : field.icons[1]"
-      />
+      <template v-if="field.icons">
+        <Icon
+          :name="value ? field.icons[0] : field.icons[1]"
+          class="mr-2 h-4 w-4"
+        />
+      </template>
       {{ field.label }}
-    </component>
-    <v-alert
+    </Button>
+
+    <Alert
       v-else-if="field.type === 'description' && value"
-      color="primary"
-      type="info"
+      variant="info"
     >
-      <v-card-text>{{ value }}</v-card-text>
-    </v-alert>
+      {{ value }}
+    </Alert>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { VSelect, VTextField, VTextarea, VBtn } from "vuetify/components";
 import type { Field } from "#core/types/forms";
+import { Input } from '#ui/app/components/ui/input'
+import { Select } from '#ui/app/components/ui/select'
+import { Textarea } from '#ui/app/components/ui/textarea'
+import { Button } from '#ui/app/components/ui/button'
+import { Switch } from '#ui/app/components/ui/switch'
+
 const model = defineModel<Field>("field", { required: true });
 
 const getComponent = (type: Field["type"]) => {
   switch (type) {
-    case "VSelect":
-      return VSelect;
-    case "VTextField":
-      return VTextField;
-    case "VTextarea":
-      return VTextarea;
-    case "VBtn":
-      return VBtn;
-    case "VBtnToggle":
-      return VBtn;
+    case "select":
+      return Select;
+    case "textarea":
+      return Textarea;
+    case "button":
+      return Button;
+    case "input":
+      return Input;
+    case "switch":
+      return Switch
+    default:
+      return Input;
   }
 };
 
-const { value, errorMessage } = useField(
-  () => model.value.value,
-  {},
-  {
-    validateOnMount: model.value.validateOnMount,
-    validateOnValueUpdate: model.value.validateOnMount,
-  }
-);
-</script>
+const { handleSubmit } = useForm({
+  initialValues: {
+    [model.value.name]: model.value.value ?? "",
+  },
+  validateOnMount: model.value.validateOnMount,
+});
 
-<style></style>
-~/shared/forms
+const { value, errorMessage } = useField(model.value.name);
+</script>

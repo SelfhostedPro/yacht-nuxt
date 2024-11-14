@@ -1,15 +1,18 @@
 <template>
-  <v-btn-toggle v-model="activeButtons" class="pa-0 ma-0" multiple>
-    <v-btn value="hidden" class="h-50" size="x-small"
-      :icon="activeButtons.includes('hidden') ? 'mdi-eye' : 'mdi-eye-off'" />
-  </v-btn-toggle>
+  <ToggleGroup v-model="activeButtons" class="p-0 m-0" type="multiple">
+    <ToggleGroupItem value="hidden" class="h-12 text-xs">
+      <component :is="activeButtons.includes('hidden') ? EyeIcon : EyeOffIcon" />
+    </ToggleGroupItem>
+  </ToggleGroup>
 </template>
 
 <script lang="ts" setup>
-const activeButtons = ref<string[]>([]);
+import { ref } from 'vue'
+import { Eye as EyeIcon, EyeOff as EyeOffIcon } from 'lucide-vue-next'
 
-defineEmits(["toParent"]);
+const activeButtons = ref<string[]>([])
 
+defineEmits(['toParent'])
 </script>
 
 <style></style>

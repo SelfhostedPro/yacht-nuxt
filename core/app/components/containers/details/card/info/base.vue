@@ -1,35 +1,43 @@
 <template>
-	<div>
-		<v-list-item>
-			<v-list-item-title> image </v-list-item-title>
-			<v-list-item-subtitle class="text-no-wrap">{{ container.image }}</v-list-item-subtitle>
-		</v-list-item>
-		<v-list-item>
-			<v-list-item-title> id </v-list-item-title>
-			<v-list-item-subtitle class="text-no-wrap">{{ container.id }}</v-list-item-subtitle>
-		</v-list-item>
-		<v-list-item>
-			<v-list-item-title> status </v-list-item-title>
-			<v-list-item-subtitle>{{ container.status }}</v-list-item-subtitle>
-		</v-list-item>
-		<v-list-item>
-			<v-list-item-title> created </v-list-item-title>
-			<v-list-item-subtitle>{{ container.created }}</v-list-item-subtitle>
-		</v-list-item>
-		<v-list-item>
-			<v-list-item-title> restart </v-list-item-title>
-			<v-list-item-subtitle>{{ container.restart && container.restart.policy ? container.restart.policy : '-'
-			}}
-			</v-list-item-subtitle>
-		</v-list-item>
-	</div>
+	<Card>
+		<CardContent>
+			<div class="space-y-4">
+				<div>
+					<Label>Image</Label>
+					<p class="truncate">{{ container.image }}</p>
+				</div>
+				<div>
+					<Label>ID</Label>
+					<p class="truncate">{{ container.id }}</p>
+				</div>
+				<div>
+					<Label>Status</Label>
+					<p>{{ container.status }}</p>
+				</div>
+				<div>
+					<Label>Created</Label>
+					<p>{{ container.created }}</p>
+				</div>
+				<div>
+					<Label>Restart</Label>
+					<p>{{ container.restart && container.restart.policy ? container.restart.policy : '-' }}</p>
+				</div>
+			</div>
+		</CardContent>
+	</Card>
 </template>
 
 <script setup lang="ts">
 import type { Container } from '#docker/types/containers/yachtContainers';
+import { Card, CardContent } from '@/components/ui/card'
+import { Label } from '@/components/ui/label'
 
 interface Props {
 	container: Container
 }
 defineProps<Props>()
 </script>
+
+<style scoped>
+/* Add any custom styles if needed */
+</style>

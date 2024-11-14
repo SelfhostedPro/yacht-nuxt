@@ -2,24 +2,25 @@
   <template
     v-if="activeFile && Object.keys(specialFileTypes).includes(activeFile.name)"
   >
-    <v-btn
+    <Button
       v-for="actionItem in getFileActions()"
       :key="actionItem.title"
       :color="actionItem.color"
       @click="performAction(actionItem.title)"
     >
       {{ actionItem.title }}
-    </v-btn>
+    </Button>
   </template>
-  <v-spacer />
-  <v-btn :loading="isLoading" color="primary" @click="saveFile">
+  <div class="spacer" />
+  <Button :loading="isLoading" color="primary" @click="saveFile">
     save
-    <v-icon icon="mdi-content-save" />
-  </v-btn>
+    <Icon name="mdi-content-save" />
+  </Button>
 </template>
 
 <script setup lang="ts">
 import { useProjectsStore } from "#core/app/stores/projects";
+
 // Setup Projects Store
 const projectsStore = useProjectsStore();
 const { activeFile } = storeToRefs(projectsStore);

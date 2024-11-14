@@ -1,39 +1,33 @@
 <template>
-  <v-card height="100vh" width="100%">
-    <v-layout :full-height="true">
-      <v-app-bar>
-        <template #prepend>
-          <v-app-bar-nav-icon @click="sidebarOpen = !sidebarOpen" />
-        </template>
-        <v-toolbar-title class="d-flex">
+  <Card class="h-screen w-full">
+    <div class="flex flex-col h-full">
+      <div class="flex items-center justify-between p-4 border-b">
+        <Button variant="ghost" @click="sidebarOpen = !sidebarOpen">
+          <IconMenu />
+        </Button>
+        <h1 class="text-lg font-semibold">
           Project Browser - {{ activeFile.name }}
-        </v-toolbar-title>
-        <template #append>
-          <projects-browser-nav-actions-add
-            :cwd="dir?.relativePath || ''"
-            @added="getFolder()"
-          />
-        </template>
-      </v-app-bar>
-      <projects-browser-nav
-        :opened="sidebarOpen"
-        :tree="dirTree"
-        @to-parent="toParent"
-      />
-      <v-main class="fill-height">
-        <projects-browser-editor />
-      </v-main>
-    </v-layout>
-  </v-card>
+        </h1>
+        <projects-browser-nav-actions-add :cwd="dir?.relativePath || ''" @added="getFolder()" />
+      </div>
+      <div class="flex flex-1">
+        <projects-browser-nav :opened="sidebarOpen" :tree="dirTree" @to-parent="toParent" />
+        <main class="flex-1">
+          <projects-browser-editor />
+        </main>
+      </div>
+    </div>
+  </Card>
 </template>
+
 <script setup lang="ts">
-import { join } from "path";
-import { useProjectsStore } from "#core/app/stores/projects";
-// import { useNotificationsStore } from "@labvue/core/stores/notificationsStore";
-// import type { Dree } from "dree";
+import { ref, onMounted, watch } from 'vue';
+import { join } from 'path';
+import { useProjectsStore } from '#core/app/stores/projects';
+import { Menu as IconMenu } from 'lucide-vue-next';
+
 const projectsStore = useProjectsStore();
-const { dir, dirTree, currentPath, activeFile, pathquery, showHidden } =
-  storeToRefs(projectsStore);
+const { dir, dirTree, currentPath, activeFile, pathquery, showHidden } = storeToRefs(projectsStore);
 
 const sidebarOpen = ref(true);
 const { getFolder, changeDirectory } = projectsStore;
@@ -47,7 +41,7 @@ onMounted(async () => {
 });
 
 const toParent = async () => {
-  console.log("changing path", `${join(currentPath.value.join(""), "..")}`);
-  await changeDirectory("..");
+  console.log('changing path', `${join(currentPath.value.join(''), '..')}`);
+  await changeDirectory('..');
 };
 </script>

@@ -1,10 +1,10 @@
 <template>
-  <v-app :theme="isDark ? 'LVDark' : 'LVLight'">
+  <!-- <v-app :theme="isDark ? 'LVDark' : 'LVLight'"> -->
     <NuxtLayout>
       <NuxtPage />
     </NuxtLayout>
-  </v-app>
+  <!-- </v-app> -->
 </template>
 <script setup lang="ts">
-const { isDark } = useCustomTheme();
+// const { isDark } = useCustomTheme();
 </script>

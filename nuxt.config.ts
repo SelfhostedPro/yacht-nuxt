@@ -5,33 +5,39 @@ export default defineNuxtConfig({
   future: {
     compatibilityVersion: 4,
   },
+  dir: {
+    public: resolve('./core/public')
+  },
   extends: [
     'core',
     'layers/config',
     'layers/auth',
     'layers/notifications',
-    'layers/docker'
+    'layers/docker',
+    'layers/ui'
+        // 'layers/vuetify',
   ],
   alias: {
     '#core': resolve('core'),
     '#auth': resolve('layers/auth'),
     '#config': resolve('layers/config'),
     '#docker': resolve('layers/docker'),
-    '#notifications': resolve('layers/notifications')
+    '#notifications': resolve('layers/notifications'),
+    '#ui': resolve('layers/ui'),
+    '@/components': resolve('layers/ui/app/components'),
+    // '@lib/utils': resolve('layers/ui/app/lib/utils'),
+    // '#vuetify': resolve('layers/vuetify')
   },
   modules: [
-    'vuetify-nuxt-module',
+    // 'vuetify-nuxt-module',
     '@pinia/nuxt',
     '@vueuse/nuxt',
     '@vee-validate/nuxt',
     'nuxt-monaco-editor',
     "@formkit/auto-animate",
-    '@nuxt/eslint'
+    // '@nuxt/eslint'
   ],
 
-  build: {
-    transpile: ['vue-sonner', 'vuetify'],
-  },
   experimental: {
     clientNodeCompat: true
   },
@@ -39,15 +45,6 @@ export default defineNuxtConfig({
   typescript: {
     typeCheck: true,
     strict: true
-  },
-
-  vuetify: {
-    moduleOptions: {
-      ssrClientHints: {
-        reloadOnFirstRequest: true,
-        viewportSize: true
-      }
-    },
   },
   monacoEditor: {
 

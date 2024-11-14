@@ -1,57 +1,40 @@
 <template>
-  <v-card-item class="d-flex flex-column items-center">
-    <v-card-subtitle class="mx-auto text-center">
-      PORTS
-    </v-card-subtitle>
-    <v-item-group
-      justify="start"
-      show-arrows
-    >
-      <v-row no-gutters>
-        <v-item
+  <div class="flex flex-col items-center">
+    <h2 class="mx-auto text-center">PORTS</h2>
+    <div class="flex overflow-x-auto">
+      <div class="flex flex-wrap justify-start">
+        <div
           v-for="port in disableIpv6(ports)"
           :key="port.containerPort"
+          class="p-2"
         >
-          <v-col v-if="labels && labels[`sh.yacht.${port.containerPort}`]">
-            <v-tooltip
-              location="bottom"
-              :text="port.hostPort ? `${port.hostPort} => ${port.containerPort}` : `${port.containerPort} not forwarded`"
-            >
-              <template #activator="{ props }">
-                <v-chip
-                  v-bind="props"
-                  label
-                  size="small"
-                  class="ma-1"
-                  :color="port.hostPort ? 'primary' : 'error'"
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger>
+                <span
+                  v-if="labels && labels[`sh.yacht.${port.containerPort}`]"
+                  class="inline-block px-3 py-1 text-sm font-medium rounded-full"
+                  :class="port.hostPort ? 'bg-blue-500 text-white' : 'bg-red-500 text-white'"
                 >
                   {{ labels[`sh.yacht.${port.containerPort}`] }}
-                </v-chip>
-              </template>
-            </v-tooltip>
-          </v-col>
-          <v-col v-else>
-            <v-tooltip
-              location="bottom"
-              :text="port.hostPort ? `host port: ${port.hostPort}` : 'port not forwarded'"
-            >
-              <template #activator="{ props }">
-                <v-chip
-                  v-bind="props"
-                  label
-                  size="small"
-                  class="ma-1"
-                  :color="port.hostPort ? 'primary' : 'error'"
+                </span>
+                <span
+                  v-else
+                  class="inline-block px-3 py-1 text-sm font-medium rounded-full"
+                  :class="port.hostPort ? 'bg-blue-500 text-white' : 'bg-red-500 text-white'"
                 >
                   {{ port.containerPort }}
-                </v-chip>
-              </template>
-            </v-tooltip>
-          </v-col>
-        </v-item>
-      </v-row>
-    </v-item-group>
-  </v-card-item>
+                </span>
+              </TooltipTrigger>
+              <TooltipContent>
+                {{ port.hostPort ? `host port: ${port.hostPort}` : 'port not forwarded' }}
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script lang="ts" setup>

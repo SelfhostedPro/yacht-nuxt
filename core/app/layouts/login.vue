@@ -1,8 +1,8 @@
 <template>
-  <v-app>
-    <v-main>
+  <div class="min-h-screen bg-background">
+    <main class="container mx-auto flex min-h-screen items-center justify-center p-4">
       <slot />
-    </v-main>
+    </main>
     <!-- <Sonner /> -->
-  </v-app>
+  </div>
 </template>

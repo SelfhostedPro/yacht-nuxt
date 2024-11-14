@@ -1,56 +1,59 @@
 <template>
-  <div>
-    <v-card-title class="d-flex">
-      Info
-      <v-spacer />
-      <v-btn :color="preview ? 'warning' : 'primary'" @click="preview = !preview">
-        {{ preview ? 'edit' : 'preview' }}
-      </v-btn>
-    </v-card-title>
-    <v-card-text v-show="!preview" class="mt-2">
-      <v-row align="center" justify="space-around">
-        <v-avatar 
-          size="60" 
-          :image="form.info?.icon ?? fields.icon.placeholder" 
-        />
-        <v-col>
-          <common-form-dynamic-string 
-            :field="fields.icon"
-          />
-        </v-col>
-        <v-col cols="12">
-          <common-form-dynamic-string 
-            :field="fields.title"
-          />
-        </v-col>
-        <v-col cols="12">
-          <common-form-dynamic-string 
-            :field="fields.notes"
-          />
-          <v-card-text class="font-weight-black">
+  <div class="space-y-4">
+    <div class="flex items-center justify-between">
+      <h3 class="text-lg font-medium">Info</h3>
+      <Button 
+        :variant="preview ? 'destructive' : 'default'"
+        @click="preview = !preview"
+      >
+        {{ preview ? 'Edit' : 'Preview' }}
+      </Button>
+    </div>
+
+    <div v-show="!preview" class="space-y-4">
+      <div class="flex items-center gap-4">
+        <Avatar class="h-[60px] w-[60px]">
+          <AvatarImage :src="form.info?.icon ?? fields.icon.placeholder" />
+          <AvatarFallback>Icon</AvatarFallback>
+        </Avatar>
+        <div class="flex-1">
+          <common-form-dynamic-string :field="fields.icon" />
+        </div>
+      </div>
+
+      <common-form-dynamic-string :field="fields.title" />
+
+      <div class="space-y-2">
+        <common-form-dynamic-string :field="fields.notes" />
+        <Alert variant="warning">
+          <p class="font-bold">
             DO NOT STORE SENSITIVE INFO HERE OR R/SELFHOSTED WILL JUDGE YOU 😤
-          </v-card-text>
-        </v-col>
-      </v-row>
-    </v-card-text>
-    <v-card v-show="preview" class="mx-5">
-      <v-card-text>
-        <v-card-title class="text-h3">
-          <v-avatar 
-            size="60" 
-            :image="form.info?.icon ?? fields.icon.placeholder" 
-          />
+          </p>
+        </Alert>
+      </div>
+    </div>
+
+    <Card v-show="preview">
+      <CardHeader>
+        <CardTitle class="flex items-center gap-4 text-3xl">
+          <Avatar class="h-[60px] w-[60px]">
+            <AvatarImage :src="form.info?.icon ?? fields.icon.placeholder" />
+            <AvatarFallback>Icon</AvatarFallback>
+          </Avatar>
           {{ form.info?.title ?? fields.title.placeholder }}
-        </v-card-title>
-        <!-- Use a safer alternative to v-html -->
-        <v-card-text>
+        </CardTitle>
+      </CardHeader>
+      <CardContent class="space-y-4">
+        <div>
           {{ $mdRenderer.render(form.info?.notes ?? fields.notes.placeholder ?? '') }}
-        </v-card-text>
-        <v-card-text class="font-weight-black">
-          DO NOT STORE SENSITIVE INFO HERE OR R/SELFHOSTED WILL JUDGE YOU 😤
-        </v-card-text>
-      </v-card-text>
-    </v-card>
+        </div>
+        <Alert variant="warning">
+          <p class="font-bold">
+            DO NOT STORE SENSITIVE INFO HERE OR R/SELFHOSTED WILL JUDGE YOU 😤
+          </p>
+        </Alert>
+      </CardContent>
+    </Card>
   </div>
 </template>
 
@@ -61,29 +64,29 @@ const { $mdRenderer } = useNuxtApp()
 const preview = ref(false)
 const form = useFormValues()
 
-// Define fields as a const with explicit type
 const fields = {
   icon: {
+    name: "icon",
     label: "Icon",
     value: "info.icon",
     placeholder:
       "https://raw.githubusercontent.com/linuxserver/docker-templates/master/linuxserver.io/img/linuxserver-ls-logo.png",
-    type: "VTextField",
+    type: "input",
   },
   title: {
+    name: "icon",
     label: "Title",
     value: "info.title",
     placeholder: "Yacht",
-    type: "VTextField",
+    type: "input",
   },
   notes: {
+    name: "icon",
     label: "Notes",
     value: "info.notes",
     placeholder:
       "## Notes\n Some notes about this section: \n\n - *Markdown is supported* \n\n - [links](https://yacht.sh) are super easy to add \n\n - The container will need to be restarted to edit this (limitation of docker)",
-    type: "VTextarea",
+    type: "input",
   },
 } satisfies Record<string, Field>
 </script>
-
-<style></style>

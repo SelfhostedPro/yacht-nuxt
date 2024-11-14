@@ -1,20 +1,15 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
-  <span>
-    <Toaster
-      position="bottom-right"
-      close-button
-      :style="{ width: smAndDown ? '100%' : '30%' }"
-    />
-  </span>
+  <Toaster position="bottom-right" :class="breakpoints.smaller('sm') ? 'w-full' : 'w-[30%]'" />
 </template>
 
 <script lang="ts" setup>
-import { Toaster } from "vue-sonner";
+import { breakpointsTailwind, useBreakpoints } from '@vueuse/core'
 import { useNotificationsStore } from "#notifications/app/stores/notificationsStore";
 import { useProgressStore } from "#notifications/app/stores/progressStore";
+import { Toaster } from '#ui/app/components/ui/sonner';
 
-const { smAndDown } = useDisplay();
+const breakpoints = useBreakpoints(breakpointsTailwind)
 const notificationsStore = useNotificationsStore();
 const { connected: notificationsConnected } = storeToRefs(notificationsStore);
 const progressStore = useProgressStore();
@@ -32,21 +27,4 @@ onMounted(async () => {
     await progressStore.connect();
   }
 });
-onBeforeUnmount(async () => {});
 </script>
-
-<style>
-@media screen and (max-width: 960px) {
-  [data-sonner-toast] {
-    right: 0vw !important;
-    bottom: 0vw !important;
-  }
-}
-[data-sonner-toast] {
-  overflow: visible;
-  left: auto !important;
-  right: 3vw !important;
-  bottom: 3vw !important;
-  position: fixed !important;
-}
-</style>

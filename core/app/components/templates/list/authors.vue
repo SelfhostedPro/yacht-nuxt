@@ -1,20 +1,31 @@
 <template>
-  <v-tooltip v-for="author in authors" :key="author.name" :text="author.name" location="top">
-    <template #activator="{ props }">
-      <a v-if="author.url" v-bind="mergeProps(props, $attrs)" :href="author.url" target="_blank">
-        <v-avatar size="32">
-          <v-img :src="author.avatar || `https://avatars.dicebear.com/api/initials/${author.name}.svg`" />
-        </v-avatar>
-      </a>
-      <v-avatar v-else size="32" v-bind="mergeProps(props, $attrs)">
-        <v-img :src="author.avatar || `https://avatars.dicebear.com/api/initials/${author.name}.svg`" />
-      </v-avatar>
-    </template>
-  </v-tooltip>
+  <div v-for="author in authors" :key="author.name" class="inline-block">
+    <Tooltip>
+      <TooltipTrigger>
+        <a v-if="author.url" :href="author.url" target="_blank" class="flex items-center">
+          <img
+            :src="author.avatar || `https://avatars.dicebear.com/api/initials/${author.name}.svg`"
+            alt="Avatar"
+            class="w-8 h-8 rounded-full"
+          />
+        </a>
+        <div v-else class="flex items-center">
+          <img
+            :src="author.avatar || `https://avatars.dicebear.com/api/initials/${author.name}.svg`"
+            alt="Avatar"
+            class="w-8 h-8 rounded-full"
+          />
+        </div>
+      </TooltipTrigger>
+      <TooltipContent>
+        <span>{{ author.name }}</span>
+      </TooltipContent>
+    </Tooltip>
+  </div>
 </template>
 
 <script lang="ts" setup>
-import { mergeProps } from 'vue';
+import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import type { YachtTemplate } from '#core/types/templates/yacht';
 
 interface Props {
@@ -23,4 +34,6 @@ interface Props {
 defineProps<Props>()
 </script>
 
-<style></style>~/shared/templates/yacht
+<style scoped>
+/* Add any additional styles if necessary */
+</style>

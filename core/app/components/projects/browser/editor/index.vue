@@ -1,16 +1,11 @@
 <template>
   <div class="fill-height">
-    <v-slide-y-transition>
-      <v-toolbar v-if="activeFile.name" density="compact">
-        <v-toolbar-items class="w-100 d-flex justify-space-between">
-          <projects-browser-editor-actions />
-          <!-- <v-btn
-            icon="mdi-arrow-expand-all"
-            @click="fullscreen = !fullscreen"
-          ></v-btn> -->
-        </v-toolbar-items>
-      </v-toolbar>
-    </v-slide-y-transition>
+    <NavigationMenu v-if="activeFile.name">
+      <NavigationMenuList class="w-100 d-flex justify-space-between">
+        <projects-browser-editor-actions />
+        <!-- Add any additional shadcn-vue components here if needed -->
+      </NavigationMenuList>
+    </NavigationMenu>
     <MonacoEditor
       v-if="editableFile && editableFile.content"
       v-model="activeFile.content"
@@ -24,6 +19,11 @@
 <script setup lang="ts">
 import type { FileInfo } from "#core/types/files";
 import { useProjectsStore } from "#core/app/stores/projects";
+import {
+  NavigationMenu,
+  NavigationMenuList,
+} from '@/components/ui/navigation-menu';
+
 const fullscreen = ref(false);
 const language = ref<string>("plaintext");
 

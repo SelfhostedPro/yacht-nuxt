@@ -1,9 +1,14 @@
 <template>
-  <v-card>
-    <v-card-title> index </v-card-title>
-  </v-card>
+  <Card>
+    <CardHeader>
+      <CardTitle>Index</CardTitle>
+    </CardHeader>
+  </Card>
 </template>
 
-<script lang="ts" setup></script>
+<script setup lang="ts">
+</script>
 
-<style></style>
+<style scoped>
+/* Add any additional styles here if needed */
+</style>

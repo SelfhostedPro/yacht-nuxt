@@ -1,77 +1,60 @@
 <template>
-  <v-card
-    v-bind="$attrs"
-    height="50vh"
-    class="text-center d-flex align-center"
-    rounded="0"
-    variant="flat"
-  >
-    <v-slide-group
-      v-model="carousel"
-      mandatory
+  <Card class="h-[50vh] text-center flex items-center rounded-none">
+    <Carousel
+      v-model:current-slide="carousel"
       :show-arrows="false"
       center-active
       @mouseenter="hovered = true"
       @mouseleave="hovered = false"
     >
-      <v-slide-group-item
-        v-for="featuredApp in template.featured || []"
+      <CarouselItem
+        v-for="(featuredApp, index) in template.featured || []"
         :key="template.templates[featuredApp]?.title || featuredApp"
-        v-slot="{ isSelected, toggle }"
+        @click="toggle(index)"
       >
-        <v-img
+        <img
           v-if="template.templates[featuredApp]"
-          cover
-          class="d-flex align-end featured-image mx-3 my-3 rounded"
-          :color="isSelected ? 'primary' : 'foreground'"
-          max-width="50vw"
-          min-width="30vw"
-          height="50vh"
-          :aspect-ratio="isSelected ? 16 / 9 : 4 / 3"
           :src="
             template.templates[featuredApp]?.featured_image ||
             template.templates[featuredApp]?.logo
           "
-          @click="toggle"
+          class="flex items-end featured-image mx-3 my-3 rounded"
+          :class="carousel === index ? 'bg-primary' : 'bg-foreground'"
+          :style="{ maxWidth: '50vw', minWidth: '30vw', height: '50vh', aspectRatio: carousel === index ? '16/9' : '4/3' }"
         >
-          <v-card rounded="0" class="featured-card">
-            <div class="d-flex align-center mt-3 justify-center">
-              <v-btn
+          <Card class="featured-card rounded-none">
+            <div class="flex items-center mt-3 justify-center">
+              <Button
                 class="mr-auto"
-                icon
-                variant="plain"
+                variant="ghost"
                 @click.stop="handleCreateApp(featuredApp)"
               >
-                <v-icon icon="mdi-plus" />
-              </v-btn>
-              <v-card-title
-                style="
-                  position: absolute;
-                  left: 50%;
-                  transform: translateX(-50%);
-                "
-                class="text-high-emphasis"
-                >{{
+                <Plus class="w-4 h-4" />
+              </Button>
+              <CardTitle class="absolute left-1/2 transform -translate-x-1/2 text-high-emphasis">
+                {{
                   template.templates[featuredApp]?.title ||
                   template.templates[featuredApp]?.name
-                }}</v-card-title
-              >
+                }}
+              </CardTitle>
             </div>
-            <v-card-text
-              v-if="isSelected && template.templates[featuredApp]?.description"
-              style="height: 60px"
-              class="text-high-emphasis overflow-auto mb-2"
-              >{{ template.templates[featuredApp]?.description }}</v-card-text
+            <CardContent
+              v-if="carousel === index && template.templates[featuredApp]?.description"
+              class="h-[60px] text-high-emphasis overflow-auto mb-2"
             >
-          </v-card>
-        </v-img>
-      </v-slide-group-item>
-    </v-slide-group>
-  </v-card>
+              {{ template.templates[featuredApp]?.description }}
+            </CardContent>
+          </Card>
+        </img>
+      </CarouselItem>
+    </Carousel>
+  </Card>
 </template>
 
 <script lang="ts" setup>
-import type { YachtTemplate } from "#core/types/templates/yacht";
+import { ref, watch, onMounted } from 'vue';
+import { Plus } from 'lucide-vue-next';
+import type { YachtTemplate } from '#core/types/templates/yacht';
 
 interface Emits {
   (e: "createApp", app: YachtTemplate["templates"][0]): void;
@@ -93,6 +76,10 @@ const handleCreateApp = (featuredApp: number) => {
   if (app) {
     emit('createApp', app);
   }
+};
+
+const toggle = (index: number) => {
+  carousel.value = index;
 };
 
 const startTimeout = () => {
@@ -136,10 +123,5 @@ onMounted(() => {
     rgba(var(--v-theme-surface), 0.8) 100%
   );
   backdrop-filter: blur(5px) brightness(40%);
-}
-
-.v-slide-group__next,
-.v-slide-group__prev {
-  display: none !important;
 }
 </style>

@@ -1,48 +1,41 @@
 <template>
-  <div>
-    <v-tooltip location="bottom">
-      <template #default>
-        {{
-          stats.memoryPercentage
-            ? `memory: ${stats.memoryPercentage}%`
-            : undefined
-        }}
-        <br >
-        {{ stats.cpuUsage ? `cpu: ${stats.cpuUsage}%` : undefined }}
+  <div class="relative">
+    <Tooltip>
+      <template #content>
+        <div class="text-sm text-gray-700">
+          {{ stats.memoryPercentage ? `memory: ${stats.memoryPercentage}%` : 'N/A' }}
+          <br>
+          {{ stats.cpuUsage ? `cpu: ${stats.cpuUsage}%` : 'N/A' }}
+        </div>
       </template>
-      <template #activator="{ props }">
-        <v-progress-circular
-          v-bind="props"
-          :indeterminate="loading.includes('containers')"
-          :model-value="stats.memoryPercentage || 0"
-          :size="60"
-          color="blue"
+      <div class="flex items-center justify-center">
+        <Progress
+          :model-value="Number(stats.memoryPercentage) || 0"
+          class="w-16 h-16 text-blue-500"
         >
-          <v-progress-circular
-            v-bind="props"
-            :indeterminate="loading.includes('containers')"
-            :model-value="stats.cpuUsage || 0"
-            :size="50"
-            color="yellow"
+          <Progress
+            :model-value="Number(stats.cpuUsage) || 0"
+            class="w-12 h-12 text-yellow-500"
           >
-            <template #default>
-              <slot name="default" />
-            </template>
-          </v-progress-circular>
-        </v-progress-circular>
-      </template>
-    </v-tooltip>
+            <slot name="default" />
+          </Progress>
+        </Progress>
+      </div>
+    </Tooltip>
   </div>
 </template>
 
 <script lang="ts" setup>
+import { Tooltip } from '@/components/ui/tooltip';
+import { Progress } from '@/components/ui/progress';
 import type { ContainerStat } from "#docker/types/containers/yachtContainers";
-import { useContainersStore } from "#core/app/stores/containers";
-const { loading } = useContainersStore();
+
 interface Props {
   stats: ContainerStat;
 }
 defineProps<Props>();
 </script>
 
-<style></style>
+<style scoped>
+/* You can add additional styles here if needed */
+</style>

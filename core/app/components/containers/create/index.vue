@@ -1,47 +1,60 @@
 <template>
-  <v-dialog
-v-model="dialog" :close-on-content-click="false" persistent no-click-animation scrollable
-    :fullscreen="maximize" :width="maximize ? undefined : '80vw'" :height="maximize ? undefined : '80vh'"
-    @update:model-value="() => template ? populateFromTemplate(template) : null">
-    <template #default>
-      <v-card color="foreground" width="80vw" height="100%" :loading="loading.includes('create')">
-        <common-title-bar
-class="form-bar" :loading="loading" color="primary" :closable="true"
-          :title="`create ${values.name || 'new container'}`" @maximize="maximize = !maximize"
-          @close="$emit('close'); dialog = false" />
-        <form class="overflow-y-hidden fill-height">
+  <Dialog v-model:open="dialog">
+    <DialogContent :class="[
+      'overflow-hidden',
+      maximize ? 'w-screen h-screen' : 'w-[80vw] h-[80vh]'
+    ]">
+      <!-- Title Bar -->
+      <common-title-bar class="form-bar" :loading="loading.length > 0" color="primary" :closable="true"
+        :title="`create ${values.name || 'new container'}`" @maximize="maximize = !maximize"
+        @close="$emit('close'); dialog = false" />
+
+      <!-- Form Content -->
+      <div class="flex-1 overflow-hidden">
+        <form class="h-full overflow-y-auto">
           <containers-create-form @validate="validate()" />
         </form>
-        <v-card-actions style="background-color: rgb(var(--v-theme-surface)) !important;">
-          <v-btn
-color="warning"
-            @click="async () => resetForm({ values: template ? await populateFromTemplate(template) : undefined })">reset</v-btn>
-          <v-spacer />
-          <v-btn v-if="step !== 0" @click="step--; validate()">
-            prev
-          </v-btn>
-          <v-btn v-if="step !== 6" color="primary" @click="step++; validate()">
-            next
-          </v-btn>
-          <span v-else>
-            <v-btn :disabled="!meta.valid" color="primary" @click="onSubmit">
-              submit
-            </v-btn>
-            <v-tooltip v-if="!meta.valid" class="submitTooltip" location="top left" activator="parent">
-              <v-card-text v-for="error, key, i in errors" :key="i">{{ `${key}: ${error}` }}</v-card-text>
-            </v-tooltip>
-          </span>
-        </v-card-actions>
-      </v-card>
-    </template>
-  </v-dialog>
+      </div>
+
+      <!-- Actions -->
+      <DialogFooter class="border-t">
+        <Button variant="destructive"
+          @click="async () => resetForm({ values: template ? await populateFromTemplate(template) : undefined })">
+          Reset
+        </Button>
+        <div class="flex gap-2">
+          <Button v-if="step !== 0" variant="outline" @click="step--; validate()">
+            Previous
+          </Button>
+          <Button v-if="step !== 6" @click="step++; validate()">
+            Next
+          </Button>
+          <div v-else>
+            <Button :disabled="!meta.valid" @click="onSubmit">
+              Submit
+            </Button>
+            <Tooltip v-if="!meta.valid">
+              <TooltipTrigger asChild>
+                <span class="absolute inset-0" />
+              </TooltipTrigger>
+              <TooltipContent>
+                <div v-for="(error, key, i) in errors" :key="i">
+                  {{ `${key}: ${error}` }}
+                </div>
+              </TooltipContent>
+            </Tooltip>
+          </div>
+        </div>
+      </DialogFooter>
+    </DialogContent>
+  </Dialog>
 </template>
 
 <script lang="ts" setup>
 import type { YachtTemplate } from '#core/types/templates/yacht';
 import { createContainerFormSchema, type CreateContainerForm } from "#docker/types/containers/create"
 import type { PartialDeep } from 'type-fest';
-import { useContainersStore} from '#core/app/stores/containers'
+import { useContainersStore } from '#core/app/stores/containers'
 
 const dialog = defineModel<boolean>('open', { default: false })
 const template = defineModel<YachtTemplate['templates'][0]>('template')
@@ -159,4 +172,4 @@ onBeforeUnmount(() => {
   background-color: rgba(var(--v-theme-error), 0.8) !important;
   color: rgb(var(--v-theme-on-surface)) !important;
 }
-</style>~/shared/templates/yacht~/shared/containers/create
+</style>

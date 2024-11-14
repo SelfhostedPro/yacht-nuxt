@@ -1,42 +1,45 @@
 <template>
-  <v-timeline v-if="!smAndDown" class="my-3" truncate-line="both" side="end" line-inset="8">
-    <v-timeline-item
+  <Stepper v-if="!smAndDown">
+    <StepperItem
       v-for="(step, i) in steps"
       :key="i"
-      :dot-color="step.errors && step.errors.length > 0 ? 'error' : currentStep >= i ? 'primary' : 'secondary'"
-      :class="currentStep === i ? 'font-weight-regular' : 'font-weight-light text-disabled'"
+      :step="i + 1"
       @click="currentStep = i"
     >
-      <template #icon>
-        <v-tooltip v-if="step.errors" location="top end" activator="parent">
-          <v-card-text v-for="error in step.errors" :key="error">{{ error }}</v-card-text>
-        </v-tooltip>
-      </template>
-      <v-fade-transition hide-on-leave>
-        <v-alert
-          v-if="currentStep === i"
-          color="foreground"
-          :rounded="0"
-          :title="step.title"
-          :text="step.description"
-        />
-      </v-fade-transition>
-      <v-fade-transition hide-on-leave>
-        {{ currentStep !== i ? step.title : null }}
-      </v-fade-transition>
-    </v-timeline-item>
-  </v-timeline>
+      <StepperTrigger>
+        <StepperIndicator :class="step.errors && step.errors.length > 0 ? 'bg-red-500' : currentStep >= i ? 'bg-blue-500' : 'bg-gray-500'">
+          {{ i + 1 }}
+        </StepperIndicator>
+        <StepperTitle :class="currentStep === i ? 'font-bold' : 'font-light text-gray-500'">
+          {{ step.title }}
+        </StepperTitle>
+        <StepperDescription v-if="currentStep === i">
+          {{ step.description }}
+        </StepperDescription>
+      </StepperTrigger>
+      <StepperSeparator />
+    </StepperItem>
+  </Stepper>
   <div v-else>
-    <v-card-title>{{ steps[currentStep]?.title || '' }}</v-card-title>
-    <v-card-text>{{ steps[currentStep]?.description || '' }}</v-card-text>
+    <Card>
+      <CardHeader>
+        <CardTitle>{{ steps[currentStep]?.title || '' }}</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <CardDescription>{{ steps[currentStep]?.description || '' }}</CardDescription>
+      </CardContent>
+    </Card>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { useDisplay } from 'vuetify';
-const { smAndDown } = useDisplay()
+import { ref, watchEffect } from 'vue'
+import { breakpointsTailwind, useBreakpoints } from '@vueuse/core'
+
+const breakpoints = useBreakpoints(breakpointsTailwind)
+const smAndDown = breakpoints.smaller('md')
 const errors = useFormErrors()
-const currentStep = defineModel<number>('step', { default: 0 })
+const currentStep = ref(0)
 
 function getErrors(paths: string[]) {
   let fieldErrors: string[] = [];
@@ -79,4 +82,6 @@ watchEffect(() => {
 });
 </script>
 
-<style></style>
+<style>
+/* Add any necessary styles for shadcn-nuxt components */
+</style>

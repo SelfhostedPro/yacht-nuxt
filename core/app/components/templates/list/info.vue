@@ -1,66 +1,84 @@
 <template>
-  <v-card v-bind="$attrs">
-    <div class="d-flex align-center mt-2 pb-1 justify-center py-auto">
-      <v-card-title style="position: absolute; left: 50%; transform: translateX(-50%);">{{ template.title
-      }} <v-btn icon variant="plain" size="small" @click="expandedInfo = !expandedInfo"><v-icon
-            :icon="expandedInfo ? 'mdi-chevron-up' : 'mdi-chevron-down'" /> </v-btn></v-card-title>
-      <div class="ml-auto mr-5 d-flex">
-        <p class="text-overline mr-3">created by: </p><templates-list-authors :authors="template.authors" />
+  <Card v-bind="$attrs">
+    <div class="flex items-center mt-2 pb-1 justify-center">
+      <CardTitle class="absolute left-1/2 transform -translate-x-1/2">
+        {{ template.title }}
+        <Button variant="ghost" size="sm" @click="expandedInfo = !expandedInfo">
+          <component :is="expandedInfo ? ChevronUp : ChevronDown" class="w-4 h-4" />
+        </Button>
+      </CardTitle>
+      <div class="ml-auto mr-5 flex">
+        <p class="text-xs mr-3">created by: </p>
+        <templates-list-authors :authors="template.authors" />
       </div>
     </div>
-    <v-expand-transition>
-      <v-card-subtitle v-if="expandedInfo" class="bg-surface">
+    <transition name="expand">
+      <CardSubtitle v-if="expandedInfo" class="bg-surface">
         name: {{ template.name }}
-        <br >
+        <br>
         type: {{ template.type }}
-        <br >
+        <br>
         created: {{ formatDate(template.created) }}
-        <br >
+        <br>
         updated: {{ formatDate(template.updated) }}
-        <br >
+        <br>
         apps: {{ template.templates.length }}
-      </v-card-subtitle>
-    </v-expand-transition>
-    <v-card-text v-if="template.description" class="mx-auto px-auto w-50 whitespace-pre">{{
-      template.description }}</v-card-text>
-    <v-card-actions class="flex-d justify-center">
-      <v-btn
-v-for="link in template['links']" :key="link.text" :color="link.color || undefined"
-        :prepend-icon="link.icon || 'mdi-link'" :href="link.url || undefined" target="_blank">{{
-          link.text || 'link' }}</v-btn>
-      <!-- <v-btn color="info" prepend-icon="mdi-restart" @click="updateTemplate()">update</v-btn> -->
-      <v-menu v-model="deleteMenu" :close-on-content-click="false" location="top" transition="slide-y-transition">
+      </CardSubtitle>
+    </transition>
+    <CardContent v-if="template.description" class="mx-auto w-1/2 whitespace-pre">
+      {{ template.description }}
+    </CardContent>
+    <CardFooter class="flex justify-center">
+      <Button
+        v-for="link in template['links']"
+        :key="link.text"
+        :variant="'link'"
+        :prepend-icon="link.icon || 'link'"
+        :href="link.url || undefined"
+        target="_blank"
+      >
+        {{ link.text || 'link' }}
+      </Button>
+      <Menu v-model="deleteMenu" :close-on-content-click="false" location="top" transition="slide-y-transition">
         <template #activator="{ props }">
-          <v-btn v-bind="props" color="error" prepend-icon="mdi-delete">delete</v-btn>
+          <Button v-bind="props" variant="destructive" prepend-icon="trash">delete</Button>
         </template>
-        <v-card :title="`delete template ${template.name}?`" max-width="30vw">
-          <v-card-text>
-            This action cannot be undone. <br >
-            Apps deployed with this template will continue to run on your system.<br >
-          </v-card-text>
-          <v-card-actions>
-            <!-- <v-btn @click="deleteTemplate(); deleteMenu = false" color="error">confirm</v-btn> -->
-            <v-btn @click="deleteMenu = false">cancel</v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-menu>
-    </v-card-actions>
-  </v-card>
+        <Card :title="`delete template ${template.name}?`" max-width="30vw">
+          <CardContent>
+            This action cannot be undone. <br>
+            Apps deployed with this template will continue to run on your system.<br>
+          </CardContent>
+          <CardFooter>
+            <!-- <Button @click="deleteTemplate(); deleteMenu = false" variant="destructive">confirm</Button> -->
+            <Button @click="deleteMenu = false">cancel</Button>
+          </CardFooter>
+        </Card>
+      </Menu>
+    </CardFooter>
+  </Card>
 </template>
 
 <script lang="ts" setup>
+import { ref } from 'vue';
 import { parseISO } from 'date-fns';
+import { ChevronUp, ChevronDown } from 'lucide-vue-next';
 import type { YachtTemplate } from '#core/types/templates/yacht';
-const expandedInfo = ref(false)
-const deleteMenu = ref(false)
+
+const expandedInfo = ref(false);
+const deleteMenu = ref(false);
+
 const formatDate = (date: string | undefined) => {
-  if (date) return parseISO(date).toLocaleString()
-  else return 'unknown'
-}
+  if (date) return parseISO(date).toLocaleString();
+  else return 'unknown';
+};
+
 interface Props {
-  template: YachtTemplate
+  template: YachtTemplate;
 }
-defineProps<Props>()
+
+defineProps<Props>();
 </script>
 
-<style></style>~/shared/templates/yacht
+<style>
+/* Add any additional styles if necessary */
+</style>

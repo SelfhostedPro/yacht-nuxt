@@ -1,128 +1,145 @@
-<!-- eslint-disable vue/no-v-html -->
-<!-- eslint-disable vue/no-v-text-v-html-on-component -->
 <template>
-  <v-card color="foreground">
-    <v-card-text>
-      <v-expansion-panels v-model="panel" variant="inset" multiple>
-        <v-expansion-panel title="base">
-          <v-expansion-panel-text>
-            <v-table>
-              <tbody>
-                <tr>
-                  <td>name</td>
-                  <td>{{ form.name }}</td>
-                </tr>
-                <tr>
-                  <td>image</td>
-                  <td>{{ form.image }}</td>
-                </tr>
-                <tr>
-                  <td>restart policy</td>
-                  <td>{{ form.restart }}</td>
-                </tr>
-                <tr>
-                  <td>server</td>
-                  <td>{{ form.server }}</td>
-                </tr>
-              </tbody>
-            </v-table>
-          </v-expansion-panel-text>
-        </v-expansion-panel>
-        <v-expansion-panel title="info">
-          <v-expansion-panel-text>
-            <v-row>
-              <v-col cols="2">
-                <v-avatar size="60" :image="form.info?.icon" />
-              </v-col>
-              <v-col>
-                <v-card-title>{{ form.info?.title }}</v-card-title>
-                <v-card-text v-if="form.info?.notes" v-html="$mdRenderer.render(form.info.notes)" />
-                <v-card-text v-else><i class="text-red">No notes defined.</i></v-card-text>
-              </v-col>
-            </v-row>
-            <v-card-text v-if="form.info?.notes" class="font-weight-black">Please check to make sure no sensitive
-              info is in this section.</v-card-text>
-          </v-expansion-panel-text>
-        </v-expansion-panel>
-        <v-expansion-panel title="network">
-          <v-expansion-panel-text>
-            <v-card-title>{{ form.network || form.network_mode }}</v-card-title>
-            <v-divider class="mb-3" thickness="3" color="primary" />
-            <v-row dense>
-              <v-col v-for="(port, index) in form.ports" :key="index" xs="12" sm="12" md="6">
-                <v-card color="foreground">
-                  <v-card-title>
-                    {{ port?.label || 'Unnamed Port' }}
-                  </v-card-title>
-                  <v-card-subtitle>
-                    host: {{ port?.host }}
-                  </v-card-subtitle>
-                  <v-card-subtitle>
-                    container: {{ port?.container }}
-                  </v-card-subtitle>
-                  <v-card-subtitle>
+  <Card>
+    <CardContent>
+      <Accordion type="multiple" :default-value="panel">
+        <!-- Base Section -->
+        <AccordionItem value="base">
+          <AccordionTrigger>base</AccordionTrigger>
+          <AccordionContent>
+            <Table>
+              <TableBody>
+                <TableRow>
+                  <TableCell>name</TableCell>
+                  <TableCell>{{ form.name }}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>image</TableCell>
+                  <TableCell>{{ form.image }}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>restart policy</TableCell>
+                  <TableCell>{{ form.restart }}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>server</TableCell>
+                  <TableCell>{{ form.server }}</TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </AccordionContent>
+        </AccordionItem>
+
+        <!-- Info Section -->
+        <AccordionItem value="info">
+          <AccordionTrigger>info</AccordionTrigger>
+          <AccordionContent>
+            <div class="flex gap-4">
+              <div class="w-16">
+                <Avatar>
+                  <AvatarImage :src="form.info?.icon || '/icons/default.svg'" />
+                  <AvatarFallback>Icon</AvatarFallback>
+                </Avatar>
+              </div>
+              <div class="flex-1">
+                <h3 class="text-lg font-semibold">{{ form.info?.title }}</h3>
+                <div v-if="form.info?.notes" v-html="$mdRenderer.render(form.info.notes)" />
+                <div v-else class="text-red-500 italic">No notes defined.</div>
+                <div v-if="form.info?.notes" class="font-bold mt-4">
+                  Please check to make sure no sensitive info is in this section.
+                </div>
+              </div>
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+
+        <!-- Network Section -->
+        <AccordionItem value="network">
+          <AccordionTrigger>network</AccordionTrigger>
+          <AccordionContent>
+            <h3 class="text-lg font-semibold mb-4">{{ form.network || form.network_mode }}</h3>
+            <Separator class="my-4" />
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <Card v-for="(port, index) in form.ports" :key="index">
+                <CardHeader>
+                  <CardTitle>{{ port?.label || 'Unnamed Port' }}</CardTitle>
+                  <CardDescription>
+                    host: {{ port?.host }}<br>
+                    container: {{ port?.container }}<br>
                     protocol: {{ port?.protocol }}
-                  </v-card-subtitle>
-                  <v-card-text>
-                    {{ port?.description }}
-                  </v-card-text>
-                </v-card>
-              </v-col>
-            </v-row>
-          </v-expansion-panel-text>
-        </v-expansion-panel>
-        <v-expansion-panel title="storage">
-          <v-expansion-panel-text>
-            <v-row>
-              <v-col v-for="(mount, index) in form.mounts" :key="index">
-                <v-card color="foreground">
-                  <v-card-title>{{ mount?.label || mount?.source }}</v-card-title>
-                  <v-card-subtitle>source: {{ mount?.source }}</v-card-subtitle>
-                  <v-card-subtitle>destination: {{ mount?.destination }}</v-card-subtitle>
-                  <v-card-subtitle class="mb-3">read only: {{ mount?.read_only }}</v-card-subtitle>
-                </v-card>
-              </v-col>
-            </v-row>
-          </v-expansion-panel-text>
-        </v-expansion-panel>
-        <v-expansion-panel title="environment">
-          <v-expansion-panel-text>
-            <v-row dense>
-              <v-col v-for="(env, index) in form.env" :key="index" xs="12" sm="12" md="6">
-                <v-card color="foreground">
-                  <v-card-title>{{ env?.label || env?.name }}</v-card-title>
-                  <v-card-subtitle v-if="env?.label">name: {{ env?.name }}</v-card-subtitle>
-                  <v-card-subtitle :class="env?.description ? undefined : 'mb-3'">value: {{ env?.value
-                    }}</v-card-subtitle>
-                  <v-card-text v-if="env?.description">{{ env?.description }}</v-card-text>
-                </v-card>
-              </v-col>
-            </v-row>
-          </v-expansion-panel-text>
-        </v-expansion-panel>
-        <v-expansion-panel title="advanced">
-          <v-expansion-panel-text style="white-space: pre-wrap;">
-            labels: {{ form.labels }}<br>
-            capabilities: {{ form.capabilities }}<br>
-            command: {{ form.command }}<br>
-            limits: {{ form.limits }}<br>
-            sysctls: {{ form.sysctls }}<br>
-            devices: {{ form.devices }}
-          </v-expansion-panel-text>
-        </v-expansion-panel>
-      </v-expansion-panels>
-    </v-card-text>
-  </v-card>
+                  </CardDescription>
+                </CardHeader>
+                <CardContent v-if="port?.description">
+                  {{ port?.description }}
+                </CardContent>
+              </Card>
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+
+        <!-- Storage Section -->
+        <AccordionItem value="storage">
+          <AccordionTrigger>storage</AccordionTrigger>
+          <AccordionContent>
+            <div class="grid gap-4">
+              <Card v-for="(mount, index) in form.mounts" :key="index">
+                <CardHeader>
+                  <CardTitle>{{ mount?.label || mount?.source }}</CardTitle>
+                  <CardDescription>
+                    source: {{ mount?.source }}<br>
+                    destination: {{ mount?.destination }}<br>
+                    read only: {{ mount?.read_only }}
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+
+        <!-- Environment Section -->
+        <AccordionItem value="environment">
+          <AccordionTrigger>environment</AccordionTrigger>
+          <AccordionContent>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <Card v-for="(env, index) in form.env" :key="index">
+                <CardHeader>
+                  <CardTitle>{{ env?.label || env?.name }}</CardTitle>
+                  <CardDescription v-if="env?.label">
+                    name: {{ env?.name }}<br>
+                    value: {{ env?.value }}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent v-if="env?.description">
+                  {{ env?.description }}
+                </CardContent>
+              </Card>
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+
+        <!-- Advanced Section -->
+        <AccordionItem value="advanced">
+          <AccordionTrigger>advanced</AccordionTrigger>
+          <AccordionContent>
+            <pre class="whitespace-pre-wrap">
+labels: {{ form.labels }}
+capabilities: {{ form.capabilities }}
+command: {{ form.command }}
+limits: {{ form.limits }}
+sysctls: {{ form.sysctls }}
+devices: {{ form.devices }}
+            </pre>
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
+    </CardContent>
+  </Card>
 </template>
 
 <script lang="ts" setup>
 import type { CreateContainerForm } from '#docker/types/containers/create'
 import type { ComputedRef } from 'vue'
+
 const { $mdRenderer } = useNuxtApp()
-
-
 const form = useFormValues() as ComputedRef<Partial<CreateContainerForm>>
-const panel = ref<number[]>([])
+const panel = ref(['base']) // Changed to use string values for accordion
 </script>
-
-<style scoped></style>

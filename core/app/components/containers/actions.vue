@@ -63,11 +63,12 @@
 <script lang="ts" setup>
 import type { Container } from "#docker/types/containers/yachtContainers";
 import { useContainersStore } from "#core/app/stores/containers";
+import { Card } from '#ui/app/components/ui/card'
 const containers = useContainersStore();
 interface Props {
   container: Container;
   server: string;
-  variant?: "flat" | "text" | "elevated" | "tonal" | "outlined" | "plain";
+  // variant?: "flat" | "text" | "elevated" | "tonal" | "outlined" | "plain";
   size?: string;
   loading?: boolean;
 }

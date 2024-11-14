@@ -1,36 +1,44 @@
 <template>
-  <v-card>
-    <v-tabs v-model="tab" color="primary" bg-color="foreground" grow>
-      <v-tab rounded="0" value="0">mounts</v-tab>
-    </v-tabs>
-    <v-window v-model="tab">
-      <v-window-item value="0">
-        <v-list v-if="container.mounts && container.mounts[0]">
-          <v-list-item v-for="mount in container.mounts" :key="mount.destination" class="text-no-wrap">
-            <v-list-item-title>{{ mount.destination }}</v-list-item-title>
-            <v-list-item-subtitle>{{ `type: ${mount['type']}` }}</v-list-item-subtitle>
-            <v-list-item-subtitle v-if="mount.name">{{ `name: ${mount.name}` }}</v-list-item-subtitle>
-            <v-list-item-subtitle v-if="mount['driver']">{{ `driver: ${mount['driver']}`
-            }}</v-list-item-subtitle>
-            <v-list-item-subtitle>{{ `read-only: ${!mount['rw']}` }}</v-list-item-subtitle>
-            {{ `source: ${mount.source}` }}
-          </v-list-item>
-        </v-list>
-        <v-card-text v-else>No mounts configured.</v-card-text>
-      </v-window-item>
-    </v-window>
-  </v-card>
+  <Card>
+    <Tabs v-model="tab" class="bg-primary text-foreground">
+      <TabsList>
+        <TabsTrigger value="0">Mounts</TabsTrigger>
+      </TabsList>
+      <TabsContent value="0">
+        <div v-if="container.mounts && container.mounts[0]">
+          <ul>
+            <li v-for="mount in container.mounts" :key="mount.destination" class="text-no-wrap">
+              <div>{{ mount.destination }}</div>
+              <div>{{ `type: ${mount['type']}` }}</div>
+              <div v-if="mount.name">{{ `name: ${mount.name}` }}</div>
+              <div v-if="mount['driver']">{{ `driver: ${mount['driver']}` }}</div>
+              <div>{{ `read-only: ${!mount['rw']}` }}</div>
+              <div>{{ `source: ${mount.source}` }}</div>
+            </li>
+          </ul>
+        </div>
+        <div v-else>No mounts configured.</div>
+      </TabsContent>
+    </Tabs>
+  </Card>
 </template>
 
 <script lang="ts" setup>
+import { ref } from 'vue';
 import type { Container } from '#docker/types/containers/yachtContainers';
+import { Card } from '@/components/ui/card';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 
 interface Props {
-  container: Container
+  container: Container;
 }
-defineProps<Props>()
-const tab = ref(0)
 
+defineProps<Props>();
+const tab = ref(0);
 </script>
 
-<style></style>
+<style scoped>
+.text-no-wrap {
+  white-space: nowrap;
+}
+</style>

@@ -1,137 +1,144 @@
 <template>
-  <v-card>
-    <v-toolbar>
-      <!-- avatar title and status -->
-      <template #prepend>
-        <containers-actions
-          variant="text"
-          :container="container"
-          :server="server"
-        />
-        <v-spacer v-if="!smAndDown" />
-        <lazy-containers-logs
-          v-if="logsOpen"
-          v-model="logsOpen"
-          :server="server"
-          :name="container.name"
-          @close="logsOpen = false"
-        />
-        <lazy-containers-terminal
-          v-if="terminalOpen"
-          v-model="terminalOpen"
-          :server="server"
-          :name="container.name"
-          @close="terminalOpen = false"
-        />
-      </template>
-      <template #append>
-        <v-btn-group v-if="!smAndDown" variant="text">
-          <v-tooltip
-            v-for="button in toolbarButtons"
-            :key="button.text"
-            :text="button.text"
-          >
-            <template #activator="{ props: tooltip }">
-              <v-btn
-                class="my-1"
-                size="default"
-                :rounded="0"
-                v-bind="tooltip"
-                :icon="button.icon"
-                :color="button.color"
-                @click="button.click()"
-              >
-                <v-icon :icon="button.icon"
-              /></v-btn>
-            </template>
-          </v-tooltip>
-        </v-btn-group>
-        <v-btn v-else color="grey-lighten-5">
-          <v-icon icon="mdi-dots-vertical" />
-          <v-menu activator="parent">
-            <v-card>
-              <v-btn
-                v-for="button in toolbarButtons.toReversed()"
-                :key="button.text"
-                block
-                :rounded="0"
-                :color="button.color"
-                @click="button.click"
-              >
-                <v-icon :icon="button.icon" />
-                {{ button.text }}
-              </v-btn>
-            </v-card>
-          </v-menu>
-        </v-btn>
-      </template>
-    </v-toolbar>
-    <v-card-title>
-      <v-toolbar-title
-        :class="`align-center ${smAndDown ? 'd-flex flex-column' : ''}`"
-      >
-        <v-avatar
-          :image="
-            container.info.icon ||
-            'https://cdn.vuetifyjs.com/images/cards/halcyon.png'
-          "
-        />
-        <v-tooltip :text="container.status" location="bottom">
-          <template #activator="{ props }">
-            <v-avatar
-              class="ml-1"
-              v-bind="props"
-              :color="container.status == 'running' ? 'primary' : 'red'"
-              size="6"
+  <Card>
+    <CardHeader class="p-0">
+      <!-- Toolbar -->
+      <div class="flex items-center justify-between p-2">
+        <div class="flex items-center gap-2">
+          <containers-actions
+            :container="container"
+            :server="server"
+          />
+          <div v-if="!isMobile" class="flex-1" />
+          <lazy-containers-logs
+            v-if="logsOpen"
+            v-model="logsOpen"
+            :server="server"
+            :name="container.name"
+            @close="logsOpen = false"
+          />
+          <lazy-containers-terminal
+            v-if="terminalOpen"
+            v-model="terminalOpen"
+            :server="server"
+            :name="container.name"
+            @close="terminalOpen = false"
+          />
+        </div>
+
+        <!-- Action Buttons -->
+        <div v-if="!isMobile" class="flex gap-1">
+          <TooltipProvider>
+            <Tooltip v-for="button in toolbarButtons" :key="button.text">
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  :class="button.color === 'warning' ? 'text-warning' : 
+                         button.color === 'info' ? 'text-info' : ''"
+                  @click="button.click"
+                >
+                  <Icon :icon="button.icon" class="h-4 w-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>{{ button.text }}</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </div>
+
+        <!-- Mobile Menu -->
+        <DropdownMenu v-else>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="icon">
+              <Icon icon="lucide:more-vertical" class="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuItem 
+              v-for="button in toolbarButtons.toReversed()"
+              :key="button.text"
+              @click="button.click"
+              :class="button.color === 'warning' ? 'text-warning' : 
+                     button.color === 'info' ? 'text-info' : ''"
+            >
+              <Icon :icon="button.icon" class="h-4 w-4 mr-2" />
+              {{ button.text }}
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+
+      <!-- Title Section -->
+      <div class="flex items-center p-4" :class="isMobile ? 'flex-col' : ''">
+        <div class="flex items-center gap-2">
+          <Avatar>
+            <AvatarImage
+              :src="container.info.icon || 'https://cdn.vuetifyjs.com/images/cards/halcyon.png'"
+              alt="Container icon"
             />
-          </template>
-        </v-tooltip>
-        {{ " " + container.name }}
-      </v-toolbar-title>
-    </v-card-title>
-  </v-card>
+            <AvatarFallback>CN</AvatarFallback>
+          </Avatar>
+          
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div 
+                  class="h-2 w-2 rounded-full"
+                  :class="container.status === 'running' ? 'bg-primary' : 'bg-destructive'"
+                />
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>{{ container.status }}</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+
+          <span class="text-lg font-medium">{{ container.name }}</span>
+        </div>
+      </div>
+    </CardHeader>
+  </Card>
 </template>
 
 <script lang="ts" setup>
 import type { Container } from "#docker/types/containers/yachtContainers";
-const { smAndDown } = useDisplay();
+import { breakpointsTailwind, useBreakpoints } from '@vueuse/core'
+
+const breakpoints = useBreakpoints(breakpointsTailwind)
+const isMobile = breakpoints.smaller('md')
+
 const logsOpen = ref(false);
 const terminalOpen = ref(false);
+
 interface Props {
   container: Container;
   server: string;
 }
 defineProps<Props>();
 
-const toolbarButtons: {
-  text: string;
-  icon: string;
-  click: () => void;
-  color?: string;
-}[] = [
+const toolbarButtons = [
   {
     text: "terminal",
-    icon: "mdi-console",
+    icon: "lucide:terminal",
     click: () => (terminalOpen.value = true),
   },
   {
     text: "logs",
-    icon: "mdi-note-text-outline",
+    icon: "lucide:file-text",
     click: () => (logsOpen.value = true),
   },
   {
     text: "help",
-    icon: "mdi-help-circle-outline",
+    icon: "lucide:help-circle",
     color: "info",
     click: () => console.log("not implemented yet"),
   },
   {
     text: "edit",
-    icon: "mdi-file-document-edit-outline",
+    icon: "lucide:file-edit",
     color: "warning",
     click: () => console.log("not implemented yet"),
   },
 ];
 </script>
-
-<style></style>

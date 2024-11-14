@@ -1,72 +1,56 @@
 <template>
   <div>
     <template v-if="container && container.name">
-      <v-row no-gutters>
-        <v-col :cols="smAndDown ? 12 : 6" :class="`${smAndDown ? '' : 'pr-5'}`">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div class="space-y-5">
           <containers-details-card-namecard
             :container="container"
             :server="server"
-            class="mb-5"
           />
           <containers-details-card-info-body
             :container="container"
             :server="server"
-            class="mb-5"
           />
           <containers-details-card-environment
-            v-if="!smAndDown"
+            v-if="!isMobile"
             :container="container"
             :server="server"
           />
-        </v-col>
-        <v-col :cols="smAndDown ? 12 : 6">
+        </div>
+        <div class="space-y-5">
           <containers-details-card-networking
             :container="container"
             :server="server"
-            class="mb-5"
           />
           <containers-details-card-storage
             :container="container"
             :server="server"
-            :class="`${smAndDown ? 'mb-5' : ''}`"
           />
           <containers-details-card-environment
-            v-if="smAndDown"
+            v-if="isMobile"
             :container="container"
             :server="server"
           />
-        </v-col>
-      </v-row>
+        </div>
+      </div>
     </template>
-    <!-- <v-card-title v-if="container && container.name">{{ container.name }}</v-card-title>
-    <p>{{ server }}</p>
-    <p>{{ name }}</p> -->
-    <!-- <pre v-if="!smAndDown">{{ JSON.stringify(container, null, 2) }}</pre> -->
-    <!-- <v-col></v-col> -->
   </div>
 </template>
 
 <script lang="ts" setup>
 import { useContainersStore } from '#core/app/stores/containers';
+import { breakpointsTailwind, useBreakpoints } from '@vueuse/core'
+
 interface Props {
   server: string;
   name: string;
 }
+
 const { server } = defineProps<Props>();
 const containersStore = useContainersStore();
-const { smAndDown } = useDisplay();
 const { container } = storeToRefs(containersStore);
-// const { refresh } = await containersStore.fetchContainerDetails(server, name);
 
-// const { refresh } = useAsyncData(
-//   `container-${server}-${name}`,
-//   () => containersStore.fetchContainerDetails(server, name),
-//   {
-//     default() {
-//       return {};
-//     },
-//   }
-// );
+// Breakpoints
+const breakpoints = useBreakpoints(breakpointsTailwind)
+const isMobile = breakpoints.smaller('md')
 </script>
-
-<style></style>

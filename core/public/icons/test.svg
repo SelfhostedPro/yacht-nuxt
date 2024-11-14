@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+    <svg x="50%">
+        <text y="90%" width="100" height="100">cpu</text>
+        <use href="#background" fill="url(#cpu-gradient)" />
+    </svg>
+    <g>
+        <text y="90%" width="100" height="100">cpu</text>
+        <use href="#background" fill="url(#memory-gradient)" />
+    </g>
+    <defs>
+        <rect id="background" width="50%" height="100%" opacity="0.3"/>
+        <linearGradient id="cpu-gradient" x2="1" gradientTransform="rotate(90)">
+            <stop offset="0%" stop-color="#112266" />
+            <stop :offset="`${stats.cpuUsage}%`" stop-color="#440000" />
+            <stop offset="100%" stop-color="#000000" />
+        </linearGradient>
+        <linearGradient id="memory-gradient" x2="1" gradientTransform="rotate(90)">
+            <stop offset="0%" stop-color="#112266" />
+            <stop :offset="`${stats.memoryPercentage}%`" stop-color="#440000" />
+            <stop offset="100%" stop-color="#000000" />
+        </linearGradient>
+    </defs>
+</svg>

@@ -1,41 +1,32 @@
 <template>
-  <v-card-item class="d-flex flex-column items-center">
-    <v-card-subtitle class="mx-auto text-center">
-      MOUNTS
-    </v-card-subtitle>
-    <v-item-group
-      show-arrows
-      class="mx-auto"
-    >
-      <v-row no-gutters>
-        <v-item
+  <div class="flex flex-col items-center">
+    <h2 class="mx-auto text-center">MOUNTS</h2>
+    <div class="mx-auto flex overflow-x-auto">
+      <div class="flex flex-wrap">
+        <div
           v-for="mount in mounts"
           :key="mount.destination"
+          class="p-2"
         >
-          <v-col>
-            <v-tooltip
-              location="bottom"
-              :text="mount.source ? `host: ${mount.source}` : 'not mounted'"
-            >
-              <template #activator="{ props }">
-                <v-chip
-                  v-bind="props"
-                  label
-                  size="small"
-                  class="ma-1"
-                  :color="mount.source ? 'primary' : 'error'"
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger>
+                <span
+                  class="inline-block px-3 py-1 text-sm font-medium rounded-full"
+                  :class="mount.source ? 'bg-blue-500 text-white' : 'bg-red-500 text-white'"
                 >
-                  {{
-                    mount.destination
-                  }}
-                </v-chip>
-              </template>
-            </v-tooltip>
-          </v-col>
-        </v-item>
-      </v-row>
-    </v-item-group>
-  </v-card-item>
+                  {{ mount.destination }}
+                </span>
+              </TooltipTrigger>
+              <TooltipContent>
+                {{ mount.source ? `host: ${mount.source}` : 'not mounted' }}
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script lang="ts" setup>

@@ -1,10 +1,13 @@
 <template>
-  <v-btn :loading="isLoading" color="primary" @click="saveFile">
+  <Button :loading="isLoading" color="primary" @click="saveFile">
     save
-    <v-icon icon="mdi-content-save" />
-  </v-btn>
+    <Save />
+  </Button>
 </template>
+
 <script setup lang="ts">
+import { Save } from 'lucide-vue-next';
+
 const isLoading = ref(false);
 const file = useOpenProjectsFile();
 const saveFile = async () => {
